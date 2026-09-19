@@ -14,7 +14,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-from contracts import load_json, managed_block, safe_path, schema_errors
+try:
+    from contracts import load_json, managed_block, safe_path, schema_errors
+except ModuleNotFoundError:
+    from runtime.contracts import load_json, managed_block, safe_path, schema_errors
 
 SYSTEM = (
     "AGENTS.md",
