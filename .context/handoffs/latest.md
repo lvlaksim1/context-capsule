@@ -2,7 +2,7 @@
 
 ## Last completed work
 
-Upgraded Context Capsule Core from v1.0.0 to v1.1.0 using lessons from the legacy capsule in `lvlaksim1/telegram-receiver`.
+Released Context Capsule Core v1.1.0 using lessons from the legacy capsule in `lvlaksim1/telegram-receiver`.
 
 Added:
 - `manifest.json` as a navigation index separate from `capsule.json`;
@@ -16,11 +16,11 @@ Added:
 
 ## Verified state
 
-All five lifecycle tests pass and the central repository self-validates under v1.1.0.
+The release commit passed GitHub Actions. All five lifecycle tests and central self-validation are green.
 
 ## Next operation
 
-Publish v1.1.0 and verify CI. After that, adopt the existing `telegram-receiver` legacy capsule without renaming or overwriting its project context.
+Use `telegram-receiver` as the first real legacy-adoption target, preserving its richer project-specific context and filenames.
 
 ## Constraints
 

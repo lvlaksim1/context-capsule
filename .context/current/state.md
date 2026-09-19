@@ -12,15 +12,15 @@ The complete context of every target repository remains inside that target repos
 
 ## Current status
 
-Core v1.1.0 has been implemented locally on top of v1.0.0. It adds manifest navigation, typed context semantics, `AGENTS.md`, protocol/dialogue layers, live-state reconciliation, safe legacy `adopt`, and an executable v1.0.0 -> v1.1.0 migration.
+Core v1.1.0 is published on `main`. It includes manifest navigation, typed context semantics, `AGENTS.md`, protocol/dialogue layers, live-state reconciliation, safe legacy `adopt`, and an executable v1.0.0 -> v1.1.0 migration.
 
 ## Verification
 
-Five lifecycle tests pass: install, reinstall refusal, legacy adoption, repair preservation, and v1.0 -> v1.1 upgrade. Self-validation passes after upgrading this repository's own capsule.
+The v1.1.0 GitHub Actions test job completed successfully. Five lifecycle tests pass: install, reinstall refusal, legacy adoption, repair preservation, and v1.0 -> v1.1 upgrade. Central self-validation also passes.
 
 ## Active work
 
-Publish v1.1.0 to `lvlaksim1/context-capsule` and verify GitHub CI. Then use `lvlaksim1/telegram-receiver` as the first production legacy-adoption test.
+Use `lvlaksim1/telegram-receiver` as the first production legacy-adoption test when requested.
 
 ## Known blockers
 
