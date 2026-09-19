@@ -113,7 +113,7 @@ def fingerprint(
         sort_keys=True,
         separators=(",", ":"),
     ).encode("utf-8")
-    hasher.update(b"@manifest-semantic\\0" + manifest_view + b"\\0")
+    hasher.update(b"@manifest-semantic\0" + manifest_view + b"\0")
 
     index = json.loads(read(root, manifest["memory_index"], fallback))
     paths = [
@@ -131,9 +131,9 @@ def fingerprint(
     for rel in sorted(set(paths)):
         hasher.update(
             rel.encode("utf-8")
-            + b"\\0"
+            + b"\0"
             + read(root, rel, fallback).encode("utf-8")
-            + b"\\0"
+            + b"\0"
         )
     return hasher.hexdigest()
 
