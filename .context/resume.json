@@ -1,0 +1,19 @@
+{
+  "schema": "context-capsule-resume",
+  "schema_version": 1,
+  "status": "draft",
+  "summary": "Context Capsule v1.3 hardening is integrated on the development branch but final verification is still in progress.",
+  "next_action": "Run the full Linux/Windows test matrix, fix failures, then create the verified release checkpoint.",
+  "verified_branch": "work/seamless-context-v1.3",
+  "verified_head": "74079c9356a07f60e100538e37c1e4d04b8fe8a0",
+  "working_set_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "bootstrap_review": [],
+  "evidence": [
+    {
+      "kind": "commit",
+      "reference": "74079c9356a07f60e100538e37c1e4d04b8fe8a0",
+      "note": "development checkpoint before final verification"
+    }
+  ],
+  "updated_at": "2026-09-20T00:00:00Z"
+}
