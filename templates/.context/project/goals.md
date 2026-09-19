@@ -1,7 +1,5 @@
 # Project goals
 
-## REQUIREMENT — Primary goals
-
-Capture durable outcomes the project is intended to achieve.
+CAPSULE_TODO: replace this template with verified durable project outcomes.
 
 Do not put temporary tasks here; those belong in `current/next.md`.
