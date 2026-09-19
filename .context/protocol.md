@@ -1,37 +1,36 @@
+<!-- context-capsule:begin -->
 # Context Capsule protocol
 
 ## Principle
 
-The repository is the durable memory for the project. Individual chats are ephemeral.
+The repository is the durable memory for the project; individual chats are ephemeral. Recovery is complete only after stored semantics are reconciled with live evidence.
 
-## Start of substantial work
+## Semantic sync
 
-- bootstrap through `ENTRYPOINT.md`;
-- verify the authoritative context branch;
-- restore project semantics before reading deep history;
-- reconcile with live code/CI/runtime evidence;
-- do not infer missing historical facts.
+Persist a durable update when an accepted decision, requirement, durable rule/preference, architecture/interface contract, blocker/root cause, rejected or superseded approach, milestone/release meaning, active priority, or important verified finding changes.
 
-## Semantic sync triggers
-
-Persist a durable update when one of these changes: accepted decision; requirement or durable rule; persistent user preference; architecture/interface contract; blocker/root cause; rejected/superseded approach; milestone/release; active plan/priority; important verified finding.
-
-Do **not** copy every runtime event, heartbeat, queue transition, CI poll, or conversational turn into `.context/`.
-
-If a project has a separate live-state authority such as `.agent/`, keep volatile execution state there. Promote only semantic consequences into Context Capsule.
+Do not routinely persist heartbeats, leases, queue transitions, polling ticks, transient CI states, repetitive worker commits or raw chat turns. When such events change project meaning, record the consequence once.
 
 ## Working-set discipline
 
-`project/` stores stable semantics. `current/state.md`, `current/blockers.md`, and `current/next.md` are compact working-set views. `handoffs/latest.md` is a concise transfer. Resolved material moves to decisions/dialogues/history.
+- `project/`: stable identity, goals, architecture and constraints.
+- `current/`: only present state, unresolved blockers and actionable next work.
+- `handoffs/latest.md`: concise transfer, not an append-only journal.
+- `decisions/`, `dialogues/`, `history/`: durable evidence and supersession history.
+- `index.json`: compact routing metadata for selective recall.
+- `resume.json`: evidence-backed continuation checkpoint.
 
-## Concurrency / CAS
+Resolved material leaves `current/`. A ready checkpoint must not be used to bless unreconciled semantic edits.
 
-Before writing context, re-read the authoritative branch and current HEAD. When an expected HEAD is supplied, abort on mismatch and merge concurrent changes instead of overwriting them.
+## Mutation discipline
 
-## End / handoff
+Lifecycle mutations use repository-path confinement, branch/HEAD checks, a cooperating-writer lock, snapshot comparison, journaled atomic file replacement and rollback. Uncommitted capsule/discovery edits are refused unless explicitly allowed; allowing them does not disable concurrent-edit detection.
 
-Update current state, blockers, next, durable decisions/rules, relevant dialogue evidence, manifest, and latest handoff.
+## End of substantial work
+
+Update stable/current semantics as needed, durable decisions/rules, handoff, memory index and the continuation checkpoint. The checkpoint should state the verified position, next concrete action and evidence.
 
 ## Privacy
 
-Never persist secret values, credentials, cookies, private keys, or unnecessary sensitive personal data.
+Never persist credentials, cookies, private keys, secret values or unnecessary sensitive personal data.
+<!-- context-capsule:end -->
