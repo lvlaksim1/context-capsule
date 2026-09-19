@@ -1,8 +1,20 @@
 {
   "schema": "context-capsule",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "source": "lvlaksim1/context-capsule",
   "installed_at": "2026-09-19",
   "repository": "lvlaksim1/context-capsule",
-  "update_policy": "manual"
+  "update_policy": "manual",
+  "managed_files": {
+    "AGENTS.md": "9fdbc010fa97f5dcd27fe05f43bb0890ab90fffd1b33c4d43287b4fc283242a3",
+    "AI_CONTEXT.md": "42ac501e54b76c51e9ee19869b9e1f90c11bedcd8bbd07cbf85d7e68ba1c7b47",
+    ".context/ENTRYPOINT.md": "ba63405bd68c9fc431d498b09bb477d0b7d7ac54fd62c98a7e7964174842bbed",
+    ".context/protocol.md": "54d287651ee87b0ab5ffeda034f7f56033cca9c18d537aea3c2518294d70fa22",
+    ".context/tools/contracts.py": "06670547bed59401e377d78852fc064829cf03b64ee1f8730e4160e5b618b908",
+    ".context/tools/capsule_runtime.py": "52991781269886b0f836463a23fe9341de96391cd91fa979a89608f5a8ef9f73",
+    ".context/tools/schemas/capsule.schema.json": "a7178e809b29e0bc38c4c2778e51d3e905ff792d56db37b4e8f36d579c96c1d0",
+    ".context/tools/schemas/manifest.schema.json": "29d36962d74a94b2b3fe7db2bb73b95862841a6b322304c4b6571fb68e79d8c1",
+    ".context/tools/schemas/index.schema.json": "39b6a752a9f4e7d28be3f4026144fc7a5268092dad0744b8de56d37c69d9f973",
+    ".context/tools/schemas/resume.schema.json": "5c6346c28c8d6ba22cf14b895dacaa84903726ca4cc7da79a127579a14439956"
+  }
 }
