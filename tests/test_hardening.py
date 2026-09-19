@@ -239,6 +239,43 @@ class HardeningTests(unittest.TestCase):
 
             self.assertEqual(tracked.read_text(encoding="utf-8"), "concurrent\n")
 
+    def test_recover_restores_interrupted_prepared_transaction(self):
+        with tempfile.TemporaryDirectory() as td:
+            target = Path(td) / "repo"
+            init_repo(target)
+            (target / ".context").mkdir()
+            tracked = target / ".context/state.md"
+            tracked.write_text("before\n", encoding="utf-8")
+            commit_all(target, "context fixture")
+
+            with storage.locked(target) as gitdir:
+                before = tracked.read_bytes()
+                after = b"after crash\n"
+                journal = {
+                    "root": str(target.resolve()),
+                    "state": "prepared",
+                    "changes": [
+                        {
+                            "path": ".context/state.md",
+                            "before": __import__("base64").b64encode(before).decode("ascii"),
+                            "before_sha256": storage.digest(before),
+                            "after_sha256": storage.digest(after),
+                        }
+                    ],
+                    "created_dirs": [],
+                }
+                storage._save_journal(gitdir, journal)
+                storage.atomic_write(target, ".context/state.md", after)
+
+            self.assertEqual(tracked.read_bytes(), b"after crash\n")
+            with storage.locked(target) as gitdir:
+                recovered = storage.recover(target, gitdir)
+                self.assertTrue(recovered)
+            self.assertEqual(tracked.read_bytes(), b"before\n")
+            self.assertFalse(
+                (target / ".git/context-capsule-transaction.json").exists()
+            )
+
     def test_transaction_rolls_back_after_mid_apply_failure(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td) / "repo"
