@@ -1,70 +1,36 @@
+<!-- context-capsule:begin -->
 # Context Capsule protocol
 
 ## Principle
 
-The repository is the durable memory for the project. Individual chats are ephemeral.
+The repository is the durable memory for the project; individual chats are ephemeral. Recovery is complete only after stored semantics are reconciled with live evidence.
 
-## Start of substantial work
+## Semantic sync
 
-- bootstrap through `ENTRYPOINT.md`;
-- verify the authoritative context branch;
-- restore project semantics before reading deep history;
-- reconcile with live code/CI/runtime evidence;
-- do not infer missing historical facts.
+Persist a durable update when an accepted decision, requirement, durable rule/preference, architecture/interface contract, blocker/root cause, rejected or superseded approach, milestone/release meaning, active priority, or important verified finding changes.
 
-## Semantic sync triggers
-
-Persist a durable update when one of these changes:
-- accepted decision;
-- requirement or durable rule;
-- persistent user preference;
-- architecture or interface contract;
-- blocker/root cause;
-- rejected/superseded approach;
-- milestone/release;
-- active plan/priority;
-- important verified finding.
-
-Do **not** copy every runtime event, heartbeat, queue transition, CI poll, or conversational turn into `.context/`.
-
-If a project has a separate live-state authority such as `.agent/`, keep volatile execution state there. Promote only semantic consequences into Context Capsule.
+Do not routinely persist heartbeats, leases, queue transitions, polling ticks, transient CI states, repetitive worker commits or raw chat turns. When such events change project meaning, record the consequence once.
 
 ## Working-set discipline
 
-- `.context/project/` — stable identity, goals, architecture, constraints.
-- `.context/current/state.md` — compact present semantic state.
-- `.context/current/blockers.md` — only unresolved blockers/risks.
-- `.context/current/next.md` — only currently actionable next work.
-- `.context/handoffs/latest.md` — concise transfer to the next chat/agent.
-- `.context/decisions/` — durable decisions and supersession chain.
-- `.context/dialogues/` — compact evidence-rich investigation records.
-- `.context/history/` — older useful context.
+- `project/`: stable identity, goals, architecture and constraints.
+- `current/`: only present state, unresolved blockers and actionable next work.
+- `handoffs/latest.md`: concise transfer, not an append-only journal.
+- `decisions/`, `dialogues/`, `history/`: durable evidence and supersession history.
+- `index.json`: compact routing metadata for selective recall.
+- `resume.json`: evidence-backed continuation checkpoint.
 
-Resolved items must leave `current/`. Do not turn `current/state.md` or `handoffs/latest.md` into append-only journals.
+Resolved material leaves `current/`. A ready checkpoint must not be used to bless unreconciled semantic edits.
 
-## Evidence and contradictions
+## Mutation discipline
 
-Evidence priority is defined by `ENTRYPOINT.md`. Repository/runtime facts are authoritative for implementation state; capsule records explain meaning, decisions, and continuity.
+Lifecycle mutations use repository-path confinement, branch/HEAD checks, a cooperating-writer lock, snapshot comparison, journaled atomic file replacement and rollback. Uncommitted capsule/discovery edits are refused unless explicitly allowed; allowing them does not disable concurrent-edit detection.
 
-Never silently resolve a contradiction by rewriting history.
+## End of substantial work
 
-## Concurrency / CAS
-
-Before writing context:
-1. re-read the authoritative branch and current HEAD;
-2. if the caller supplied an expected HEAD, abort on mismatch;
-3. merge concurrent context changes rather than overwriting them;
-4. use SHA/version-aware writes where available.
-
-## End / handoff
-
-Before a substantial work segment finishes:
-- update current state, blockers, next;
-- record new durable decisions/rules;
-- update relevant dialogue evidence;
-- refresh the manifest;
-- update `handoffs/latest.md`.
+Update stable/current semantics as needed, durable decisions/rules, handoff, memory index and the continuation checkpoint. The checkpoint should state the verified position, next concrete action and evidence.
 
 ## Privacy
 
-Never persist secret values, credentials, cookies, private keys, or unnecessary sensitive personal data.
+Never persist credentials, cookies, private keys, secret values or unnecessary sensitive personal data.
+<!-- context-capsule:end -->
