@@ -1,7 +1,9 @@
 # Current blockers and open risks
 
+## BLOCKER
+
+The new safety/recovery modules are unintegrated drafts. Existing v1.2 defects remain active. This branch is not ready for release or production migration.
+
 ## OPEN
 
-No Core release blocker is active.
-
-The remaining unverified area is production adoption of the three real legacy capsules under v1.2.0. Those adoptions should be performed one by one and used as evidence for any further Core changes.
+Strict schemas, templates, CLI integration and focused regression tests remain to be implemented. No real target repository has been changed.
