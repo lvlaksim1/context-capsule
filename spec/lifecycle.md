@@ -2,40 +2,44 @@
 
 ## 1. Install
 
-Installation is performed against a target repository.
+Use `install` only for a repository that does not already contain a capsule. It creates the standard structure, writes `capsule.json` and `manifest.json`, pins the Core version, and validates references.
 
-The installer:
+After structural installation, initial context capture is performed from the target repository and written only to that repository.
 
-1. detects whether a capsule is already installed;
-2. refuses destructive reinstallation;
-3. creates the standard directory structure;
-4. writes system-owned bootstrap files;
-5. creates empty project-owned context documents only when missing;
-6. records the pinned Core version in `.context/capsule.json`;
-7. validates structural integrity.
+## 2. Adopt legacy capsule
 
-After structural installation, an agent performs **initial context capture** from the target repository itself. That capture is written only to the target repository.
+Use `adopt` when `.context/` already exists but `.context/capsule.json` does not.
 
-## 2. Normal operation
+Adoption:
 
-Agents begin with `AI_CONTEXT.md`, then follow `.context/ENTRYPOINT.md`.
+1. refuses to overwrite existing project-owned files;
+2. preserves an existing legacy `manifest.json` and its custom fields;
+3. creates the technical `capsule.json` passport;
+4. enriches `manifest.json` with the v1 navigation contract;
+5. adds missing discovery/protocol files only when absent;
+6. indexes existing rules, decisions, dialogues, history, handoff, and current state;
+7. validates all indexed paths.
 
-Routine project work reads and updates the target repository capsule only. Context Capsule Core is not contacted.
+## 3. Normal operation
 
-## 3. Validate
+Agents begin with `AI_CONTEXT.md` or `AGENTS.md`, follow `ENTRYPOINT.md`, then use `manifest.json` for actual paths. Routine work does not contact Core.
 
-Validation checks structure, metadata, required files, version consistency, and basic invariants. It does not upload project content.
+## 4. Validate
 
-## 4. Upgrade
-
-Upgrade is explicit. The installed version is compared with the requested Core version. A declared migration must exist for version changes that modify structure or semantics.
-
-Project-owned context is preserved.
+Validation checks technical metadata, authoritative branch metadata, system discovery files, manifest integrity, and every indexed path. It never uploads project content.
 
 ## 5. Repair
 
-Repair restores missing system-owned files and structural invariants. It MUST NOT overwrite project-owned context.
+Repair restores missing system-owned files and refreshes the navigation manifest. It does not overwrite project-owned context.
 
-## 6. Removal
+## 6. Upgrade
 
-Removal is intentionally not automated in v1.0.0 because `.context/` contains project history. Any future removal command must require an explicit archival policy.
+Upgrade is explicit and migration-driven. v1.0.0 -> v1.1.0 adds the manifest/protocol/agent-discovery/dialogue layer without replacing existing project context.
+
+## 7. Handoff/update discipline
+
+Before a work session ends, update current state and `handoffs/latest.md`; refresh the manifest when project-context files were added/moved. Preserve superseded decisions rather than rewriting history.
+
+## 8. Removal
+
+Removal remains intentionally non-automated because `.context/` contains project history and decisions.

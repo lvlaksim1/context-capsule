@@ -2,8 +2,8 @@
 
 This repository uses Context Capsule.
 
-Start recovery at:
+Start recovery at `.context/ENTRYPOINT.md`.
 
-`.context/ENTRYPOINT.md`
+The complete project context is stored in this repository. `.context/manifest.json` maps the current project-context files and authoritative branch.
 
-The complete project context is stored in this repository. Do not look for a central copy of project context in Context Capsule Core.
+Do not look for a central copy of project context in Context Capsule Core.

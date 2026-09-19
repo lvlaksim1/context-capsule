@@ -1,0 +1,23 @@
+{
+  "schema": "context-capsule-manifest",
+  "schema_version": 1,
+  "repository": "lvlaksim1/context-capsule",
+  "authoritative_branch": "main",
+  "entrypoint": ".context/ENTRYPOINT.md",
+  "capsule_metadata": ".context/capsule.json",
+  "latest_handoff": ".context/handoffs/latest.md",
+  "current_state": ".context/current/state.md",
+  "protocol": ".context/protocol.md",
+  "rules": [
+    ".context/rules/project-rules.md"
+  ],
+  "decisions": [
+    ".context/decisions/DEC-0001-core-separation.md",
+    ".context/decisions/DEC-0002-local-context-only.md",
+    ".context/decisions/DEC-0003-repository-bootstrap.md",
+    ".context/decisions/DEC-0004-semantic-manifest-and-adoption.md"
+  ],
+  "dialogues": [],
+  "history": [],
+  "updated_at": "2026-09-19"
+}

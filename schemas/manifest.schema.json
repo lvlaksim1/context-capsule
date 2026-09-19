@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-capsule.local/schemas/manifest.schema.json",
+  "title": "Context Capsule navigation manifest",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "repository",
+    "authoritative_branch",
+    "entrypoint",
+    "capsule_metadata",
+    "latest_handoff",
+    "current_state",
+    "protocol",
+    "rules",
+    "decisions",
+    "dialogues",
+    "history",
+    "updated_at"
+  ],
+  "properties": {
+    "schema": {"const": "context-capsule-manifest"},
+    "schema_version": {"const": 1},
+    "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+    "authoritative_branch": {"type": "string", "minLength": 1},
+    "entrypoint": {"type": "string", "minLength": 1},
+    "capsule_metadata": {"type": "string", "minLength": 1},
+    "latest_handoff": {"type": "string", "minLength": 1},
+    "current_state": {"type": "string", "minLength": 1},
+    "protocol": {"type": "string", "minLength": 1},
+    "rules": {"type": "array", "items": {"type": "string"}},
+    "decisions": {"type": "array", "items": {"type": "string"}},
+    "dialogues": {"type": "array", "items": {"type": "string"}},
+    "history": {"type": "array", "items": {"type": "string"}},
+    "updated_at": {"type": "string", "format": "date"}
+  },
+  "additionalProperties": true
+}

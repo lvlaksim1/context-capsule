@@ -1,34 +1,25 @@
-# Installation protocol for agents
+# Installation and adoption protocol for agents
 
-This document defines the canonical bootstrap procedure when a user asks to install Context Capsule into a repository.
+## New repository
 
-## Inputs
+1. Select an explicit stable Context Capsule Core version.
+2. Inspect the target for `AI_CONTEXT.md`, `AGENTS.md`, `.context/`, and `.context/capsule.json`.
+3. If no capsule exists, run `install` with the target repository and authoritative branch.
+4. Perform initial context capture from the target repository only.
+5. Refresh/validate `.context/manifest.json`.
+6. Re-read `.context/ENTRYPOINT.md` and verify recovery against the live authoritative branch.
+7. Commit the installation in the target repository.
 
-- URL or `owner/name` of the target repository.
-- Access sufficient to read and write that repository.
-- This Context Capsule Core repository at an explicitly selected version/tag.
+## Existing legacy capsule
 
-## Procedure
+If `.context/` exists but `.context/capsule.json` does not, do **not** reinstall. Run `adopt`.
 
-1. Read `VERSION`, `spec/architecture.md`, and `spec/lifecycle.md` from Context Capsule Core.
-2. Inspect the target repository for `AI_CONTEXT.md` and `.context/capsule.json`.
-3. If a capsule already exists, do not reinstall. Validate it and use upgrade/repair as appropriate.
-4. Install the structure from `templates/` and generate `.context/capsule.json` pinned to the selected Core version.
-5. Validate the installed structure.
-6. Perform initial context capture **from the target repository only**:
-   - project purpose;
-   - durable rules and constraints;
-   - important accepted decisions visible from repository evidence;
-   - current state and active work;
-   - latest handoff / next operation.
-7. Write that captured context only into the target repository.
-8. Re-read `.context/ENTRYPOINT.md` from the installed repository and verify clean recovery is possible.
-9. Commit the capsule installation in the target repository.
+Adoption must preserve existing project context, including project-specific filenames and richer old structures. It may add missing system files and enrich the navigation manifest, but it must not rename or overwrite project-owned context merely to satisfy a template.
 
 ## Prohibited behavior
 
 - Do not copy target context into Context Capsule Core.
-- Do not create a central registry of target repositories.
-- Do not collect telemetry.
-- Do not silently upgrade an installed capsule.
-- Do not overwrite project-owned context during repair.
+- Do not create a central registry or telemetry store.
+- Do not silently upgrade versions.
+- Do not destroy superseded decisions or dialogue evidence.
+- Do not assume the handoff is current without checking the authoritative branch and relevant live evidence.

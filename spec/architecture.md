@@ -2,57 +2,50 @@
 
 ## Purpose
 
-Context Capsule provides durable, repository-local context for human/AI project work. A new agent should be able to recover project identity, constraints, decisions, current state, and the latest handoff from the repository itself.
+Context Capsule provides durable, repository-local context for human/AI project work. A fresh agent should recover project identity, constraints, accepted decisions, current state, evidence, and the latest handoff from the repository itself.
 
 ## Architectural invariants
 
 1. **Repository-local context.** The complete context of a target project is stored inside that target repository.
 2. **No reverse synchronization.** Context Capsule Core MUST NOT store, aggregate, mirror, index, or receive project context from target repositories.
-3. **Autonomous installed instance.** A target repository continues to use its installed capsule even when Context Capsule Core is unavailable.
-4. **Pinned version.** Each installed capsule records the exact capsule version in `.context/capsule.json`.
-5. **Explicit upgrades.** New Core versions do not silently change installed repositories. Upgrades require an explicit migration.
-6. **Ownership separation.** System-owned capsule files and project-owned context files have different lifecycle rules.
-7. **History preservation.** Upgrade and repair operations MUST NOT erase project decisions, history, rules, or handoffs.
-8. **No bootstrap ZIP dependency.** The canonical bootstrap source is this repository, not an out-of-band archive.
+3. **Autonomous installed instance.** A target repository continues to use its installed capsule even when Core is unavailable.
+4. **Pinned version.** Each installed capsule records its exact Core version in `.context/capsule.json`.
+5. **Explicit upgrades.** New Core versions do not silently change installed repositories.
+6. **Ownership separation.** System-owned capsule files and project-owned context have different lifecycle rules.
+7. **History preservation.** Upgrade, repair, and legacy adoption MUST NOT erase project decisions, dialogue evidence, history, rules, or handoffs.
+8. **Repository bootstrap.** The canonical bootstrap source is this repository, not an out-of-band ZIP archive.
+9. **Manifest navigation.** `.context/manifest.json` maps actual project-owned context paths; project content is not forced into one global filename convention.
+10. **Live-state verification.** Capsule recovery is incomplete until the agent reconciles stored context with the authoritative branch and relevant current repository/CI/runtime evidence.
 
-## Two layers
+## Core layer
 
-### Core layer
+Lives in this repository and contains installer/adopter/validator/repair/upgrade tooling, canonical templates, schemas, lifecycle rules, migrations, and conformance tests.
 
-Lives in this repository and contains:
+## Installed project layer
 
-- installer and validator;
-- canonical templates;
-- schema definitions;
-- lifecycle and precedence rules;
-- migrations;
-- conformance tests.
-
-### Installed project layer
-
-Lives in each target repository and contains:
+A standard installation contains:
 
 - `AI_CONTEXT.md` — discovery pointer;
-- `.context/ENTRYPOINT.md` — deterministic recovery entrypoint;
-- `.context/capsule.json` — installed schema/version metadata;
-- `.context/current/` — current project state;
-- `.context/rules/` — active project rules;
-- `.context/decisions/` — durable decisions;
-- `.context/handoffs/latest.md` — current session handoff;
-- `.context/history/` — compact historical records.
+- `AGENTS.md` — secondary agent discovery pointer;
+- `.context/ENTRYPOINT.md` — deterministic recovery protocol;
+- `.context/capsule.json` — technical installation/version passport;
+- `.context/manifest.json` — navigation index and authoritative branch;
+- `.context/protocol.md` — semantic/update rules;
+- `.context/current/` — current state;
+- `.context/rules/` — active rules;
+- `.context/decisions/` — durable decisions and supersession chain;
+- `.context/handoffs/latest.md` — current handoff;
+- `.context/dialogues/` — compact evidence-rich investigation records;
+- `.context/history/` — other compact historical context.
 
-## Ownership model
+## Two metadata files, two jobs
 
-System-owned files may be installed or repaired from Core:
+`capsule.json` answers: **what Context Capsule installation is this?**
 
-- `AI_CONTEXT.md`
-- `.context/ENTRYPOINT.md`
-- `.context/capsule.json` structure
+`manifest.json` answers: **where is this project's context and which branch is authoritative?**
 
-Project-owned files are never replaced by generic Core content after initial creation:
+Keeping these roles separate lets Core evolve technically without forcing project-owned context into a rigid filename layout.
 
-- `.context/current/**`
-- `.context/rules/**`
-- `.context/decisions/**`
-- `.context/handoffs/**`
-- `.context/history/**`
+## Legacy adoption
+
+`adopt` is the transition path for repositories that already contain a useful `.context/` created by older mechanisms. Adoption preserves existing context files and enriches them with Core metadata/navigation rather than reinstalling or renaming them.

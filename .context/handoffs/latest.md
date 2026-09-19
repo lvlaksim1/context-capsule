@@ -2,16 +2,26 @@
 
 ## Last completed work
 
-Created the canonical private repository `lvlaksim1/context-capsule` through Repo Factory and published Context Capsule Core v1.0.0 with installer, validator, templates, schema, lifecycle specification, migration registry, tests, CI, and self-hosted project context.
+Upgraded Context Capsule Core from v1.0.0 to v1.1.0 using lessons from the legacy capsule in `lvlaksim1/telegram-receiver`.
+
+Added:
+- `manifest.json` as a navigation index separate from `capsule.json`;
+- authoritative-branch metadata;
+- typed context semantics;
+- dialogue evidence layer;
+- `AGENTS.md` discovery pointer;
+- live repository/CI/runtime reconciliation requirement;
+- safe `adopt` lifecycle operation for legacy capsules;
+- executable v1.0.0 -> v1.1.0 migration.
 
 ## Verified state
 
-Initial unit tests pass. Self-validation passes.
+All five lifecycle tests pass and the central repository self-validates under v1.1.0.
 
 ## Next operation
 
-Verify the GitHub CI run for the published Core, then run a clean bootstrap test against another repository.
+Publish v1.1.0 and verify CI. After that, adopt the existing `telegram-receiver` legacy capsule without renaming or overwriting its project context.
 
 ## Constraints
 
-Do not place target repository context in Core. Do not silently adopt an unrelated existing `.context/`. Do not silently upgrade capsule versions.
+No target repository context may flow into Core. Legacy adoption must preserve richer existing context rather than replacing it with generic templates. Version changes remain explicit.
