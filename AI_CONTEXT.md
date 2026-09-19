@@ -1,9 +1,9 @@
-# AI Context
+<!-- context-capsule:begin -->
+# AI Context — Context Capsule managed discovery
 
-This repository uses Context Capsule.
+This repository stores its own durable Context Capsule.
 
-Start recovery at `.context/ENTRYPOINT.md`.
+Start at `.context/ENTRYPOINT.md`. The manifest maps stable project meaning, current state, rules, decisions, handoff, semantic memory index and any separate volatile runtime authority.
 
-The complete durable project context is stored in this repository. `.context/manifest.json` maps the authoritative context branch, project semantics, current working set, and evidence layers.
-
-Do not look for a central copy of project context in Context Capsule Core.
+A fresh chat must reconcile the stored capsule with live repository evidence before continuing substantial work. There is no central copy of this project's context in Context Capsule Core.
+<!-- context-capsule:end -->
