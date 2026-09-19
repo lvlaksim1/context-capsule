@@ -1,7 +1,5 @@
 # Current blockers and open risks
 
-## BLOCKER / OPEN
+CAPSULE_TODO: state unresolved blockers, uncertainties or risks, or explicitly record that none are known.
 
-Record only unresolved blockers, uncertainties, or risks that can affect the next work.
-
-Move resolved items to decisions/dialogues/history.
+Move resolved material to decisions/dialogues/history.
