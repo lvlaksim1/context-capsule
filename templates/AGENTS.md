@@ -1,8 +1,11 @@
-# Agent Instructions
+<!-- context-capsule:begin -->
+## Context Capsule — managed agent bootstrap
 
-Before substantial work, restore project context from `.context/ENTRYPOINT.md`.
+Before substantial work, restore repository context from `.context/ENTRYPOINT.md`.
 
-Follow `.context/manifest.json` for the authoritative context branch and actual project-context paths. After recovery, reconcile stored context with live repository/CI/runtime evidence.
+Use `.context/manifest.json` to locate the authoritative branch, stable project semantics, current working set, rules, decisions and runtime authorities. Reconcile stored context with current repository/CI/runtime evidence before treating it as current fact.
 
-Do not copy volatile runtime state into durable context unless it changes project semantics.
-Do not send project context to Context Capsule Core.
+When `.context/tools/capsule_runtime.py` is present, its `check --ready` command is the repository-local structural/readiness check and `resume` builds a bounded recovery pack.
+
+Persist semantic changes during work; do not copy routine heartbeats, queue churn or transient CI state into durable context. Never send target-project context back to Context Capsule Core.
+<!-- context-capsule:end -->
