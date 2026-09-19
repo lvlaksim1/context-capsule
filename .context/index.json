@@ -1,0 +1,67 @@
+{
+  "schema": "context-capsule-index",
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "DEC-0001-core-separation",
+      "type": "decision",
+      "status": "active",
+      "title": "DEC-0001 — Separate Context Capsule Core repository",
+      "summary": "Context Capsule is maintained as its own central repository, independent from application projects such as `ai-agent-lab`. The central repository contains the capsule implementation and its lifecycle rules. It is not a store for the context of repositories that use the capsule. Application projects must not become accidental infrastructure dependencies for the Context Capsule mechanism.",
+      "tags": [],
+      "path": ".context/decisions/DEC-0001-core-separation.md",
+      "updated_at": "2026-09-20"
+    },
+    {
+      "id": "DEC-0002-local-context-only",
+      "type": "decision",
+      "status": "active",
+      "title": "DEC-0002 — Target context remains local",
+      "summary": "The full context of a repository with an installed capsule is stored in that same repository. No part of that project's context is synchronized back to Context Capsule Core. - no central context registry; - no telemetry or installation statistics; - target repositories remain autonomous; - private project context stays under the target repository's own access controls.",
+      "tags": [],
+      "path": ".context/decisions/DEC-0002-local-context-only.md",
+      "updated_at": "2026-09-20"
+    },
+    {
+      "id": "DEC-0003-repository-bootstrap",
+      "type": "decision",
+      "status": "active",
+      "title": "DEC-0003 — Repository-based bootstrap",
+      "summary": "New installations should bootstrap from the canonical `context-capsule` repository rather than by passing a ZIP archive into a fresh chat. The bootstrap process is deterministic, version-pinned, validated, and non-destructive.",
+      "tags": [],
+      "path": ".context/decisions/DEC-0003-repository-bootstrap.md",
+      "updated_at": "2026-09-20"
+    },
+    {
+      "id": "DEC-0004-semantic-manifest-and-adoption",
+      "type": "decision",
+      "status": "active",
+      "title": "DEC-0004 — Semantic manifest and legacy adoption",
+      "summary": "Context Capsule Core v1.1.0 separates the technical installation passport (`capsule.json`) from the project navigation index (`manifest.json`). The manifest records the authoritative branch and actual paths to project-owned rules, current state, handoff, decisions, dialogue evidence, and history. Project-owned context is therefore not forced into one rigid global filename convention. Legacy capsul",
+      "tags": [],
+      "path": ".context/decisions/DEC-0004-semantic-manifest-and-adoption.md",
+      "updated_at": "2026-09-20"
+    },
+    {
+      "id": "DEC-0005-rich-context-working-set",
+      "type": "decision",
+      "status": "active",
+      "title": "DEC-0005 — Rich stable semantics, compact working set",
+      "summary": "Context Capsule v1.2 separates stable project semantics from the current working set. Stable project meaning lives in `project/{identity,goals,architecture,constraints}`. Current resumable work lives in `current/{state,blockers,next}` and must remain compact. Projects with a separate volatile runtime authority such as `.agent/` keep execution churn there; only durable semantic consequences are pro",
+      "tags": [],
+      "path": ".context/decisions/DEC-0005-rich-context-working-set.md",
+      "updated_at": "2026-09-20"
+    },
+    {
+      "id": "DEC-0006-clean-install-and-temporary-legacy",
+      "type": "decision",
+      "status": "active",
+      "title": "DEC-0006 — Clean installation and temporary legacy support",
+      "summary": "- Source: explicit user instructions in the current development conversation. The permanent installation scenario is clean installation into a repository without a capsule. Existing project memory must never be overwritten by a clean install. Legacy adoption, merging and version migration are TEMPORARY mechanisms. Keep them available and safe until the old capsules in `fgis-fsa-il`, `telegram-rece",
+      "tags": [],
+      "path": ".context/decisions/DEC-0006-clean-install-and-temporary-legacy.md",
+      "updated_at": "2026-09-20"
+    }
+  ],
+  "updated_at": "2026-09-20"
+}
