@@ -1,38 +1,32 @@
+<!-- context-capsule:begin -->
 # Context Capsule entrypoint
 
-## Recovery protocol
+## Fast recovery
 
-1. Read `.context/capsule.json`.
-2. Read `.context/manifest.json` and identify the authoritative context branch and discovery branch.
-3. Read project identity, goals, architecture, and constraints referenced by the manifest.
-4. Read active project rules.
-5. Read current state, blockers, and next actions.
-6. Read the latest handoff.
-7. Read relevant durable decisions.
-8. Read dialogue evidence only when chronology or reasoning matters.
-9. Read deeper history only when needed.
-10. Reconcile the recovered context with the live authoritative repository branch, current CI/workflows, and any declared runtime authority.
-11. If verified live facts are newer than stored context, live facts win; classify the semantic change and update the capsule before substantial work continues.
+1. Read `.context/capsule.json` and `.context/manifest.json`.
+2. Confirm the checked-out branch is the manifest's `authoritative_branch`.
+3. Read project identity, goals, architecture and constraints.
+4. Read all active project rules.
+5. Read `current/state.md`, `current/blockers.md`, `current/next.md` and the latest handoff.
+6. Read `.context/resume.json`. Treat `status=draft`, bootstrap-review entries, a fingerprint mismatch or newer implementation commits as a requirement to reconcile before continuing.
+7. Use `.context/index.json` to select only task-relevant durable decisions/dialogues/history; do not bulk-load history by default.
+8. Verify important stored claims against live code, CI/release evidence and any declared runtime authority.
+9. If verified live facts are newer, live facts win. Record the resulting semantic change before substantial work continues.
+
+If available, `python .context/tools/capsule_runtime.py check --ready` performs the repository-local readiness check and `python .context/tools/capsule_runtime.py resume --task "<task>"` emits a bounded recovery pack.
 
 ## Evidence priority
 
 1. current explicit user instruction;
 2. active confirmed requirement/decision;
-3. verified current code, CI, release, or runtime evidence;
-4. `.context/current/*`;
+3. verified current code, CI, release or runtime evidence;
+4. current semantic state;
 5. latest handoff;
-6. active rules;
+6. active project rules;
 7. historical decisions/dialogues;
 8. older README/docs.
 
-Do not silently reconcile contradictions. Record the conflict and request a decision only when work cannot safely continue.
+Do not silently resolve contradictions or erase superseded decisions. Use **FACT**, **DECISION**, **REQUIREMENT**, **RULE**, **PREFERENCE**, **HYPOTHESIS**, **BLOCKER**, **OPEN**, and **DEPRECATED** deliberately.
 
-## Context semantics
-
-Use: **FACT**, **DECISION**, **REQUIREMENT**, **RULE**, **PREFERENCE**, **HYPOTHESIS**, **BLOCKER**, **OPEN**, **DEPRECATED**.
-
-Never silently erase superseded decisions. Mark them superseded/deprecated and link to the replacement.
-
-Keep the current working set compact. Move resolved or superseded material into decisions, dialogues, or history rather than accumulating it in `current/` or `handoffs/latest.md`.
-
-Never synchronize project context back to Context Capsule Core.
+Keep `project/` durable and `current/` compact. Never synchronize project context back to Context Capsule Core.
+<!-- context-capsule:end -->
