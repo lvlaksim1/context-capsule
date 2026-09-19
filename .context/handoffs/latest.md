@@ -2,15 +2,17 @@
 
 ## Last completed work
 
-Prepared Context Capsule Core v1.2.0 from evidence gathered across all repositories with installed capsules.
+Released Context Capsule Core v1.2.0 from evidence gathered across all repositories with installed capsules.
 
-## Verified local state
+## Verified state
 
-Nine lifecycle tests pass individually, covering clean install, reinstall refusal, `fgis-fsa-il`-style legacy adoption, `ai-agent-lab` branch/runtime adoption, non-destructive repair, v1.1→v1.2 upgrade, chained v1.0→v1.1→v1.2 upgrade, compactness warnings, and expected-HEAD CAS protection.
+GitHub Actions for release commit `c15d72dc851f6f80b61d67b76a9cdf157639f85e` completed successfully. All nine lifecycle tests, central self-validation, and central self-audit passed.
+
+v1.2.0 now supports clean install, rich legacy adoption, branch-aware context discovery, separate volatile runtime authority, compact working-set warnings, CAS-guarded lifecycle mutation, and chained migrations from v1.0 through v1.2.
 
 ## Next operation
 
-Publish v1.2.0, verify GitHub Actions and central self-validation, then begin real legacy adoption with `fgis-fsa-il`.
+Begin real production adoption with `fgis-fsa-il`, preserving its richer project structure and rules exactly where useful.
 
 ## Constraints
 

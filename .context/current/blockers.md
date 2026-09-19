@@ -2,7 +2,6 @@
 
 ## OPEN
 
-- v1.2.0 must pass repository CI/self-validation after publication.
-- Real production adoption of the three legacy capsules has not yet been performed under v1.2.0.
+No Core release blocker is active.
 
-No known design blocker prevents release.
+The remaining unverified area is production adoption of the three real legacy capsules under v1.2.0. Those adoptions should be performed one by one and used as evidence for any further Core changes.
