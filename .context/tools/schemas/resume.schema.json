@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-capsule.local/schemas/resume.schema.json",
+  "title": "Context Capsule continuation checkpoint",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "status",
+    "summary",
+    "next_action",
+    "verified_branch",
+    "verified_head",
+    "working_set_sha256",
+    "bootstrap_review",
+    "evidence",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "context-capsule-resume"},
+    "schema_version": {"const": 1},
+    "status": {"enum": ["draft", "ready"]},
+    "summary": {"type": "string"},
+    "next_action": {"type": "string"},
+    "verified_branch": {"type": "string", "minLength": 1},
+    "verified_head": {"type": "string", "pattern": "^([0-9a-f]{40})?$"},
+    "working_set_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "bootstrap_review": {"type": "array", "items": {"type": "string"}},
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "reference"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {"enum": ["file", "commit", "ci", "release", "runtime"]},
+          "reference": {"type": "string", "minLength": 1},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "updated_at": {"type": "string", "format": "date-time"}
+  }
+}
