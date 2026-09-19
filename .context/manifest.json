@@ -1,6 +1,6 @@
 {
   "schema": "context-capsule-manifest",
-  "schema_version": 2,
+  "schema_version": 3,
   "repository": "lvlaksim1/context-capsule",
   "authoritative_branch": "work/seamless-context-v1.3",
   "discovery_branch": "work/seamless-context-v1.3",
@@ -44,5 +44,7 @@
     "volatile_runtime_excluded": true,
     "cas_required_when_expected_head_supplied": true
   },
-  "updated_at": "2026-09-20"
+  "updated_at": "2026-09-20",
+  "resume": ".context/resume.json",
+  "memory_index": ".context/index.json"
 }
