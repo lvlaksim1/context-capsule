@@ -283,7 +283,7 @@ def merge_manifest(
     manifest.update(
         {
             "schema": "context-capsule-manifest",
-            "schema_version": 2,
+            "schema_version": 3,
             "repository": repository,
             "authoritative_branch": authoritative_branch,
             "discovery_branch": discovered_branch,
@@ -292,6 +292,8 @@ def merge_manifest(
             "capsule_metadata": ".context/capsule.json",
             "protocol": protocol,
             "latest_handoff": latest_handoff,
+            "resume": ".context/resume.json",
+            "memory_index": ".context/index.json",
             "project": project,
             "current": current,
             "current_state": current["state"],
