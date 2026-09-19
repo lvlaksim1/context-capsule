@@ -2,6 +2,8 @@
 
 ## FACT
 
-Core v1.2.0 remains the released baseline on main (`2965c17`). This development branch contains an unfinished hardening checkpoint, not a new release.
+Released baseline remains Core v1.2.0 on `main` at `2965c17`. Development is isolated on `work/seamless-context-v1.3`; draft PR #1 is open and must not be merged yet.
 
-The corrected scope keeps legacy migration available temporarily. Initial safety/recovery modules exist but are NOT connected to the original installer. See the latest handoff for exact files and limitations.
+The v1.3 implementation is now integrated rather than merely drafted: lifecycle mutations are transaction-planned and journaled, repository paths/symlinks are confined, checkout/dirty-context preconditions are enforced, schema v3 is executable, managed bootstrap blocks preserve pre-existing project instructions, and each installed repository receives local validation/recovery tooling plus `index.json` and `resume.json`.
+
+The central repository itself has been migrated structurally to the v1.3 format. Final correctness is not yet claimed because the complete cross-platform test matrix and production-copy migration tests are still pending.
