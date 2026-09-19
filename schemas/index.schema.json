@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://context-capsule.local/schemas/index.schema.json",
+  "title": "Context Capsule semantic memory index",
+  "type": "object",
+  "required": ["schema", "schema_version", "records", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "context-capsule-index"},
+    "schema_version": {"const": 1},
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "status", "title", "summary", "tags", "path"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "type": {"enum": ["decision", "dialogue", "history"]},
+          "status": {"enum": ["active", "superseded", "deprecated", "closed", "reference"]},
+          "title": {"type": "string", "minLength": 1},
+          "summary": {"type": "string"},
+          "tags": {"type": "array", "items": {"type": "string"}},
+          "path": {"type": "string", "minLength": 1},
+          "updated_at": {"type": "string", "format": "date"}
+        }
+      }
+    },
+    "updated_at": {"type": "string", "format": "date"}
+  }
+}
