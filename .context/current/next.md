@@ -1,7 +1,8 @@
 # Next actions
 
-1. Read the latest handoff and DEC-0006; do not repeat the broad audit.
-2. Integrate safe staged lifecycle mutation and test actual failure cases.
-3. Integrate schema enforcement, managed bootstrap and ready/draft recovery.
-4. Verify offline continuation and Windows/Linux behavior before publishing to main.
-5. Retain temporary migration mechanisms until the three old project capsules have been migrated and verified.
+1. Finish adapting the existing lifecycle tests to v1.3 and add managed-bootstrap/readiness regressions.
+2. Run CI on Linux and Windows/Python matrix; inspect logs and fix every failure.
+3. Exercise clean install, legacy adopt, chained upgrade, repair, rollback/interruption and fresh-chat recovery end to end.
+4. Test migrations against disposable copies of the three real legacy capsule shapes.
+5. Update specifications/README from verified behavior, create a ready central checkpoint, then prepare the release/merge to `main`.
+6. Keep legacy migration/adoption code until the three real repositories are migrated and verified; removal remains a later evidence-gated task.
