@@ -14,6 +14,8 @@
     "capsule_metadata",
     "protocol",
     "latest_handoff",
+    "resume",
+    "memory_index",
     "project",
     "current",
     "rules",
@@ -26,8 +28,8 @@
   ],
   "properties": {
     "schema": {"const": "context-capsule-manifest"},
-    "schema_version": {"const": 2},
-    "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+    "schema_version": {"const": 3},
+    "repository": {"type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$"},
     "authoritative_branch": {"type": "string", "minLength": 1},
     "discovery_branch": {"type": "string", "minLength": 1},
     "branch_mode": {"enum": ["single", "redirect"]},
@@ -35,6 +37,8 @@
     "capsule_metadata": {"type": "string", "minLength": 1},
     "protocol": {"type": "string", "minLength": 1},
     "latest_handoff": {"type": "string", "minLength": 1},
+    "resume": {"type": "string", "minLength": 1},
+    "memory_index": {"type": "string", "minLength": 1},
     "project": {
       "type": "object",
       "required": ["identity", "goals", "architecture", "constraints"],
@@ -73,7 +77,11 @@
     },
     "sync_policy": {
       "type": "object",
-      "required": ["semantic_only", "volatile_runtime_excluded", "cas_required_when_expected_head_supplied"],
+      "required": [
+        "semantic_only",
+        "volatile_runtime_excluded",
+        "cas_required_when_expected_head_supplied"
+      ],
       "properties": {
         "semantic_only": {"const": true},
         "volatile_runtime_excluded": {"const": true},
