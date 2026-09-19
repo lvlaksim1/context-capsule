@@ -10,8 +10,52 @@ CLI = ROOT / "installer" / "capsulectl.py"
 
 
 class CapsuleCtlTests(unittest.TestCase):
-    def run_cli(self, *args, cwd=None):
-        return subprocess.run([sys.executable, str(CLI), *args], text=True, capture_output=True, cwd=cwd)
+    def _git(self, target, *args, check=True):
+        return subprocess.run(
+            ["git", *args],
+            cwd=target,
+            text=True,
+            capture_output=True,
+            check=check,
+        )
+
+    def _prepare_git_fixture(self, args):
+        if not args or args[0] not in {"install", "adopt", "repair", "upgrade"}:
+            return
+        if "--target" not in args:
+            return
+        target = Path(args[args.index("--target") + 1])
+        target.mkdir(parents=True, exist_ok=True)
+        created = not (target / ".git").exists()
+        if created:
+            self._git(target, "init", "-b", "main")
+            self._git(target, "config", "user.email", "test@example.com")
+            self._git(target, "config", "user.name", "Context Capsule Test")
+            if not any(target.iterdir()):
+                (target / ".test-anchor").write_text("fixture\n")
+            self._git(target, "add", ".")
+            self._git(target, "commit", "-m", "fixture")
+            if "--branch" in args:
+                desired = args[args.index("--branch") + 1]
+                if desired != "main":
+                    self._git(target, "checkout", "-b", desired)
+        else:
+            self._git(target, "config", "user.email", "test@example.com")
+            self._git(target, "config", "user.name", "Context Capsule Test")
+            status = self._git(target, "status", "--porcelain").stdout.strip()
+            if status:
+                self._git(target, "add", ".")
+                self._git(target, "commit", "-m", "fixture update")
+
+    def run_cli(self, *args, cwd=None, prepare=True):
+        if prepare:
+            self._prepare_git_fixture(args)
+        return subprocess.run(
+            [sys.executable, str(CLI), *args],
+            text=True,
+            capture_output=True,
+            cwd=cwd,
+        )
 
     def test_install_creates_v12_structure(self):
         with tempfile.TemporaryDirectory() as td:
