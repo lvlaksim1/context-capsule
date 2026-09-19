@@ -31,7 +31,7 @@ class CapsuleCtlTests(unittest.TestCase):
             self._git(target, "init", "-b", "main")
             self._git(target, "config", "user.email", "test@example.com")
             self._git(target, "config", "user.name", "Context Capsule Test")
-            if not any(target.iterdir()):
+            if not self._git(target, "status", "--porcelain").stdout.strip():
                 (target / ".test-anchor").write_text("fixture\n")
             self._git(target, "add", ".")
             self._git(target, "commit", "-m", "fixture")
@@ -57,7 +57,7 @@ class CapsuleCtlTests(unittest.TestCase):
             cwd=cwd,
         )
 
-    def test_install_creates_v12_structure(self):
+    def test_install_creates_v13_structure(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td) / "repo"
             target.mkdir()
@@ -68,13 +68,17 @@ class CapsuleCtlTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             metadata = json.loads((target / ".context/capsule.json").read_text(encoding="utf-8"))
             manifest = json.loads((target / ".context/manifest.json").read_text(encoding="utf-8"))
-            self.assertEqual(metadata["version"], "1.2.0")
-            self.assertEqual(manifest["schema_version"], 2)
+            self.assertEqual(metadata["version"], "1.3.0")
+            self.assertEqual(manifest["schema_version"], 3)
             self.assertEqual(manifest["branch_mode"], "single")
             self.assertEqual(manifest["project"]["identity"], ".context/project/identity.md")
             self.assertEqual(manifest["current"]["blockers"], ".context/current/blockers.md")
             self.assertTrue((target / ".context/current/next.md").exists())
             self.assertTrue((target / ".context/project/architecture.md").exists())
+            self.assertTrue((target / ".context/resume.json").exists())
+            self.assertTrue((target / ".context/index.json").exists())
+            self.assertTrue((target / ".context/tools/capsule_runtime.py").exists())
+            self.assertIn("managed_files", metadata)
 
     def test_reinstall_refused(self):
         with tempfile.TemporaryDirectory() as td:
@@ -145,7 +149,11 @@ class CapsuleCtlTests(unittest.TestCase):
                     ".context/rules/ai-rules.md",
                 ],
             )
-            self.assertEqual((target / ".context/ENTRYPOINT.md").read_text(), "CUSTOM ENTRYPOINT\n")
+            entrypoint = (target / ".context/ENTRYPOINT.md").read_text()
+            self.assertIn("CUSTOM ENTRYPOINT", entrypoint)
+            self.assertIn("context-capsule:begin", entrypoint)
+            resume = json.loads((target / ".context/resume.json").read_text())
+            self.assertIn(".context/ENTRYPOINT.md", resume["bootstrap_review"])
             self.assertFalse((target / ".context/rules/project-rules.md").exists())
 
     def test_ai_agent_style_branch_and_runtime_are_detected(self):
@@ -195,7 +203,7 @@ class CapsuleCtlTests(unittest.TestCase):
             self.assertEqual(rule.read_text(), "PROJECT DATA\n")
             self.assertTrue((target / ".context/current/blockers.md").exists())
 
-    def test_upgrade_1_1_to_1_2_preserves_state(self):
+    def test_upgrade_1_1_to_1_3_preserves_state(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td) / "repo"
             (target / ".context/current").mkdir(parents=True)
@@ -246,13 +254,13 @@ class CapsuleCtlTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             new_meta = json.loads((target / ".context/capsule.json").read_text())
             new_manifest = json.loads((target / ".context/manifest.json").read_text())
-            self.assertEqual(new_meta["version"], "1.2.0")
-            self.assertEqual(new_manifest["schema_version"], 2)
+            self.assertEqual(new_meta["version"], "1.3.0")
+            self.assertEqual(new_manifest["schema_version"], 3)
             self.assertEqual((target / ".context/current/state.md").read_text(), "IMPORTANT STATE\n")
             self.assertTrue((target / ".context/current/blockers.md").exists())
             self.assertTrue((target / ".context/project/identity.md").exists())
 
-    def test_upgrade_1_0_chains_to_1_2(self):
+    def test_upgrade_1_0_chains_to_1_3(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td) / "repo"
             (target / ".context/current").mkdir(parents=True)
@@ -272,9 +280,10 @@ class CapsuleCtlTests(unittest.TestCase):
             (target / ".context/capsule.json").write_text(json.dumps(meta))
             result = self.run_cli("upgrade", "--target", str(target))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            self.assertIn("migrated 1.0.0 -> 1.1.0", result.stdout)
-            self.assertIn("migrated 1.1.0 -> 1.2.0", result.stdout)
-            self.assertEqual(json.loads((target / ".context/capsule.json").read_text())["version"], "1.2.0")
+            self.assertIn("migrate 1.0.0 -> 1.1.0", result.stdout)
+            self.assertIn("migrate 1.1.0 -> 1.2.0", result.stdout)
+            self.assertIn("migrate 1.2.0 -> 1.3.0", result.stdout)
+            self.assertEqual(json.loads((target / ".context/capsule.json").read_text())["version"], "1.3.0")
 
     def test_compactness_warning_is_non_fatal(self):
         with tempfile.TemporaryDirectory() as td:
