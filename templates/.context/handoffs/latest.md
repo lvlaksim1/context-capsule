@@ -1,17 +1,5 @@
 # Latest handoff
 
-## Last completed work
+CAPSULE_TODO: replace this template with a concise evidence-backed transfer.
 
-No handoff recorded yet.
-
-## Verified current state
-
-Not yet captured.
-
-## Next operation
-
-Perform initial context capture from the target repository.
-
-## Constraints
-
-Preserve existing repository content. Reconcile with live evidence. Do not send project context to Context Capsule Core.
+Include the last completed work, verified current state, next concrete operation and constraints needed by a fresh chat.
