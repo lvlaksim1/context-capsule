@@ -81,29 +81,61 @@ def required_paths(manifest: dict) -> list[str]:
     )
 
 
+def semantic_manifest_view(manifest: dict) -> dict:
+    keys = (
+        "repository",
+        "authoritative_branch",
+        "discovery_branch",
+        "branch_mode",
+        "latest_handoff",
+        "project",
+        "current",
+        "rules",
+        "decisions",
+        "dialogues",
+        "history",
+        "runtime",
+        "sync_policy",
+    )
+    return {key: manifest.get(key) for key in keys}
+
+
 def fingerprint(
     root: Path,
     manifest: dict,
     fallback: Path | None = None,
 ) -> str:
-    """Hash the durable semantic working set, excluding resume.json itself."""
+    """Hash durable project semantics while ignoring purely technical refreshes."""
     hasher = hashlib.sha256()
-    paths = required_paths(manifest) + sum(
-        (manifest[key] for key in ("decisions", "dialogues", "history")),
-        [],
-    )
+    manifest_view = json.dumps(
+        semantic_manifest_view(manifest),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    hasher.update(b"@manifest-semantic\\0" + manifest_view + b"\\0")
+
     index = json.loads(read(root, manifest["memory_index"], fallback))
-    paths += [item["path"] for item in index["records"]]
+    paths = [
+        *(manifest["project"][key] for key in ("identity", "goals", "architecture", "constraints")),
+        *manifest["rules"],
+        *(manifest["current"][key] for key in ("state", "blockers", "next")),
+        manifest["latest_handoff"],
+        manifest["memory_index"],
+        *manifest["decisions"],
+        *manifest["dialogues"],
+        *manifest["history"],
+        *(item["path"] for item in index["records"]),
+    ]
 
     for rel in sorted(set(paths)):
         hasher.update(
             rel.encode("utf-8")
-            + b"\0"
+            + b"\\0"
             + read(root, rel, fallback).encode("utf-8")
-            + b"\0"
+            + b"\\0"
         )
     return hasher.hexdigest()
-
 
 def _schema(root: Path, name: str, directory: Path | None) -> dict:
     if directory:
