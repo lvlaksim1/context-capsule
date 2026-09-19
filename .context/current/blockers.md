@@ -1,9 +1,10 @@
 # Current blockers and open risks
 
-## BLOCKER
-
-The new safety/recovery modules are unintegrated drafts. Existing v1.2 defects remain active. This branch is not ready for release or production migration.
-
 ## OPEN
 
-Strict schemas, templates, CLI integration and focused regression tests remain to be implemented. No real target repository has been changed.
+- Run the complete v1.3 regression suite and inspect actual failures.
+- Add/verify Windows coverage for locking, atomic replacement and recovery.
+- Verify migration against copies of `fgis-fsa-il`, `telegram-receiver` and `ai-agent-lab` before touching the real repositories.
+- Recompute and mark the central `resume.json` checkpoint ready only after verification.
+
+No known architectural blocker currently requires redesign; remaining work is verification and defect correction.
