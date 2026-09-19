@@ -291,9 +291,9 @@ class CapsuleCtlTests(unittest.TestCase):
             target.mkdir()
             self.assertEqual(self.run_cli("install", "--target", str(target), "--repository", "owner/repo").returncode, 0)
             (target / ".context/current/state.md").write_text("x" * 13000)
-            result = self.run_cli("validate", "--target", str(target))
+            result = self.run_cli("audit", "--target", str(target))
             self.assertEqual(result.returncode, 0)
-            self.assertIn("review for resolved/history material", result.stdout)
+            self.assertIn("compact resolved/history material", result.stdout)
 
     def test_expected_head_cas_guard(self):
         with tempfile.TemporaryDirectory() as td:
