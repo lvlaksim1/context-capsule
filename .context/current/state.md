@@ -12,11 +12,11 @@ Installed capsules are autonomous and version-pinned. Core is consulted only for
 
 ## Current status
 
-Core v1.0.0 bootstrap implementation is prepared and passes its initial tests. The canonical private repository `lvlaksim1/context-capsule` has been created through `lvlaksim1/repo-factory`.
+Core v1.0.0 is published in the canonical private repository `lvlaksim1/context-capsule`. Initial local tests and self-validation pass.
 
 ## Active work
 
-Publish this v1.0.0 bootstrap to `lvlaksim1/context-capsule`, then verify clean installation into a separate test repository.
+Verify the published GitHub CI run, then perform a clean installation/bootstrap test against a separate repository.
 
 ## Known blockers
 

@@ -2,7 +2,7 @@
 
 ## Last completed work
 
-Designed and implemented the initial Context Capsule Core v1.0.0 bootstrap locally. Added installer, validator, templates, schema, lifecycle specification, migration registry, tests, CI, and self-hosted project context.
+Created the canonical private repository `lvlaksim1/context-capsule` through Repo Factory and published Context Capsule Core v1.0.0 with installer, validator, templates, schema, lifecycle specification, migration registry, tests, CI, and self-hosted project context.
 
 ## Verified state
 
@@ -10,7 +10,7 @@ Initial unit tests pass. Self-validation passes.
 
 ## Next operation
 
-Publish the current tree to the newly created `lvlaksim1/context-capsule`, then run a clean bootstrap test against another repository.
+Verify the GitHub CI run for the published Core, then run a clean bootstrap test against another repository.
 
 ## Constraints
 
