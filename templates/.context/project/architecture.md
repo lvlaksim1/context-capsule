@@ -1,7 +1,5 @@
 # Project architecture
 
-## FACT / DECISION — Architecture
-
-Capture the stable high-level architecture, major components, authoritative data/state boundaries, and important integration contracts.
+CAPSULE_TODO: replace this template with the verified stable architecture, authoritative state boundaries and important integration contracts.
 
 Volatile runtime values do not belong here.
