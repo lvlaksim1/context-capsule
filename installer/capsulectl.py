@@ -945,25 +945,28 @@ def dirty_capsule_state(target: Path) -> str:
 
 
 def non_capsule_dirty_paths(target: Path) -> list[str]:
-    process = git(
-        target,
-        "status",
-        "--porcelain=v1",
-        "--untracked-files=all",
-        required=False,
-    )
+    """Return dirty paths outside the capsule without parsing porcelain records.
+
+    Using name-only Git commands avoids quoting/rename/path-prefix ambiguities
+    across platforms. The checkpoint only needs to know whether implementation
+    state outside the capsule is uncommitted.
+    """
     result: list[str] = []
-    for line in process.splitlines():
-        if len(line) < 4:
-            continue
-        path = line[3:].strip()
-        if " -> " in path:
-            path = path.split(" -> ", 1)[1].strip()
-        path = path.strip('"')
-        if path in ("AGENTS.md", "AI_CONTEXT.md") or path.startswith(".context/"):
-            continue
-        result.append(path)
-    return result
+    commands = (
+        ("diff", "--name-only"),
+        ("diff", "--cached", "--name-only"),
+        ("ls-files", "--others", "--exclude-standard"),
+    )
+    for command in commands:
+        output = git(target, *command, required=False)
+        for path in output.splitlines():
+            path = path.strip()
+            if not path:
+                continue
+            if path in ("AGENTS.md", "AI_CONTEXT.md") or path.startswith(".context/"):
+                continue
+            result.append(path)
+    return list(dict.fromkeys(result))
 
 
 def mutation_context(target: Path, args: argparse.Namespace):
