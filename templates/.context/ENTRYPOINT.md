@@ -2,31 +2,37 @@
 
 ## Recovery protocol
 
-1. Read `.context/capsule.json` to identify the installed Context Capsule version.
-2. Read `.context/manifest.json`; it is the navigation index for the actual project-context paths and authoritative branch.
-3. Read the manifest-referenced project rules.
-4. Read the manifest-referenced current state.
-5. Read the latest handoff.
-6. Read relevant durable decisions.
-7. Read dialogue evidence only when the reasoning or observed chronology matters.
-8. Read deeper history only when needed.
-9. Verify the recovered state against the live repository at the current authoritative branch/commit, including relevant CI/workflows/runtime evidence.
-10. If repository facts are newer than the capsule, repository facts win; update the capsule before substantial work continues.
+1. Read `.context/capsule.json`.
+2. Read `.context/manifest.json` and identify the authoritative context branch and discovery branch.
+3. Read project identity, goals, architecture, and constraints referenced by the manifest.
+4. Read active project rules.
+5. Read current state, blockers, and next actions.
+6. Read the latest handoff.
+7. Read relevant durable decisions.
+8. Read dialogue evidence only when chronology or reasoning matters.
+9. Read deeper history only when needed.
+10. Reconcile the recovered context with the live authoritative repository branch, current CI/workflows, and any declared runtime authority.
+11. If verified live facts are newer than stored context, live facts win; classify the semantic change and update the capsule before substantial work continues.
+
+## Evidence priority
+
+1. current explicit user instruction;
+2. active confirmed requirement/decision;
+3. verified current code, CI, release, or runtime evidence;
+4. `.context/current/*`;
+5. latest handoff;
+6. active rules;
+7. historical decisions/dialogues;
+8. older README/docs.
+
+Do not silently reconcile contradictions. Record the conflict and request a decision only when work cannot safely continue.
 
 ## Context semantics
 
-Use these record types when writing durable context:
+Use: **FACT**, **DECISION**, **REQUIREMENT**, **RULE**, **PREFERENCE**, **HYPOTHESIS**, **BLOCKER**, **OPEN**, **DEPRECATED**.
 
-- **FACT** — verified observation.
-- **DECISION** — accepted architectural or implementation choice.
-- **REQUIREMENT** — behavior or invariant that must hold.
-- **RULE** — durable operating rule for the project.
-- **PREFERENCE** — user preference that materially affects implementation.
-- **HYPOTHESIS** — unverified explanation.
-- **BLOCKER** — condition preventing progress.
-- **OPEN** — unresolved work or question.
-- **DEPRECATED** — old approach retained for history only.
+Never silently erase superseded decisions. Mark them superseded/deprecated and link to the replacement.
 
-Never silently erase superseded decisions. Mark them superseded/deprecated and link to the replacement when possible.
+Keep the current working set compact. Move resolved or superseded material into decisions, dialogues, or history rather than accumulating it in `current/` or `handoffs/latest.md`.
 
-Never send or synchronize project context back to Context Capsule Core.
+Never synchronize project context back to Context Capsule Core.

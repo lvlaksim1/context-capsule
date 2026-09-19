@@ -2,4 +2,4 @@
 
 No project-specific rules have been captured yet.
 
-Add only durable active rules here. Keep superseded rules traceable in decisions/history instead of silently rewriting history.
+Store only durable active rules here. Preserve superseded rules through decisions/history rather than silently rewriting history.

@@ -8,31 +8,79 @@
     "schema_version",
     "repository",
     "authoritative_branch",
+    "discovery_branch",
+    "branch_mode",
     "entrypoint",
     "capsule_metadata",
-    "latest_handoff",
-    "current_state",
     "protocol",
+    "latest_handoff",
+    "project",
+    "current",
     "rules",
     "decisions",
     "dialogues",
     "history",
+    "runtime",
+    "sync_policy",
     "updated_at"
   ],
   "properties": {
     "schema": {"const": "context-capsule-manifest"},
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 2},
     "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
     "authoritative_branch": {"type": "string", "minLength": 1},
+    "discovery_branch": {"type": "string", "minLength": 1},
+    "branch_mode": {"enum": ["single", "redirect"]},
     "entrypoint": {"type": "string", "minLength": 1},
     "capsule_metadata": {"type": "string", "minLength": 1},
-    "latest_handoff": {"type": "string", "minLength": 1},
-    "current_state": {"type": "string", "minLength": 1},
     "protocol": {"type": "string", "minLength": 1},
+    "latest_handoff": {"type": "string", "minLength": 1},
+    "project": {
+      "type": "object",
+      "required": ["identity", "goals", "architecture", "constraints"],
+      "properties": {
+        "identity": {"type": "string", "minLength": 1},
+        "goals": {"type": "string", "minLength": 1},
+        "architecture": {"type": "string", "minLength": 1},
+        "constraints": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "current": {
+      "type": "object",
+      "required": ["state", "blockers", "next"],
+      "properties": {
+        "state": {"type": "string", "minLength": 1},
+        "blockers": {"type": "string", "minLength": 1},
+        "next": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": true
+    },
+    "current_state": {"type": "string"},
     "rules": {"type": "array", "items": {"type": "string"}},
     "decisions": {"type": "array", "items": {"type": "string"}},
     "dialogues": {"type": "array", "items": {"type": "string"}},
     "history": {"type": "array", "items": {"type": "string"}},
+    "runtime": {
+      "type": "object",
+      "required": ["authoritative_paths", "volatile", "promote_semantic_changes_only"],
+      "properties": {
+        "authoritative_paths": {"type": "array", "items": {"type": "string"}},
+        "volatile": {"type": "boolean"},
+        "promote_semantic_changes_only": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "sync_policy": {
+      "type": "object",
+      "required": ["semantic_only", "volatile_runtime_excluded", "cas_required_when_expected_head_supplied"],
+      "properties": {
+        "semantic_only": {"const": true},
+        "volatile_runtime_excluded": {"const": true},
+        "cas_required_when_expected_head_supplied": {"const": true}
+      },
+      "additionalProperties": true
+    },
     "updated_at": {"type": "string", "format": "date"}
   },
   "additionalProperties": true

@@ -4,7 +4,7 @@
 
 No handoff recorded yet.
 
-## Verified state
+## Verified current state
 
 Not yet captured.
 
@@ -14,4 +14,4 @@ Perform initial context capture from the target repository.
 
 ## Constraints
 
-Preserve existing repository content. Do not send project context to Context Capsule Core.
+Preserve existing repository content. Reconcile with live evidence. Do not send project context to Context Capsule Core.

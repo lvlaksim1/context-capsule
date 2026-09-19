@@ -1,15 +1,12 @@
 # Decisions
 
-Store durable project decisions here.
+Store durable decisions here.
 
 Recommended fields:
-
-- ID or date-based filename;
-- date;
+- ID/date;
+- semantic type: DECISION;
 - status: active / superseded / deprecated;
 - decision;
 - rationale;
 - supersedes / superseded-by;
-- evidence or commit reference when useful.
-
-Never silently rewrite an old accepted decision when architecture changes. Preserve the old decision and point to its replacement.
+- evidence/commit reference when useful.

@@ -19,3 +19,5 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Self-validate central capsule
         run: python installer/capsulectl.py validate --target .
+      - name: Self-audit central capsule
+        run: python installer/capsulectl.py audit --target .

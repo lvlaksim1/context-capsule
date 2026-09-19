@@ -1,25 +1,29 @@
-# Installation and adoption protocol for agents
+# Installation and adoption protocol
 
 ## New repository
 
-1. Select an explicit stable Context Capsule Core version.
-2. Inspect the target for `AI_CONTEXT.md`, `AGENTS.md`, `.context/`, and `.context/capsule.json`.
-3. If no capsule exists, run `install` with the target repository and authoritative branch.
-4. Perform initial context capture from the target repository only.
-5. Refresh/validate `.context/manifest.json`.
-6. Re-read `.context/ENTRYPOINT.md` and verify recovery against the live authoritative branch.
-7. Commit the installation in the target repository.
+1. Select an explicit stable Core version.
+2. Inspect the target for existing discovery/context files.
+3. Install on the authoritative context branch.
+4. Capture stable project identity/goals/architecture/constraints from repository evidence.
+5. Capture compact current state/blockers/next.
+6. Record rules, decisions, and handoff.
+7. Validate/audit and reconcile against live repository/CI/runtime state.
 
 ## Existing legacy capsule
 
-If `.context/` exists but `.context/capsule.json` does not, do **not** reinstall. Run `adopt`.
+Use `adopt`; never reinstall over useful `.context/`.
 
-Adoption must preserve existing project context, including project-specific filenames and richer old structures. It may add missing system files and enrich the navigation manifest, but it must not rename or overwrite project-owned context merely to satisfy a template.
+Adoption preserves rich legacy paths, recognizes old authoritative maps, detects split context/discovery branches and `.agent/` runtime authority, and adds only missing standard structure.
 
-## Prohibited behavior
+## Concurrency
 
-- Do not copy target context into Context Capsule Core.
-- Do not create a central registry or telemetry store.
-- Do not silently upgrade versions.
-- Do not destroy superseded decisions or dialogue evidence.
-- Do not assume the handoff is current without checking the authoritative branch and relevant live evidence.
+For mutating lifecycle operations, use `--expected-head` when a Git HEAD is known. A mismatch aborts rather than overwriting concurrent changes.
+
+## Prohibited
+
+- no reverse context sync into Core;
+- no telemetry/central registry;
+- no silent version upgrade;
+- no flattening of richer legacy context;
+- no copying routine runtime churn into durable `.context/`.

@@ -2,26 +2,16 @@
 
 ## Last completed work
 
-Released Context Capsule Core v1.1.0 using lessons from the legacy capsule in `lvlaksim1/telegram-receiver`.
+Prepared Context Capsule Core v1.2.0 from evidence gathered across all repositories with installed capsules.
 
-Added:
-- `manifest.json` as a navigation index separate from `capsule.json`;
-- authoritative-branch metadata;
-- typed context semantics;
-- dialogue evidence layer;
-- `AGENTS.md` discovery pointer;
-- live repository/CI/runtime reconciliation requirement;
-- safe `adopt` lifecycle operation for legacy capsules;
-- executable v1.0.0 -> v1.1.0 migration.
+## Verified local state
 
-## Verified state
-
-The release commit passed GitHub Actions. All five lifecycle tests and central self-validation are green.
+Nine lifecycle tests pass individually, covering clean install, reinstall refusal, `fgis-fsa-il`-style legacy adoption, `ai-agent-lab` branch/runtime adoption, non-destructive repair, v1.1→v1.2 upgrade, chained v1.0→v1.1→v1.2 upgrade, compactness warnings, and expected-HEAD CAS protection.
 
 ## Next operation
 
-Use `telegram-receiver` as the first real legacy-adoption target, preserving its richer project-specific context and filenames.
+Publish v1.2.0, verify GitHub Actions and central self-validation, then begin real legacy adoption with `fgis-fsa-il`.
 
 ## Constraints
 
-No target repository context may flow into Core. Legacy adoption must preserve richer existing context rather than replacing it with generic templates. Version changes remain explicit.
+Do not flatten richer legacy context. Do not copy volatile runtime churn into `.context`. Do not send target context to Core.

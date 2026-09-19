@@ -1,7 +1,8 @@
 # Agent Instructions
 
-Before changing this repository, restore project context from `.context/ENTRYPOINT.md`.
+Before substantial work, restore project context from `.context/ENTRYPOINT.md`.
 
-Follow `.context/manifest.json` for the authoritative branch and actual project-context paths. After recovery, verify the live repository state before substantial edits.
+Follow `.context/manifest.json` for the authoritative context branch and actual project-context paths. After recovery, reconcile stored context with live repository/CI/runtime evidence.
 
+Do not copy volatile runtime state into durable context unless it changes project semantics.
 Do not send project context to Context Capsule Core.

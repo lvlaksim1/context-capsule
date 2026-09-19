@@ -1,11 +1,17 @@
 {
   "schema": "context-capsule-migrations",
-  "current": "1.1.0",
+  "current": "1.2.0",
   "migrations": [
     {
       "from": "1.0.0",
       "to": "1.1.0",
       "operation": "builtin:1.0.0-to-1.1.0",
+      "preserves_project_context": true
+    },
+    {
+      "from": "1.1.0",
+      "to": "1.2.0",
+      "operation": "builtin:1.1.0-to-1.2.0",
       "preserves_project_context": true
     }
   ]

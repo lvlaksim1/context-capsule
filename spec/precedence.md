@@ -1,15 +1,16 @@
-# Context precedence
+# Evidence precedence
 
-When recovering a project, use the following precedence:
+When sources conflict:
 
-1. verified repository/runtime facts at the current authoritative branch/commit;
-2. explicit active project rules indexed by `.context/manifest.json`;
-3. accepted durable decisions;
-4. current state;
+1. current explicit user instruction;
+2. active confirmed project requirement/decision;
+3. verified current code, CI, release, or runtime evidence;
+4. current semantic state;
 5. latest handoff;
-6. dialogue evidence when chronology/reasoning matters;
-7. other historical records.
+6. active project rules;
+7. historical decisions/dialogues;
+8. older README/docs.
 
-The capsule is durable memory, not a substitute for verifying live state. If stored context conflicts with newer verified repository facts, live facts win and the capsule must be updated.
+A handoff is not automatically authoritative merely because it is recent. Reconcile it with live evidence.
 
-A superseded decision remains part of project history. Mark it superseded/deprecated and link to its replacement instead of silently rewriting it.
+Never silently rewrite historical decisions to hide a contradiction. Record supersession explicitly.

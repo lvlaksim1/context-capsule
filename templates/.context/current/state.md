@@ -1,17 +1,7 @@
 # Current state
 
-## Project purpose
+## FACT — Current semantic state
 
-To be captured from the repository during initial context bootstrap.
+Capture the compact current state needed to resume work.
 
-## Current status
-
-To be captured.
-
-## Active work
-
-To be captured.
-
-## Known blockers
-
-None recorded yet.
+Do not append historical runtime events here. Promote only semantic consequences.
