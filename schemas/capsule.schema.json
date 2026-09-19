@@ -9,38 +9,24 @@
     "source",
     "installed_at",
     "repository",
-    "update_policy"
+    "update_policy",
+    "managed_files"
   ],
   "additionalProperties": false,
   "properties": {
-    "schema": {
-      "const": "context-capsule"
-    },
-    "version": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
-    },
-    "source": {
-      "type": "string",
-      "minLength": 1
-    },
-    "installed_at": {
-      "type": "string",
-      "format": "date"
-    },
-    "repository": {
-      "type": "string",
-      "pattern": "^[^/]+/[^/]+$"
-    },
-    "update_policy": {
-      "enum": [
-        "manual"
-      ],
-      "default": "manual"
-    },
-    "adopted_from": {
-      "type": "string",
-      "minLength": 1
+    "schema": {"const": "context-capsule"},
+    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "source": {"type": "string", "minLength": 1},
+    "installed_at": {"type": "string", "format": "date"},
+    "repository": {"type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$"},
+    "update_policy": {"enum": ["manual"], "default": "manual"},
+    "adopted_from": {"type": "string", "minLength": 1},
+    "managed_files": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
     }
   }
 }
