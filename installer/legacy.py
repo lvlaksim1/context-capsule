@@ -42,6 +42,13 @@ def _load_template(template_root: Path, rel: str) -> str:
 
 def _normalize_fgis(manifest: dict) -> dict:
     result = copy.deepcopy(manifest)
+    if "context_version" in result:
+        result.setdefault("legacy_context_version", result["context_version"])
+    if "capsule_installer_version" in result:
+        result.setdefault("legacy_capsule_installer_version", result["capsule_installer_version"])
+    result["context_version"] = VERSION
+    result["capsule_installer_version"] = VERSION
+    result["installation_status"] = "adopted-v1.3"
     authoritative = result.get("authoritative")
     if isinstance(authoritative, dict):
         project = copy.deepcopy(result.get("project")) if isinstance(result.get("project"), dict) else {}
