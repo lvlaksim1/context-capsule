@@ -1,6 +1,6 @@
 # Branch-aware context
 
-A project may keep its authoritative Context Capsule on a branch other than the repository default branch.
+A project may keep the authoritative Context Capsule on a branch other than the repository default branch.
 
 Manifest fields:
 
@@ -10,9 +10,9 @@ Manifest fields:
 
 ## Mutation rule
 
-All lifecycle writes must run from the checked-out authoritative branch. `--branch` verifies that condition; it never switches branches.
+The central GitHub service performs lifecycle mutation only against the authoritative branch and verifies the branch/HEAD before publication.
 
-For redirect topology, the discovery branch must already exist. Core must not accidentally install a second independent capsule there.
+For redirect topology, the discovery branch must already exist. The service must not create a second independent capsule there.
 
 ## Discovery shims
 
@@ -20,8 +20,6 @@ The discovery branch may contain minimal `AGENTS.md`, `AI_CONTEXT.md` and/or `.c
 
 Discovery text is project-owned unless it contains an explicit Context Capsule managed block.
 
-## Detached checkouts
+## Read-only GitHub checks
 
-Read-only validation/audit can run in a detached CI checkout. In that case branch authority cannot be proven from `git branch --show-current`, so runtime inspection reports that limitation instead of performing mutation.
-
-Mutating lifecycle commands require a named branch.
+Validation/audit may inspect a detached GitHub checkout. In that case branch-name evidence is incomplete, so the service must rely on explicit repository/ref metadata instead of pretending a local branch name proves authority.
