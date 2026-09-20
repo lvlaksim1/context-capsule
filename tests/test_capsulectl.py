@@ -140,6 +140,29 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         self.assertEqual(result["runtime"]["custom_flag"], "keep")
         self.assertIn("docs/custom-decision.md", result["decisions"])
 
+    def test_repair_preserves_redirect_topology_and_requires_authoritative_branch(self):
+        final = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "work", CORE_SHA, semantic_overrides=semantic_overrides()
+        ))
+        manifest = json.loads(final[".context/manifest.json"])
+        manifest["authoritative_branch"] = "work"
+        manifest["discovery_branch"] = "main"
+        manifest["branch_mode"] = "redirect"
+        final[".context/manifest.json"] = json.dumps(manifest)
+
+        repaired = apply(final, repair_changes(
+            final, TEMPLATES, repository="owner/repo", branch="work", core_commit=CORE_SHA
+        ))
+        result = json.loads(repaired[".context/manifest.json"])
+        self.assertEqual(result["authoritative_branch"], "work")
+        self.assertEqual(result["discovery_branch"], "main")
+        self.assertEqual(result["branch_mode"], "redirect")
+
+        with self.assertRaises(CapsuleModelError):
+            repair_changes(
+                final, TEMPLATES, repository="owner/repo", branch="main", core_commit=CORE_SHA
+            )
+
     def test_clean_install_refuses_existing_context(self):
         with self.assertRaises(CapsuleModelError):
             clean_install_changes({".context/anything": "x"}, TEMPLATES, "owner/repo", "main", CORE_SHA)

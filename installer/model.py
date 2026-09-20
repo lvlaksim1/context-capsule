@@ -162,6 +162,12 @@ def build_manifest(
     if legacy_redirect:
         authoritative_branch, discovery_branch = legacy_redirect
         branch_mode = "redirect" if authoritative_branch != discovery_branch else "single"
+    elif existing:
+        authoritative_branch = old.get("authoritative_branch") or branch
+        discovery_branch = old.get("discovery_branch") or authoritative_branch
+        branch_mode = old.get("branch_mode") or (
+            "redirect" if authoritative_branch != discovery_branch else "single"
+        )
     else:
         authoritative_branch = branch
         discovery_branch = branch
@@ -483,6 +489,16 @@ def repair_changes(
 ) -> dict[str, str]:
     existing_manifest = parse_json_text(files, ".context/manifest.json") or {}
     existing_meta = parse_json_text(files, ".context/capsule.json") or {}
+
+    authoritative_branch = existing_manifest.get("authoritative_branch")
+    if (
+        isinstance(authoritative_branch, str)
+        and authoritative_branch
+        and authoritative_branch != branch
+    ):
+        raise CapsuleModelError(
+            f"repair must run against authoritative branch {authoritative_branch!r}, not {branch!r}"
+        )
     changes = bootstrap_changes(files, template_root)
     provisional = dict(files)
     provisional.update(changes)
