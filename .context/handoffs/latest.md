@@ -1,22 +1,22 @@
 # Latest handoff
 
-## Completed
+## Verified v1.3 result
 
-The temporary Context Capsule legacy migration layer has been fully retired after migrating the three known legacy repositories.
+Context Capsule Core v1.3 is implementation-complete.
 
-Permanent cleanup implementation commit: `f7b947b0974bc697cf61f553d7f48294413d39d5`.
+Exact verified implementation commit: `ab242959226218b3388de208da9a755e584740c9`.
 
-Removed from the normal product:
+Verification was performed against files reconstructed from that exact GitHub commit and matched to their Git blob SHA values.
 
-- `installer/legacy.py`;
-- `capsulectl adopt`;
-- repository-specific legacy migration tests;
-- temporary legacy profile registry entries;
-- active documentation that presented legacy adoption as an available lifecycle operation.
+Results:
 
-Historical migration code remains recoverable from Git history only.
+- compile: PASS;
+- permanent tests: 9/9 PASS;
+- self VALID: PASS;
+- self READY: PASS;
+- fresh-chat recovery smoke: PASS.
 
-## Permanent v1.3 surface
+The permanent product surface is:
 
 - clean install;
 - non-destructive repair;
@@ -24,16 +24,18 @@ Historical migration code remains recoverable from Git history only.
 - READY;
 - bounded fresh-chat recover;
 - managed bootstrap blocks;
-- safe repository paths;
+- safe repository paths and symlink confinement;
+- preservation of project-owned manifest extensions;
+- preservation of installed redirect branch topology;
 - exact Core SHA provenance;
-- atomic GitHub branch publication.
+- atomic GitHub branch publication from an expected parent.
 
-## Verification boundary
+The temporary legacy migration layer is retired. The three known legacy repositories were migrated before removal.
 
-Static repository inspection confirms no executable/import references to the removed legacy adapter remain and the permanent test suite contains eight focused tests.
+## CI infrastructure note
 
-GitHub Actions still fails before runner assignment (`runner_id=0`, `steps=[]`), so exact hosted execution of the cleanup commit remains pending.
+GitHub-hosted Actions on this private repository still terminate before runner assignment (`runner_id=0`, `steps=[]`). Public hosted Actions in the same account run normally, while the private FGIS project uses its own self-hosted runner. This is treated as repository/account CI infrastructure, not a failed Context Capsule test.
 
 ## Next
 
-Once Actions runs normally, execute the exact permanent suite and, if green, promote v1.3 to the stable branch and create immutable release provenance.
+Promote the verified v1.3 line to `main` and use the final stable commit SHA as the canonical immutable installation source.

@@ -1,6 +1,6 @@
 {
   "schema": "context-capsule-migrations",
   "current": "1.3.0",
-  "status": "development",
+  "status": "stable",
   "migrations": []
 }

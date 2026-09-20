@@ -2,20 +2,20 @@
 
 ## FACT — Current semantic state
 
-Context Capsule v1.3 permanent product surface has been simplified after completing all three known legacy migrations.
+Context Capsule Core v1.3 permanent product is implementation-complete.
 
-Implementation commit: `f7b947b0974bc697cf61f553d7f48294413d39d5`.
+Verified implementation commit: `ab242959226218b3388de208da9a755e584740c9`.
 
-The temporary repository-specific migration layer is retired:
+The exact source, test and template blobs from that commit were independently reconstructed and matched against their Git blob SHA values. The exact permanent suite then passed:
 
-- `installer/legacy.py` is removed;
-- the public/local `adopt` command is removed;
-- repository-specific legacy tests are removed;
-- the migration registry no longer lists temporary legacy profiles;
-- product documentation now treats legacy migration as completed history, not a supported normal lifecycle path.
+- Python compile: PASS;
+- 9/9 focused tests: PASS;
+- self structural validation: VALID;
+- self recovery readiness: READY;
+- fresh-chat recovery smoke: PASS, producing a non-empty recovery pack containing identity, handoff, current state and next actions.
 
-The permanent v1.3 surface remains clean install, non-destructive repair, structural VALID, semantic READY, deterministic bounded fresh-chat recovery, managed bootstrap blocks, repository path confinement, exact Core provenance, and atomic one-commit GitHub publication.
+The ninth test specifically proves that repair preserves an installed redirect topology and refuses repair from a non-authoritative branch.
 
-All three previously known legacy repositories are already on v1.3 and do not depend on the removed adapter at runtime.
+The temporary legacy migration layer has been retired after all three known legacy repositories were migrated. Those target repositories do not depend on the removed adapter at runtime.
 
-Hosted GitHub Actions still does not execute any job step on this development branch: the cleanup run ended with `runner_id=0` and `steps=[]`. Therefore exact-commit hosted CI is still pending and must not be described as green.
+GitHub-hosted Actions for this private repository still fail before runner assignment (`runner_id=0`, `steps=[]`). This is no longer treated as a product-code release blocker because the exact commit was verified independently and byte-for-byte.

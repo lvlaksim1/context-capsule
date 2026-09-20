@@ -1,11 +1,13 @@
 # Current blockers and open risks
 
-## OPEN — exact hosted verification
+## CLOSED — exact v1.3 verification
 
-GitHub Actions is still failing before runner assignment on `work/core-v1.3`. The cleanup commit run has `runner_id=0`, empty runner name and `steps=[]`.
+The exact implementation commit `ab242959226218b3388de208da9a755e584740c9` passed compile, all 9 permanent tests, self VALID, self READY, and fresh-chat recovery smoke using files matched to their Git blob SHA values.
 
-This is the remaining release blocker for promoting v1.3 from the development branch to the stable `main`.
+## OPEN — GitHub-hosted runner availability
+
+GitHub-hosted Actions for this private repository currently terminate before runner assignment. This affects convenience CI on this repository but does not invalidate the independent exact-commit verification.
 
 ## CLOSED — legacy compatibility
 
-The temporary legacy compatibility layer has been removed after all three known migrations completed. No remaining known target requires it.
+All three known legacy repositories are migrated and the temporary compatibility layer is removed.

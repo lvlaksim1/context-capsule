@@ -1,6 +1,6 @@
 # Next actions
 
-1. Do not add new legacy compatibility cases to the permanent product.
-2. When GitHub Actions assigns a runner normally, execute the exact v1.3 test suite plus compile, self-VALID, self-READY, and recovery smoke gates.
-3. If those exact gates pass, review the final diff against released v1.2 and prepare promotion of v1.3 to `main`.
-4. Only after a verified stable commit exists, create an immutable v1.3 release/tag and use that commit as the canonical installation source.
+1. Promote the verified v1.3 line to stable `main`.
+2. Treat the final stable commit SHA as the immutable canonical installation source.
+3. Do not reintroduce permanent repository-specific legacy compatibility.
+4. Separately investigate private-repository GitHub-hosted runner availability only as CI infrastructure maintenance; it is not a blocker for the verified v1.3 product.

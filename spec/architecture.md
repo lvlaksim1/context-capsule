@@ -21,4 +21,4 @@ The canonical target is a GitHub branch. Lifecycle changes are planned and valid
 
 New clean installations use a single primary branch for discovery and authority.
 
-Redirect topology remains only as temporary compatibility for the known `ai-agent-lab` legacy layout.
+An already installed capsule may legitimately use `branch_mode: redirect` when discovery and authoritative context live on different branches. Repair must preserve that existing topology and must run against the authoritative branch; it must not silently collapse redirect into single-branch mode.
