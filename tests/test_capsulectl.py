@@ -32,6 +32,7 @@ def semantic_overrides():
         ".context/current/next.md": "# Next\n\nRun fresh-chat recovery and continue with the next verified integration stage.\n",
         ".context/rules/project-rules.md": "# Rules\n\nPreserve repository-local context and publish target changes as one non-forced Git commit.\n",
         ".context/handoffs/latest.md": "# Handoff\n\nThe fixture is verified; next consume the recovery pack without prior conversation history.\n",
+        ".context/decisions/DEC-test.md": "# Decision\n\nKeep fresh-chat working state ahead of deeper durable decision history.\n",
     }
 
 
@@ -110,6 +111,8 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         self.assertIn("fresh chat with no prior history", pack)
         self.assertIn("Never upload project context", pack)
         self.assertIn("Run fresh-chat recovery", pack)
+        self.assertLess(pack.index("## LATEST HANDOFF"), pack.index("## DURABLE DECISION"))
+        self.assertLess(pack.index("## CURRENT STATE"), pack.index("## DURABLE DECISION"))
 
     def test_path_escape_is_rejected(self):
         final = apply({}, clean_install_changes(

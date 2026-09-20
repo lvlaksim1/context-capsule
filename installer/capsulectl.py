@@ -283,7 +283,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     recover = sub.add_parser("recover", help="emit a deterministic fresh-chat recovery pack")
     recover.add_argument("--target", required=True)
-    recover.add_argument("--max-chars", type=int, default=30000)
+    recover.add_argument("--max-chars", type=int, default=50000)
     recover.set_defaults(func=cmd_recover)
     return parser
 

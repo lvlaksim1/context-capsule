@@ -385,7 +385,7 @@ def readiness_snapshot(files: dict[str, str]) -> tuple[bool, list[str]]:
     return not missing, missing
 
 
-def build_recovery_pack(files: dict[str, str], *, max_chars: int = 30000) -> str:
+def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str:
     ready, reasons = readiness_snapshot(files)
     if not ready:
         raise CapsuleModelError("capsule is not READY: " + "; ".join(reasons))
@@ -399,16 +399,16 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 30000) -> str
     ]
     for path in manifest.get("rules", []):
         ordered.append(("ACTIVE RULE", path))
-    for path in manifest.get("decisions", []):
-        ordered.append(("DURABLE DECISION", path))
     ordered.extend(
         [
+            ("LATEST HANDOFF", manifest["latest_handoff"]),
             ("CURRENT STATE", manifest["current"]["state"]),
             ("CURRENT BLOCKERS", manifest["current"]["blockers"]),
             ("NEXT ACTIONS", manifest["current"]["next"]),
-            ("LATEST HANDOFF", manifest["latest_handoff"]),
         ]
     )
+    for path in manifest.get("decisions", []):
+        ordered.append(("DURABLE DECISION", path))
 
     chunks = [
         "# CONTEXT CAPSULE RECOVERY PACK",
