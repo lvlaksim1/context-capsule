@@ -14,18 +14,61 @@
   ],
   "additionalProperties": false,
   "properties": {
-    "schema": {"const": "context-capsule"},
-    "version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
-    "source": {"type": "string", "minLength": 1},
-    "installed_at": {"type": "string", "format": "date"},
-    "repository": {"type": "string", "pattern": "^[^/\\s]+/[^/\\s]+$"},
-    "update_policy": {"enum": ["manual"], "default": "manual"},
-    "adopted_from": {"type": "string", "minLength": 1},
+    "schema": {
+      "const": "context-capsule"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "installed_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[^/\\s]+/[^/\\s]+$"
+    },
+    "update_policy": {
+      "enum": [
+        "manual"
+      ],
+      "default": "manual"
+    },
+    "adopted_from": {
+      "type": "string",
+      "minLength": 1
+    },
     "managed_files": {
       "type": "object",
-      "additionalProperties": {
-        "type": "string",
-        "pattern": "^[0-9a-f]{64}$"
+      "required": [
+        "AGENTS.md",
+        "AI_CONTEXT.md",
+        ".context/ENTRYPOINT.md",
+        ".context/protocol.md"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "AGENTS.md": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "AI_CONTEXT.md": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        ".context/ENTRYPOINT.md": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        ".context/protocol.md": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
       }
     }
   }
