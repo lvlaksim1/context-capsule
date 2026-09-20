@@ -18,3 +18,8 @@ Hosted CI result on stable `main`:
 The earlier `runner_id=0`, `steps=[]` condition disappeared immediately after the repository visibility changed from private to public. This confirms the workflow/code itself was not the cause.
 
 The temporary legacy migration layer remains retired, and all three known legacy repositories are already migrated to v1.3.
+
+## FACT — Default semantic write-back
+
+Core v1.3 now states explicitly that significant durable project changes are written back during normal work without waiting for an owner command to save/update context or for chat termination.
+

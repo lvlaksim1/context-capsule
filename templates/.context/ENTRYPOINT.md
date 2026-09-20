@@ -9,6 +9,7 @@
 5. Read current state, blockers, next actions, and the latest handoff.
 6. Reconcile the recovered semantic state with live repository/CI/runtime evidence.
 7. Treat verified newer repository facts as authoritative and update the capsule when they change durable project meaning.
+8. Persist significant durable changes during normal work. Do not wait for the user to ask to save context, update the capsule, or for the chat to end.
 
 A structurally valid capsule is not necessarily recovery-ready. Use `capsulectl ready` before relying on it for a fresh-chat handoff.
 

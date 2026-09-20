@@ -26,3 +26,8 @@ All three known legacy projects were migrated before the temporary adapter was r
 ## Status
 
 No known product, migration, or CI blocker remains.
+
+## Default semantic write-back
+
+The universal v1.3 templates now explicitly require semantic write-back during normal work. Agents must not wait for an owner request to save/update context or for chat termination. This behavior is regression-tested.
+

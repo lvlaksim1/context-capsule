@@ -113,6 +113,12 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         self.assertLess(pack.index("## LATEST HANDOFF"), pack.index("## DURABLE DECISION"))
         self.assertLess(pack.index("## CURRENT STATE"), pack.index("## DURABLE DECISION"))
 
+    def test_default_semantic_writeback_is_explicit(self):
+        installed = apply({}, clean_install_changes({}, TEMPLATES, "owner/repo", "main", CORE_SHA))
+        expected_rule = "Do not wait for the user to ask to save context, update the capsule, or for the chat to end."
+        self.assertIn(expected_rule, installed[".context/ENTRYPOINT.md"])
+        self.assertIn(expected_rule, installed[".context/protocol.md"])
+
     def test_path_escape_is_rejected(self):
         final = apply({}, clean_install_changes(
             {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=semantic_overrides()

@@ -23,6 +23,8 @@ A fresh chat or agent with no conversation history must be able to recover the p
 
 Persist durable decisions, requirements, rules, architecture changes, root causes, rejected approaches, milestones, and priority changes.
 
+Update durable context during normal work as soon as verified project meaning changes. Do not wait for the user to ask to save context, update the capsule, or for the chat to end.
+
 Do not copy routine runtime churn such as heartbeats, leases, polling ticks, queue transitions, or transient CI state into `.context/`.
 
 ## Repository mutation
