@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Context Capsule Core lifecycle and checkpoint tool.
+"""Context Capsule Core lifecycle and checkpoint worker.
 
-All target-project context remains in the target repository. Mutating lifecycle
-operations are planned completely, validated, then applied through the local
-transaction layer.
+This module is executed by the central GitHub service against an ephemeral
+target-repository checkout. Target-project context remains in the target
+repository; no Context Capsule executable is installed on the user's computer.
 """
 from __future__ import annotations
 
@@ -1468,7 +1468,7 @@ def run_mutation(
             and not branch_exists(target, discovery)
         ):
             errors.append(
-                f"manifest.json: discovery branch does not exist locally: "
+                f"manifest.json: discovery branch is unavailable in the GitHub checkout: "
                 f"{discovery}"
             )
     if errors:
