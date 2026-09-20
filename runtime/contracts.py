@@ -1,4 +1,4 @@
-"""Offline contracts: safe repository paths and the bundled JSON Schema subset."""
+"""Central GitHub service contracts: safe repository paths and schema checks."""
 from __future__ import annotations
 
 import datetime as dt
