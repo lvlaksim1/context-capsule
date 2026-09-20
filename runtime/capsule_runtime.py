@@ -49,13 +49,17 @@ def git_success(root: Path, *args: str) -> bool:
     )
 
 
-def read(root: Path, rel: str, fallback: Path | None = None) -> str:
+def read_bytes(root: Path, rel: str, fallback: Path | None = None) -> bytes:
     path = safe_path(root, rel)
     if not path.exists() and fallback is not None:
         path = safe_path(fallback, rel)
     if not path.is_file():
         raise ValueError(f"missing context file: {rel}")
-    return path.read_text(encoding="utf-8")
+    return path.read_bytes()
+
+
+def read(root: Path, rel: str, fallback: Path | None = None) -> str:
+    return read_bytes(root, rel, fallback).decode("utf-8")
 
 
 def required_paths(manifest: dict) -> list[str]:
@@ -295,7 +299,7 @@ def inspect(
             if not rel.startswith(".context/tools/"):
                 raise ValueError(f"unsupported managed path: {rel}")
             actual = hashlib.sha256(
-                read(root, rel, fallback).encode("utf-8")
+                read_bytes(root, rel, fallback)
             ).hexdigest()
             if actual != expected:
                 errors.append(f"installed tool integrity mismatch: {rel}")
