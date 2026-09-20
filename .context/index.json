@@ -61,6 +61,20 @@
       "tags": [],
       "path": ".context/decisions/DEC-0006-clean-install-and-temporary-legacy.md",
       "updated_at": "2026-09-20"
+    },
+    {
+      "id": "DEC-0007-github-only-service",
+      "type": "decision",
+      "status": "active",
+      "title": "DEC-0007 — GitHub-only service boundary",
+      "summary": "Context Capsule operates exclusively inside GitHub. Target repositories store context data and discovery instructions only; all installation, validation, migration, repair, indexing and readiness mechanics stay in the central GitHub service.",
+      "tags": [
+        "github",
+        "service-boundary",
+        "no-local-runtime"
+      ],
+      "path": ".context/decisions/DEC-0007-github-only-service.md",
+      "updated_at": "2026-09-20"
     }
   ],
   "updated_at": "2026-09-20"
