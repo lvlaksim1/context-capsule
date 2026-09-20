@@ -31,3 +31,5 @@ No known product, migration, or CI blocker remains.
 
 The universal v1.3 templates now explicitly require semantic write-back during normal work. Agents must not wait for an owner request to save/update context or for chat termination. This behavior is regression-tested.
 
+The managed `AGENTS.md` block is the repair propagation surface for this rule in existing v1.3 installations; project-owned text outside the managed block remains untouched.
+

@@ -118,6 +118,7 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         expected_rule = "Do not wait for the user to ask to save context, update the capsule, or for the chat to end."
         self.assertIn(expected_rule, installed[".context/ENTRYPOINT.md"])
         self.assertIn(expected_rule, installed[".context/protocol.md"])
+        self.assertIn(expected_rule, installed["AGENTS.md"])
 
     def test_path_escape_is_rejected(self):
         final = apply({}, clean_install_changes(
