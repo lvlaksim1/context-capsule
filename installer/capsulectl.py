@@ -16,6 +16,7 @@ from installer.model import (
     VERSION,
     build_recovery_pack,
     clean_install_changes,
+    discovery_redirect_changes,
     readiness_snapshot,
     repair_changes,
     validate_snapshot,
@@ -96,12 +97,16 @@ def load_snapshot(target: Path) -> dict[str, str]:
     return files
 
 
-def apply_local_changes(target: Path, changes: dict[str, str]) -> None:
-    """Development/local helper. Canonical GitHub publication is single-commit, not this writer."""
+def apply_local_changes(target: Path, changes: dict[str, str | None]) -> None:
+    """Development/local helper. Canonical GitHub publication is branch-local atomic Git."""
     for rel, content in changes.items():
         path = confined_local_path(target, rel)
         if path.exists() and path.is_symlink():
             confined_local_path(target, rel)
+        if content is None:
+            if path.exists():
+                path.unlink()
+            continue
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_name(path.name + ".context-capsule.tmp")
         tmp.write_text(content, encoding="utf-8")
@@ -152,6 +157,7 @@ def cmd_install(args: argparse.Namespace) -> int:
             args.repository,
             args.branch,
             infer_core_commit(args.core_commit),
+            discovery_branch=args.discovery_branch,
         )
     except (CapsuleModelError, CapsuleSafetyError) as exc:
         print(f"Context Capsule install: FAIL\n  - {exc}")
@@ -181,6 +187,27 @@ def cmd_repair(args: argparse.Namespace) -> int:
     print(f"Context Capsule repair applied locally ({len(changes)} changed files).")
     return cmd_validate(argparse.Namespace(target=str(target)))
 
+
+def cmd_discovery(args: argparse.Namespace) -> int:
+    target = target_root(args.target)
+    ensure_branch(target, args.discovery_branch)
+    files = load_snapshot(target)
+    try:
+        changes = discovery_redirect_changes(
+            files,
+            TEMPLATES,
+            authoritative_branch=args.authoritative_branch,
+            discovery_branch=args.discovery_branch,
+        )
+    except (CapsuleModelError, CapsuleSafetyError) as exc:
+        print(f"Context Capsule discovery: FAIL\n  - {exc}")
+        return 2
+    apply_local_changes(target, changes)
+    print(
+        f"Context Capsule discovery redirect prepared: "
+        f"{args.discovery_branch} -> {args.authoritative_branch}"
+    )
+    return 0
 
 def cmd_validate(args: argparse.Namespace) -> int:
     target = target_root(args.target)
@@ -236,7 +263,14 @@ def build_parser() -> argparse.ArgumentParser:
     install.add_argument("--repository", required=True)
     install.add_argument("--branch", default="main")
     install.add_argument("--core-commit")
+    install.add_argument("--discovery-branch")
     install.set_defaults(func=cmd_install)
+
+    discovery = sub.add_parser("discovery", help="prepare a discovery-only branch redirect")
+    discovery.add_argument("--target", required=True)
+    discovery.add_argument("--authoritative-branch", required=True)
+    discovery.add_argument("--discovery-branch", default="main")
+    discovery.set_defaults(func=cmd_discovery)
 
     repair = sub.add_parser("repair", help="repair a v1.3 capsule without discarding manifest extensions")
     repair.add_argument("--target", required=True)

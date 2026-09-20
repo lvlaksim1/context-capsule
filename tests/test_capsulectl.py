@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 from installer.github_atomic import ConcurrentBranchUpdate, HeadState, MutationPlan, publish_single_commit
-from installer.model import CapsuleModelError, build_recovery_pack, clean_install_changes, readiness_snapshot, repair_changes, validate_snapshot
+from installer.model import CapsuleModelError, build_recovery_pack, clean_install_changes, discovery_redirect_changes, readiness_snapshot, repair_changes, validate_snapshot
 from installer.safety import CapsuleSafetyError, BEGIN_MARKER, END_MARKER, render_managed_block
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,7 +16,11 @@ CORE_SHA = "a" * 40
 
 def apply(base, changes):
     result = dict(base)
-    result.update(changes)
+    for path, content in changes.items():
+        if content is None:
+            result.pop(path, None)
+        else:
+            result[path] = content
     return result
 
 
@@ -147,15 +151,35 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         self.assertEqual(result["runtime"]["custom_flag"], "keep")
         self.assertIn("docs/custom-decision.md", result["decisions"])
 
-    def test_repair_preserves_redirect_topology_and_requires_authoritative_branch(self):
+    def test_clean_install_supports_permanent_redirect_topology(self):
         final = apply({}, clean_install_changes(
-            {}, TEMPLATES, "owner/repo", "work", CORE_SHA, semantic_overrides=semantic_overrides()
+            {}, TEMPLATES, "owner/repo", "context", CORE_SHA,
+            semantic_overrides=semantic_overrides(), discovery_branch="main"
         ))
         manifest = json.loads(final[".context/manifest.json"])
-        manifest["authoritative_branch"] = "work"
-        manifest["discovery_branch"] = "main"
-        manifest["branch_mode"] = "redirect"
-        final[".context/manifest.json"] = json.dumps(manifest)
+        self.assertEqual(manifest["authoritative_branch"], "context")
+        self.assertEqual(manifest["discovery_branch"], "main")
+        self.assertEqual(manifest["branch_mode"], "redirect")
+
+    def test_discovery_redirect_is_not_a_stale_full_capsule(self):
+        full = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "context", CORE_SHA,
+            semantic_overrides=semantic_overrides(), discovery_branch="main"
+        ))
+        discovery = apply(full, discovery_redirect_changes(
+            full, TEMPLATES, authoritative_branch="context", discovery_branch="main"
+        ))
+        self.assertNotIn(".context/manifest.json", discovery)
+        self.assertNotIn(".context/capsule.json", discovery)
+        self.assertIn("context", discovery[".context/ENTRYPOINT.md"])
+        self.assertIn("discovery branch `main`", discovery["AI_CONTEXT.md"])
+        self.assertIn("authoritative durable context is on `context`", discovery["AGENTS.md"])
+
+    def test_repair_preserves_redirect_topology_and_requires_authoritative_branch(self):
+        final = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "work", CORE_SHA,
+            semantic_overrides=semantic_overrides(), discovery_branch="main"
+        ))
 
         repaired = apply(final, repair_changes(
             final, TEMPLATES, repository="owner/repo", branch="work", core_commit=CORE_SHA

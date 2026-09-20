@@ -93,6 +93,42 @@ def bootstrap_changes(files: dict[str, str], template_root: Path) -> dict[str, s
     }
 
 
+
+def discovery_redirect_changes(
+    files: dict[str, str],
+    template_root: Path,
+    authoritative_branch: str,
+    discovery_branch: str,
+) -> dict[str, str | None]:
+    if authoritative_branch == discovery_branch:
+        raise CapsuleModelError("discovery redirect requires different authoritative and discovery branches")
+
+    def discovery_text(name: str) -> str:
+        text = _load_template(template_root, f"discovery/{name}")
+        return (
+            text.replace("{{AUTHORITATIVE_BRANCH}}", authoritative_branch)
+            .replace("{{DISCOVERY_BRANCH}}", discovery_branch)
+        )
+
+    changes: dict[str, str | None] = {
+        "AI_CONTEXT.md": render_managed_block(
+            files.get("AI_CONTEXT.md"),
+            discovery_text("AI_CONTEXT.md").strip(),
+            default_heading="# AI Context",
+        ),
+        "AGENTS.md": render_managed_block(
+            files.get("AGENTS.md"),
+            discovery_text("AGENTS.md").strip(),
+            default_heading="# Agent Instructions",
+        ),
+        ".context/ENTRYPOINT.md": discovery_text(".context/ENTRYPOINT.md"),
+    }
+    for path in files:
+        if path.startswith(".context/") and path != ".context/ENTRYPOINT.md":
+            changes[path] = None
+    return changes
+
+
 def build_capsule_metadata(
     repository: str,
     core_commit: str,
@@ -154,13 +190,13 @@ def build_manifest(
     branch: str,
     *,
     existing: dict | None = None,
-    legacy_redirect: tuple[str, str] | None = None,
+    redirect_topology: tuple[str, str] | None = None,
 ) -> dict:
     old = copy.deepcopy(existing or {})
     manifest = old
 
-    if legacy_redirect:
-        authoritative_branch, discovery_branch = legacy_redirect
+    if redirect_topology:
+        authoritative_branch, discovery_branch = redirect_topology
         branch_mode = "redirect" if authoritative_branch != discovery_branch else "single"
     elif existing:
         authoritative_branch = old.get("authoritative_branch") or branch
@@ -448,6 +484,7 @@ def clean_install_changes(
     core_commit: str,
     *,
     semantic_overrides: dict[str, str] | None = None,
+    discovery_branch: str | None = None,
 ) -> dict[str, str]:
     if any(path == ".context" or path.startswith(".context/") for path in files):
         raise CapsuleModelError("clean install refused: existing .context content found")
@@ -470,7 +507,10 @@ def clean_install_changes(
     provisional.update(changes)
     meta = build_capsule_metadata(repository, core_commit)
     provisional[".context/capsule.json"] = canonical_json(meta)
-    manifest = build_manifest(provisional, repository, branch)
+    redirect_topology = None
+    if discovery_branch and discovery_branch != branch:
+        redirect_topology = (branch, discovery_branch)
+    manifest = build_manifest(provisional, repository, branch, redirect_topology=redirect_topology)
     provisional[".context/manifest.json"] = canonical_json(manifest)
 
     errors = validate_snapshot(provisional)
