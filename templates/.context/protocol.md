@@ -3,32 +3,34 @@
 
 ## Principle
 
-The repository is the durable memory for the project; individual chats are ephemeral. Recovery is complete only after stored semantics are reconciled with live evidence.
+The repository is the durable memory for the project; chats are ephemeral. Context Capsule itself is operated only through GitHub.
 
 ## Semantic sync
 
-Persist a durable update when an accepted decision, requirement, durable rule/preference, architecture/interface contract, blocker/root cause, rejected or superseded approach, milestone/release meaning, active priority, or important verified finding changes.
+Persist durable changes to decisions, requirements, rules/preferences, architecture/interface contracts, blocker/root-cause findings, accepted/rejected approaches, milestone/release meaning, active priorities and important verified findings.
 
-Do not routinely persist heartbeats, leases, queue transitions, polling ticks, transient CI states, repetitive worker commits or raw chat turns. When such events change project meaning, record the consequence once.
+Do not routinely persist heartbeats, leases, queue transitions, polling ticks, transient CI states, repetitive worker commits or raw chat turns. Record only durable consequences.
 
-## Working-set discipline
+## Working set
 
 - `project/`: stable identity, goals, architecture and constraints.
-- `current/`: only present state, unresolved blockers and actionable next work.
-- `handoffs/latest.md`: concise transfer, not an append-only journal.
-- `decisions/`, `dialogues/`, `history/`: durable evidence and supersession history.
-- `index.json`: compact routing metadata for selective recall.
+- `current/`: present state, unresolved blockers and actionable next work.
+- `handoffs/latest.md`: concise transfer.
+- `decisions/`, `dialogues/`, `history/`: durable evidence/history.
+- `index.json`: navigation metadata for history, never an access barrier.
 - `resume.json`: evidence-backed continuation checkpoint.
 
-Resolved material leaves `current/`. A ready checkpoint must not be used to bless unreconciled semantic edits.
+Resolved material leaves `current/`.
 
-## Mutation discipline
+## GitHub-only operation
 
-Lifecycle mutations use repository-path confinement, branch/HEAD checks, a cooperating-writer lock, snapshot comparison, journaled atomic file replacement and rollback. Uncommitted capsule/discovery edits are refused unless explicitly allowed; allowing them does not disable concurrent-edit detection.
+Target repositories contain context data and discovery instructions only. Installation, validation, migration, repair, indexing and readiness checks are executed by the central Context Capsule service inside GitHub. No local executable runtime, Python setup or desktop compatibility layer is part of the product.
+
+Mutations must be based on a verified repository branch and HEAD. The GitHub service must refuse stale writes and publish a coherent repository change through normal Git/GitHub concurrency controls.
 
 ## End of substantial work
 
-Update stable/current semantics as needed, durable decisions/rules, handoff, memory index and the continuation checkpoint. The checkpoint should state the verified position, next concrete action and evidence.
+Update stable/current semantics as needed, durable decisions/rules, handoff, memory index and the continuation checkpoint.
 
 ## Privacy
 
