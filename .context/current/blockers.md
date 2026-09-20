@@ -2,6 +2,6 @@
 
 ## OPEN
 
-No Core release blocker is active.
+Implementation and verification of v1.3 items 2–9 remain in progress.
 
-The remaining unverified area is production adoption of the three real legacy capsules under v1.2.0. Those adoptions should be performed one by one and used as evidence for any further Core changes.
+No target repository is to be migrated during this stage. The three real legacy migrations begin only after the clean-install/recovery foundation is green.

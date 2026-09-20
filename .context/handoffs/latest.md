@@ -1,19 +1,21 @@
 # Latest handoff
 
-## Last completed work
+## Current objective
 
-Released Context Capsule Core v1.2.0 from evidence gathered across all repositories with installed capsules.
+Implement v1.3 hardening items 1–9 without user participation.
 
-## Verified state
+## Baseline
 
-GitHub Actions for release commit `c15d72dc851f6f80b61d67b76a9cdf157639f85e` completed successfully. All nine lifecycle tests, central self-validation, and central self-audit passed.
+Start exclusively from `main` commit `2965c17e5545e641ed7c0b4038a44885e3726a05`. Do not use the other model's commits or code.
 
-v1.2.0 now supports clean install, rich legacy adoption, branch-aware context discovery, separate volatile runtime authority, compact working-set warnings, CAS-guarded lifecycle mutation, and chained migrations from v1.0 through v1.2.
+## Active branch
+
+`work/core-v1.3`
+
+## Product boundary
+
+See `.context/decisions/DEC-0006-v1.3-product-boundary.md` and `spec/v1.3.md`.
 
 ## Next operation
 
-Begin real production adoption with `fgis-fsa-il`, preserving its richer project structure and rules exactly where useful.
-
-## Constraints
-
-Do not flatten richer legacy context. Do not copy volatile runtime churn into `.context`. Do not send target context to Core.
+Implement the atomic GitHub publication model and safe planning primitives, then layer recovery/readiness and temporary known-legacy adapters on top.

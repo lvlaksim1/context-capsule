@@ -1,6 +1,9 @@
 # Next actions
 
-1. Use `fgis-fsa-il` as the first rich-legacy adoption test.
-2. Use `telegram-receiver` as the compact legacy adoption test.
-3. Use `ai-agent-lab` as the branch-redirect + `.agent/` semantic-sync adoption test.
-4. After those production adoptions, refine Core only from observed evidence rather than hypothetical complexity.
+1. Implement the atomic GitHub mutation model and safe target-path handling.
+2. Preserve unknown manifest extensions and add managed bootstrap blocks.
+3. Record exact Core commit provenance.
+4. Separate VALID from READY and add deterministic fresh-chat recovery.
+5. Add focused negative tests.
+6. Implement temporary adapters for the three known legacy capsule shapes.
+7. Verify the development branch with CI; do not migrate real target repositories yet.
