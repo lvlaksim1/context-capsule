@@ -282,6 +282,12 @@ def inspect(
         except (ValueError, OSError) as exc:
             errors.append(str(exc))
 
+    unsupported_managed = sorted(set(meta["managed_files"]) - set(SYSTEM))
+    if unsupported_managed:
+        errors.append(
+            "unsupported managed target paths: " + ", ".join(unsupported_managed)
+        )
+
     for rel in manifest["runtime"]["authoritative_paths"]:
         try:
             candidate = rel[:-1] if rel.endswith("/") else rel
