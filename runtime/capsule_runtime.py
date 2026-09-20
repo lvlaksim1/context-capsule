@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Repository-local Context Capsule readiness and recovery tooling.
+"""GitHub-side Context Capsule readiness and recovery logic.
 
-This file is copied into each installed repository together with contracts.py
-and the bundled schemas. It performs read-only checks and never contacts Core.
+This module lives only in the central Context Capsule repository and is executed
+by GitHub automation against a target-repository checkout. Target repositories
+store context data and discovery instructions, not executable Capsule runtime.
 """
 from __future__ import annotations
 
@@ -11,13 +12,12 @@ import hashlib
 import json
 import re
 import subprocess
-import sys
 from pathlib import Path
 
-try:
-    from contracts import load_json, managed_block, safe_path, schema_errors
-except ModuleNotFoundError:
-    from runtime.contracts import load_json, managed_block, safe_path, schema_errors
+from runtime.contracts import load_json, managed_block, safe_path, schema_errors
+
+CORE_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_SCHEMAS = CORE_ROOT / "schemas"
 
 SYSTEM = (
     "AGENTS.md",
@@ -49,23 +49,13 @@ def git_success(root: Path, *args: str) -> bool:
     )
 
 
-def read_bytes(root: Path, rel: str, fallback: Path | None = None) -> bytes:
+def read(root: Path, rel: str, fallback: Path | None = None) -> str:
     path = safe_path(root, rel)
     if not path.exists() and fallback is not None:
         path = safe_path(fallback, rel)
     if not path.is_file():
         raise ValueError(f"missing context file: {rel}")
-    return path.read_bytes()
-
-
-def read(root: Path, rel: str, fallback: Path | None = None) -> str:
-    return read_bytes(root, rel, fallback).decode("utf-8")
-
-
-def canonical_text_sha256(data: bytes) -> str:
-    text = data.decode("utf-8")
-    normalized = text.replace("\r\n", "\n").replace("\r", "\n")
-    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+    return path.read_text(encoding="utf-8")
 
 
 def required_paths(manifest: dict) -> list[str]:
@@ -147,16 +137,9 @@ def fingerprint(
         )
     return hasher.hexdigest()
 
-def _schema(root: Path, name: str, directory: Path | None) -> dict:
-    if directory:
-        return load_json(directory / f"{name}.schema.json")
-    return load_json(
-        safe_path(
-            root,
-            f".context/tools/schemas/{name}.schema.json",
-            exists=True,
-        )
-    )
+def _schema(name: str, directory: Path | None) -> dict:
+    schema_dir = directory or DEFAULT_SCHEMAS
+    return load_json(schema_dir / f"{name}.schema.json")
 
 
 def _substantive_markdown(text: str) -> bool:
@@ -234,7 +217,7 @@ def inspect(
             errors.extend(
                 schema_errors(
                     documents[name],
-                    _schema(root, name, schemas),
+                    _schema(name, schemas),
                     name,
                 )
             )
@@ -298,27 +281,13 @@ def inspect(
         except (ValueError, OSError) as exc:
             errors.append(str(exc))
 
-    for rel, expected in meta["managed_files"].items():
-        if rel in SYSTEM:
-            continue
-        try:
-            if not rel.startswith(".context/tools/"):
-                raise ValueError(f"unsupported managed path: {rel}")
-            actual = canonical_text_sha256(
-                read_bytes(root, rel, fallback)
-            )
-            if actual != expected:
-                errors.append(f"installed tool integrity mismatch: {rel}")
-        except (ValueError, OSError) as exc:
-            errors.append(str(exc))
-
     for rel in manifest["runtime"]["authoritative_paths"]:
         try:
             candidate = rel[:-1] if rel.endswith("/") else rel
             path = safe_path(root, candidate)
             if not path.exists():
                 warnings.append(
-                    f"runtime authority unavailable locally: {rel}; verify live source"
+                    f"declared runtime authority unavailable in checkout: {rel}; verify its GitHub source"
                 )
         except ValueError as exc:
             errors.append(str(exc))
@@ -329,7 +298,7 @@ def inspect(
             errors.extend(
                 schema_errors(
                     documents[name],
-                    _schema(root, name, schemas),
+                    _schema(name, schemas),
                     name,
                 )
             )
@@ -442,7 +411,7 @@ def inspect(
             )
         elif not branch:
             warnings.append(
-                "no named Git branch available; verify authority before writing"
+                "detached GitHub checkout; branch authority cannot be proven from local checkout name"
             )
 
         head = git(root, "rev-parse", "HEAD")
@@ -549,7 +518,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--target",
-        default=str(Path(__file__).resolve().parents[2]),
+        required=True,
     )
     parser.add_argument("--ready", action="store_true")
     parser.add_argument("--task", default="")
