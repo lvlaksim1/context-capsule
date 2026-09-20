@@ -11,7 +11,7 @@
     ".context/ENTRYPOINT.md": "ba63405bd68c9fc431d498b09bb477d0b7d7ac54fd62c98a7e7964174842bbed",
     ".context/protocol.md": "54d287651ee87b0ab5ffeda034f7f56033cca9c18d537aea3c2518294d70fa22",
     ".context/tools/contracts.py": "06670547bed59401e377d78852fc064829cf03b64ee1f8730e4160e5b618b908",
-    ".context/tools/capsule_runtime.py": "09df75bc32d68f1f761d506f38a2aaf3873aba8318ae4f58bb6c1b1142a39792",
+    ".context/tools/capsule_runtime.py": "49bbf05708700eebb41a4fdd86f2b656b628415505bf1647b4ef9daaf57e63cb",
     ".context/tools/schemas/capsule.schema.json": "a7178e809b29e0bc38c4c2778e51d3e905ff792d56db37b4e8f36d579c96c1d0",
     ".context/tools/schemas/manifest.schema.json": "29d36962d74a94b2b3fe7db2bb73b95862841a6b322304c4b6571fb68e79d8c1",
     ".context/tools/schemas/index.schema.json": "39b6a752a9f4e7d28be3f4026144fc7a5268092dad0744b8de56d37c69d9f973",
