@@ -77,7 +77,7 @@ class CapsuleCtlTests(unittest.TestCase):
             self.assertTrue((target / ".context/project/architecture.md").exists())
             self.assertTrue((target / ".context/resume.json").exists())
             self.assertTrue((target / ".context/index.json").exists())
-            self.assertTrue((target / ".context/tools/capsule_runtime.py").exists())
+            self.assertFalse((target / ".context/tools").exists())
             self.assertIn("managed_files", metadata)
 
     def test_reinstall_refused(self):
