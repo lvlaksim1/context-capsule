@@ -50,6 +50,7 @@ def assert_mutable_path(rel: str) -> None:
 
 def inventory(root: Path) -> dict[str, bytes]:
     """Return a byte snapshot of every lifecycle-managed target file."""
+    root = root.resolve()
     result: dict[str, bytes] = {}
     for rel in ROOT_FILES:
         path = safe_path(root, rel)
@@ -197,6 +198,8 @@ def recover(root: Path, gitdir: Path) -> bool:
     matches either its before or after digest. An arbitrary concurrent edit
     causes recovery to stop and retain the journal for manual reconciliation.
     """
+    root = root.resolve()
+    gitdir = gitdir.resolve()
     journal = _journal_path(gitdir)
     if not journal.exists():
         return False
@@ -298,6 +301,8 @@ def apply(
     branch: str,
 ) -> None:
     """Apply a complete mutation plan or restore its complete preimage."""
+    root = root.resolve()
+    gitdir = gitdir.resolve()
     for rel in before.keys() | after.keys():
         assert_mutable_path(rel)
 
