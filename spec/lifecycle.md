@@ -1,76 +1,47 @@
 # Lifecycle
 
+## Internal execution model
+
+Lifecycle code runs only in the central GitHub service. Any Python CLI/module is an internal GitHub-runner implementation detail.
+
 ## Install — permanent path
 
-`install` requires a repository with no existing `.context/`. Existing `AGENTS.md` or `AI_CONTEXT.md` are not grounds for destructive refusal: their project text is preserved and a Core-managed block is added.
+Clean install targets a repository without `.context/`.
 
-Install creates a complete v1.3 structural capsule, repository-local tools/schemas, semantic index and a **draft** continuation checkpoint. Project semantic templates remain explicitly `CAPSULE_TODO` until captured and reconciled.
+The service plans and validates a v1.3 capsule, preserves existing project bootstrap text, adds managed discovery blocks, creates semantic skeleton/index/checkpoint, and publishes the result through GitHub.
+
+No executable Context Capsule files are copied to the target.
 
 ## Checkpoint
 
-`checkpoint` updates `.context/resume.json`.
-
-A `--ready` checkpoint requires:
-
-- project/current/rule/handoff documents to contain substantive project-specific content;
-- no unresolved preserved-bootstrap review;
-- evidence;
-- no uncommitted non-capsule implementation files;
-- a semantic fingerprint over the current working set.
-
-After a ready checkpoint is committed, context-only descendant commits do not make it stale. A descendant that changes implementation outside Context Capsule requires reconciliation.
+A ready checkpoint requires substantive project/current/rule/handoff content, resolved bootstrap review, evidence and a current semantic fingerprint.
 
 ## Validate
 
-`validate` is structural. It executes the bundled schema vocabulary, verifies canonical references, branch consistency, safe repository paths, managed-file integrity, semantic index structure and current Core version.
-
-Validation deliberately does not claim semantic readiness.
+Validation checks schemas, references, branch consistency, safe paths, managed bootstrap integrity, index structure and installed Core version.
 
 ## Audit
 
-`audit` adds repository-local runtime inspection, semantic readiness, checkpoint/fingerprint freshness, indexed-memory coverage, compactness and Git freshness signals.
-
-`audit --ready` returns nonzero when structural validation succeeds but continuation readiness is incomplete.
+Audit adds semantic readiness/freshness, Git evidence, index coverage and compactness checks. These checks are executed centrally against the target repository checkout.
 
 ## Repair
 
-`repair` applies only to a current-version installed capsule. It restores/refreshes managed structure and navigation without replacing project-owned semantic files.
+Repair restores/refreshes current-version managed structure and navigation without replacing project-owned semantic content.
 
-It preserves unknown manifest extensions and nonstandard indexed paths. Repair does not convert a draft checkpoint to ready.
+## Adopt / Upgrade — temporary transition
 
-## Adopt — temporary
+Legacy adoption and the migration chain exist only for the current old installations. They preserve project-specific structures and are removed only after the three real repositories are migrated and verified.
 
-`adopt` exists for pre-Core legacy `.context/` installations. It preserves useful structure, custom fields and custom bootstrap text, then enriches the repository with v1.3 contracts.
+## Mutation model
 
-This command is scheduled for removal only after the three known old repositories have been migrated and verified.
+The service:
 
-## Upgrade — temporary legacy chain
+1. reads the target at a known branch/HEAD;
+2. constructs the complete planned state;
+3. validates that state;
+4. rechecks checkout/HEAD before applying the plan;
+5. publishes one coherent Git/GitHub change.
 
-The transition chain currently supports:
+A failed ephemeral runner operation does not change the remote repository unless publication succeeds.
 
-`1.0.0 -> 1.1.0 -> 1.2.0 -> 1.3.0`.
-
-The chain is explicit; no unknown version is silently upgraded. Historical project memory is preserved. Recognized historical Core bootstrap may be replaced; unknown bootstrap is preserved and flagged for review.
-
-## Mutation transaction
-
-Mutating commands build the complete target snapshot before any write. Preflight includes schema/reference/path/branch checks.
-
-Apply then:
-
-1. holds a repository-local cooperating-writer OS lock in Git metadata;
-2. verifies snapshot, HEAD and branch have not changed;
-3. records preimages/digests in a transaction journal;
-4. replaces each affected file atomically in its own directory;
-5. detects a changed operand before overwriting it;
-6. marks the journal committed, then removes it;
-7. rolls back preimages on a handled mid-operation failure;
-8. recovers a leftover prepared journal on the next lifecycle mutation when no conflicting external edit is present.
-
-This is transactional recovery for cooperating lifecycle operations, not global filesystem isolation from arbitrary processes.
-
-## Dirty state and CAS
-
-By default, uncommitted capsule/discovery files block lifecycle mutation. `--allow-dirty-context` is an explicit override; it does not disable snapshot/concurrent-edit detection.
-
-`--expected-head` adds a caller-supplied Git commit precondition. It is one part of concurrency protection, not the whole transaction guarantee.
+No local OS lock, desktop crash journal or cross-platform local rollback subsystem is part of the architecture.
