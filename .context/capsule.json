@@ -2,7 +2,7 @@
   "schema": "context-capsule",
   "version": "1.3.0",
   "source": "lvlaksim1/context-capsule",
-  "core_commit": "1018129caa6aae0677741c1da62504cf2ae3904e",
+  "core_commit": "f7b947b0974bc697cf61f553d7f48294413d39d5",
   "installed_at": "2026-09-19",
   "repository": "lvlaksim1/context-capsule",
   "update_policy": "manual"

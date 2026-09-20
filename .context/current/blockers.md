@@ -1,9 +1,11 @@
 # Current blockers and open risks
 
-## OPEN — exact Core CI execution
+## OPEN — exact hosted verification
 
-GitHub Actions runs on the Core development branch have terminated without an assigned runner (`runner_id=0`, `steps=[]`). Exact-commit hosted verification is therefore still pending.
+GitHub Actions is still failing before runner assignment on `work/core-v1.3`. The cleanup commit run has `runner_id=0`, empty runner name and `steps=[]`.
 
-## CLOSED — real legacy adoption coverage
+This is the remaining release blocker for promoting v1.3 from the development branch to the stable `main`.
 
-All three known legacy repositories have now been migrated successfully with their intended profile. There are no additional known legacy targets that justify keeping a broad compatibility framework.
+## CLOSED — legacy compatibility
+
+The temporary legacy compatibility layer has been removed after all three known migrations completed. No remaining known target requires it.

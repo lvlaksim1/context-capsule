@@ -2,16 +2,20 @@
 
 ## FACT — Current semantic state
 
-Context Capsule v1.3 hardening is implemented on `work/core-v1.3` from the clean v1.2 baseline. No code from the external-model checkpoint was used.
+Context Capsule v1.3 permanent product surface has been simplified after completing all three known legacy migrations.
 
-The current implementation provenance is `1018129caa6aae0677741c1da62504cf2ae3904e`.
+Implementation commit: `f7b947b0974bc697cf61f553d7f48294413d39d5`.
 
-All three known legacy capsule profiles have now been exercised against their real repositories:
+The temporary repository-specific migration layer is retired:
 
-- `ai-agent-lab` — redirect topology plus volatile `.agent/` runtime authority;
-- `fgis-fsa-il` — rich single-branch semantic capsule with project/rules/decisions/dialogues;
-- `telegram-receiver` — compact single-branch capsule expanded into the v1.3 stable project/current model from already verified repository context.
+- `installer/legacy.py` is removed;
+- the public/local `adopt` command is removed;
+- repository-specific legacy tests are removed;
+- the migration registry no longer lists temporary legacy profiles;
+- product documentation now treats legacy migration as completed history, not a supported normal lifecycle path.
 
-The migrations preserve target-owned semantic files, archive superseded system entrypoint/protocol where applicable, record exact Core provenance, and do not copy target project context into Core.
+The permanent v1.3 surface remains clean install, non-destructive repair, structural VALID, semantic READY, deterministic bounded fresh-chat recovery, managed bootstrap blocks, repository path confinement, exact Core provenance, and atomic one-commit GitHub publication.
 
-Hosted GitHub Actions for the Core development branch are still not executing steps because no runner is assigned; exact-commit hosted CI remains externally blocked and must not be described as green.
+All three previously known legacy repositories are already on v1.3 and do not depend on the removed adapter at runtime.
+
+Hosted GitHub Actions still does not execute any job step on this development branch: the cleanup run ended with `runner_id=0` and `steps=[]`. Therefore exact-commit hosted CI is still pending and must not be described as green.

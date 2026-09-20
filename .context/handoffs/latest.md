@@ -2,22 +2,38 @@
 
 ## Completed
 
-The v1.3 hardening foundation and all three planned real legacy migrations are complete.
+The temporary Context Capsule legacy migration layer has been fully retired after migrating the three known legacy repositories.
 
-Current Core implementation SHA: `1018129caa6aae0677741c1da62504cf2ae3904e`.
+Permanent cleanup implementation commit: `f7b947b0974bc697cf61f553d7f48294413d39d5`.
 
-Migrated targets:
+Removed from the normal product:
 
-- `ai-agent-lab` — authoritative `work-webhook-test` plus discovery `main`;
-- `fgis-fsa-il` — authoritative/default `main`;
-- `telegram-receiver` — authoritative/default `main`.
+- `installer/legacy.py`;
+- `capsulectl adopt`;
+- repository-specific legacy migration tests;
+- temporary legacy profile registry entries;
+- active documentation that presented legacy adoption as an available lifecycle operation.
 
-Each target now has Context Capsule Core v1.3 metadata and a v3 manifest while preserving its project-specific semantics. No target project context is stored in Core.
+Historical migration code remains recoverable from Git history only.
+
+## Permanent v1.3 surface
+
+- clean install;
+- non-destructive repair;
+- VALID;
+- READY;
+- bounded fresh-chat recover;
+- managed bootstrap blocks;
+- safe repository paths;
+- exact Core SHA provenance;
+- atomic GitHub branch publication.
 
 ## Verification boundary
 
-The target migrations were validated against their live Git trees and manifest references. Core hosted CI remains externally blocked because Actions is not assigning a runner to this development branch.
+Static repository inspection confirms no executable/import references to the removed legacy adapter remain and the permanent test suite contains eight focused tests.
+
+GitHub Actions still fails before runner assignment (`runner_id=0`, `steps=[]`), so exact hosted execution of the cleanup commit remains pending.
 
 ## Next
 
-Remove or isolate the now-unneeded temporary legacy adapters, then perform exact Core verification and prepare the permanent v1.3 product surface.
+Once Actions runs normally, execute the exact permanent suite and, if green, promote v1.3 to the stable branch and create immutable release provenance.
