@@ -182,6 +182,98 @@ class RuntimeReadinessTests(unittest.TestCase):
             )
             self.assertEqual(accepted.returncode, 0, accepted.stdout + accepted.stderr)
 
+    def test_known_v12_bootstrap_upgrades_without_false_review(self):
+        with tempfile.TemporaryDirectory() as td:
+            target = Path(td) / "repo"
+            init_repo(target)
+
+            old_agents = """# Agent Instructions
+
+Before substantial work, restore project context from `.context/ENTRYPOINT.md`.
+
+Follow `.context/manifest.json` for the authoritative context branch and actual project-context paths. After recovery, reconcile stored context with live repository/CI/runtime evidence.
+
+Do not copy volatile runtime state into durable context unless it changes project semantics.
+Do not send project context to Context Capsule Core.
+"""
+            (target / "AGENTS.md").write_text(old_agents, encoding="utf-8")
+
+            metadata = {
+                "schema": "context-capsule",
+                "version": "1.2.0",
+                "source": "lvlaksim1/context-capsule",
+                "installed_at": "2026-09-19",
+                "repository": "owner/repo",
+                "update_policy": "manual",
+            }
+            manifest = {
+                "schema": "context-capsule-manifest",
+                "schema_version": 2,
+                "repository": "owner/repo",
+                "authoritative_branch": "main",
+                "discovery_branch": "main",
+                "branch_mode": "single",
+                "entrypoint": ".context/ENTRYPOINT.md",
+                "capsule_metadata": ".context/capsule.json",
+                "protocol": ".context/protocol.md",
+                "latest_handoff": ".context/handoffs/latest.md",
+                "project": {
+                    "identity": ".context/project/identity.md",
+                    "goals": ".context/project/goals.md",
+                    "architecture": ".context/project/architecture.md",
+                    "constraints": ".context/project/constraints.md",
+                },
+                "current": {
+                    "state": ".context/current/state.md",
+                    "blockers": ".context/current/blockers.md",
+                    "next": ".context/current/next.md",
+                },
+                "current_state": ".context/current/state.md",
+                "rules": [".context/rules/project-rules.md"],
+                "decisions": [],
+                "dialogues": [],
+                "history": [],
+                "runtime": {
+                    "authoritative_paths": [],
+                    "volatile": False,
+                    "promote_semantic_changes_only": False,
+                },
+                "sync_policy": {
+                    "semantic_only": True,
+                    "volatile_runtime_excluded": True,
+                    "cas_required_when_expected_head_supplied": True,
+                },
+                "updated_at": "2026-09-20",
+            }
+            (target / ".context").mkdir()
+            (target / ".context/capsule.json").write_text(
+                json.dumps(metadata), encoding="utf-8"
+            )
+            (target / ".context/manifest.json").write_text(
+                json.dumps(manifest), encoding="utf-8"
+            )
+            for rel in (
+                ".context/project/identity.md",
+                ".context/project/goals.md",
+                ".context/project/architecture.md",
+                ".context/project/constraints.md",
+                ".context/current/state.md",
+                ".context/current/blockers.md",
+                ".context/current/next.md",
+                ".context/rules/project-rules.md",
+                ".context/handoffs/latest.md",
+            ):
+                path = target / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(f"# {rel}\n\nlegacy content\n", encoding="utf-8")
+            commit_all(target, "v1.2 fixture")
+
+            upgraded = run_cli("upgrade", "--target", str(target))
+            self.assertEqual(upgraded.returncode, 0, upgraded.stdout + upgraded.stderr)
+            resume = json.loads((target / ".context/resume.json").read_text())
+            self.assertNotIn("AGENTS.md", resume["bootstrap_review"])
+            self.assertFalse((target / ".context/tools").exists())
+
     def test_schema_validation_rejects_semver_lookalike(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td) / "repo"
