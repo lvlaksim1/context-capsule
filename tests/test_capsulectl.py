@@ -172,8 +172,8 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         self.assertNotIn(".context/manifest.json", discovery)
         self.assertNotIn(".context/capsule.json", discovery)
         self.assertIn("context", discovery[".context/ENTRYPOINT.md"])
-        self.assertIn("discovery branch `main`", discovery["AI_CONTEXT.md"])
-        self.assertIn("authoritative durable context is on `context`", discovery["AGENTS.md"])
+        self.assertIn("discovery branch main", discovery["AI_CONTEXT.md"])
+        self.assertIn("authoritative durable context is on context", discovery["AGENTS.md"])
 
     def test_repair_preserves_redirect_topology_and_requires_authoritative_branch(self):
         final = apply({}, clean_install_changes(
