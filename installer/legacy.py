@@ -5,6 +5,7 @@ from pathlib import Path
 
 from .model import (
     PROJECT_SEED_PATHS,
+    VERSION,
     CapsuleModelError,
     bootstrap_changes,
     build_capsule_metadata,
@@ -92,6 +93,13 @@ def _normalize_telegram(manifest: dict) -> dict:
 
 def _normalize_ai_agent(manifest: dict) -> dict:
     result = copy.deepcopy(manifest)
+    if "context_version" in result:
+        result.setdefault("legacy_context_version", result["context_version"])
+    if "installed_from" in result:
+        result.setdefault("legacy_installed_from", result["installed_from"])
+    result["context_version"] = VERSION
+    result["installed_from"] = f"Context Capsule Core v{VERSION}"
+    result["installation_status"] = "adopted-v1.3"
     if isinstance(result.get("current_state"), str):
         current = copy.deepcopy(result.get("current")) if isinstance(result.get("current"), dict) else {}
         current.setdefault("state", result["current_state"])
