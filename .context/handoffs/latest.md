@@ -1,43 +1,42 @@
-# Latest handoff — v1.3 integration checkpoint, NOT a release
+# Latest handoff — GitHub-only v1.3 cleanup checkpoint
 
-## Objective
+## User correction
 
-Deliver a robust Context Capsule whose permanent path is clean installation into a repository without a capsule, while retaining temporary migration/adoption only until `fgis-fsa-il`, `telegram-receiver` and `ai-agent-lab` have been migrated. The primary outcome is reliable continuation in a fresh chat without prior conversation.
+Context Capsule is exclusively a GitHub service. Nothing is installed or executed on the user's computer.
 
-## Branch and safety
+## Corrected architecture
 
-- Released baseline: `main` / Core v1.2.0 / `2965c17`.
-- Active development: `work/seamless-context-v1.3`.
-- Draft PR: #1. Do not merge until final verification succeeds.
-- Real target repositories have not been migrated by this work.
+- Central executable implementation: `lvlaksim1/context-capsule`.
+- Execution environment: GitHub automation / ephemeral GitHub-hosted checkout.
+- Target repositories: context data + discovery/bootstrap text only.
+- No target-installed `.context/tools/**`.
+- No local Python requirement.
+- No Windows/Linux desktop compatibility matrix.
+- No OS-level local lock/crash journal subsystem.
 
-## Integrated implementation
+## Removed from the v1.3 branch
 
-- `installer/storage.py`: cooperating-writer OS lock in Git metadata, target snapshot, path-scoped mutation, validated rollback journal, same-directory atomic replacement, interruption recovery and concurrent-edit detection.
-- `installer/legacy.py`: temporary legacy adapters preserve unknown top-level/nested semantics and nonstandard indexed references instead of flattening them.
-- `installer/capsulectl.py`: full plan/preflight/apply lifecycle; branch/HEAD and dirty-context checks; install/adopt/repair/upgrade plus evidence-backed checkpoint command.
-- `runtime/contracts.py`: repository confinement, symlink/special-file rejection, bundled-schema executor, managed-block parsing.
-- `runtime/capsule_runtime.py`: offline structural/readiness inspection, semantic fingerprint, Git freshness classification and bounded task-specific recovery pack.
-- schema v3 adds `managed_files`, `memory_index` and `resume`.
-- Managed bootstrap blocks preserve existing AGENTS/AI_CONTEXT/custom legacy bootstrap text and force explicit review when origin is unknown.
-- Installed repositories receive their own runtime and schemas under `.context/tools/`.
-- `CAPSULE_TODO` marks unfilled clean-install semantic documents; structural validity and continuation readiness are intentionally different states.
-- Migration registry now includes temporary v1.2 -> v1.3; earlier 1.0 -> 1.1 -> 1.2 hops remain available for the transition.
+- copied runtime/schema bundle in target repositories;
+- tests enforcing copied runtime parity;
+- Windows CI matrix and multi-Python compatibility matrix;
+- desktop OS locking, journal, atomic-file rollback and Windows path work;
+- bootstrap/docs instructions telling a target repository to execute local Capsule Python.
 
-## Tests added/changed
+## Retained
 
-- Existing lifecycle tests are being adapted to real Git worktrees and v1.3.
-- New hardening tests cover wrong branch, malformed adoption without partial writes, nested/custom manifest preservation, dirty-context refusal, symlink escape, path traversal, concurrent edit and mid-apply rollback.
-- New runtime tests cover draft-vs-ready behavior, ready checkpoint continuity across context-only commits, detection of later implementation commits, preservation/review of existing AGENTS instructions and strict schema rejection.
-
-## Current verification status
-
-Code and central structure are integrated, but final test results are not yet established. Do not claim the v1.2 defects fixed until the full suite and cross-platform CI pass.
+- v3 schemas and strict central validation;
+- managed bootstrap blocks preserving unknown project instructions;
+- branch/HEAD/dirty-context checks;
+- repository path/symlink confinement;
+- semantic index and draft/ready checkpoint;
+- central readiness/recovery logic;
+- production-derived legacy migration fixtures;
+- temporary migration chain through v1.3.
 
 ## Next exact step
 
-Run the complete test matrix, inspect failures, repair implementation/tests, then exercise migrations against disposable copies of the three real legacy projects. After success, update docs/specs, compute a real central semantic fingerprint, mark the central checkpoint ready and only then prepare merge/release.
+Run GitHub-only CI after cleanup, fix all failures, then verify migration fixtures and central self-audit. Do not merge PR #1 before the cleaned branch is green.
 
-## Constraints
+## Future recorded change
 
-Never overwrite target project memory, never export target context to Core, never silently replace unknown bootstrap instructions, and do not remove temporary migration mechanisms before the three real migrations are complete.
+Remove the hard recovery-pack byte budget. `index.json` remains navigation only; it must never prevent access to needed context.
