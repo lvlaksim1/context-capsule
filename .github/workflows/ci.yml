@@ -18,8 +18,36 @@ jobs:
         with:
           python-version: '3.13'
       - name: Run tests
-        run: python -m unittest discover -s tests -v
+        id: tests
+        continue-on-error: true
+        shell: bash
+        run: |
+          python -m unittest discover -s tests -v > test.log 2>&1
       - name: Self-validate central capsule
-        run: python installer/capsulectl.py validate --target .
+        id: validate
+        continue-on-error: true
+        shell: bash
+        run: |
+          python installer/capsulectl.py validate --target . > validate.log 2>&1
       - name: Self-audit central capsule
-        run: python installer/capsulectl.py audit --target .
+        id: audit
+        continue-on-error: true
+        shell: bash
+        run: |
+          python installer/capsulectl.py audit --target . > audit.log 2>&1
+      - name: Upload temporary diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: context-capsule-ci-diagnostics
+          path: |
+            test.log
+            validate.log
+            audit.log
+          retention-days: 1
+      - name: Enforce results
+        shell: bash
+        run: |
+          test "${{ steps.tests.outcome }}" = "success"
+          test "${{ steps.validate.outcome }}" = "success"
+          test "${{ steps.audit.outcome }}" = "success"
