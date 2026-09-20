@@ -12,6 +12,7 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 from pathlib import Path
 
 from runtime.contracts import load_json, managed_block, safe_path, schema_errors
