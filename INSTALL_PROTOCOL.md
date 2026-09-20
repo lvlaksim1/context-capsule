@@ -1,78 +1,68 @@
-# Context Capsule installation and transition protocol
+# Context Capsule GitHub installation protocol
+
+## Product boundary
+
+The user does not install or run anything locally.
+
+All Context Capsule operations are initiated and executed inside GitHub by the central service. Internal scripts may run in an ephemeral GitHub-hosted checkout, but this is not a user-facing runtime.
 
 ## Permanent path: clean installation
 
-Use `install` only when the target has no existing `.context/`.
+For a repository without an existing capsule, the GitHub service:
 
-1. Check out the branch that will be the authoritative context branch.
-2. Start from a clean capsule/discovery working set.
-3. Run:
-   ```bash
-   python installer/capsulectl.py install --target /repo --repository owner/name
-   ```
-4. Keep any pre-existing project instructions in `AGENTS.md` / `AI_CONTEXT.md`; Core adds only its managed block.
-5. Replace every `CAPSULE_TODO` semantic template with repository-specific verified content.
-6. Record durable rules/decisions and a concise handoff.
-7. Reconcile those semantics with the live repository, CI/release evidence and any declared runtime authority.
-8. Create an evidence-backed `checkpoint --ready`.
-9. Run `audit --ready` and the repository-local runtime check.
-10. Commit the capsule changes so the ready state is actually durable.
+1. reads the target repository and authoritative branch;
+2. verifies the expected HEAD when available;
+3. refuses an existing `.context/` unless the operation is an explicit legacy adoption;
+4. creates the standard context structure;
+5. preserves pre-existing project instructions in shared bootstrap files;
+6. adds only the Context Capsule managed bootstrap block;
+7. creates `manifest.json`, `index.json` and a draft `resume.json`;
+8. validates the planned state before publication;
+9. commits/publishes the coherent change through GitHub.
 
-A fresh install is expected to be structurally valid immediately and **not ready** until steps 5-9 are completed.
+The target repository receives data/instructions only, never Context Capsule executables.
+
+## Context capture and readiness
+
+After clean installation, repository-specific semantics must be populated from verified GitHub evidence. `CAPSULE_TODO` templates are not considered continuation-ready.
+
+The central service marks a checkpoint ready only after required semantic content, evidence, bootstrap review and freshness checks pass.
 
 ## Branch topology
 
-The checked-out branch is the authoritative branch for lifecycle mutation. Supplying `--branch` is a precondition check, not a request to switch branches.
+The lifecycle operation runs against the authoritative context branch. The service must verify branch identity and must not create a second independent capsule in a discovery branch.
 
-For a split topology:
-
-```bash
---branch work-context --discovery-branch main
-```
-
-The discovery branch must already exist. Lifecycle mutation is performed on the authoritative branch; do not create a second independent capsule on the discovery branch.
+For split topology, the discovery branch contains only the minimal pointer needed to locate the authoritative branch.
 
 ## Mutation safety
 
-Before a mutating lifecycle command:
+The service builds a complete plan against a known branch/HEAD. Before publication it verifies that the checkout still corresponds to that state.
 
-- commit/stash existing capsule/discovery changes, or deliberately use `--allow-dirty-context`;
-- optionally supply `--expected-head <sha>`;
-- do not use symlinked capsule paths.
+Remote publication must use Git/GitHub concurrency protection so a stale service run cannot overwrite a newer repository state.
 
-Core computes the complete target state before writing. If preflight fails, no target file is written. During apply it uses a repository-local OS lock, compares the snapshot/HEAD/branch, journals preimages in Git metadata and rolls back a failed cooperating-writer transaction.
+No local desktop lock, crash journal, Windows path compatibility layer or local rollback service is required.
 
-## Existing legacy capsule — temporary transition only
+## Existing legacy capsule — temporary only
 
-Until the three historical installations are migrated, use `adopt` when useful `.context/` exists but `.context/capsule.json` does not.
+Until the three known old installations are migrated, legacy adoption/migration preserves:
 
-Adoption preserves:
-
-- unknown legacy manifest fields;
-- richer/nonnormalized project and current paths;
+- custom manifest fields;
+- richer project/current paths;
 - declared decisions/dialogues/history outside standard folders;
 - project-specific rule files;
 - custom bootstrap text;
 - split authoritative/discovery branches;
-- `.agent/` or other declared volatile runtime authority.
+- separate live runtime authorities such as `.agent/`.
 
-Known historical Core bootstrap text may be replaced by the current managed block. Unknown text is preserved verbatim outside that block and recorded in `resume.bootstrap_review`; a ready checkpoint then requires explicit review.
+Unknown project bootstrap text is preserved and requires explicit review before readiness.
 
-`upgrade` follows the declared temporary migration chain. Current transition support is v1.0 -> v1.1 -> v1.2 -> v1.3.
-
-After `fgis-fsa-il`, `telegram-receiver` and `ai-agent-lab` are migrated and verified, removal of the legacy/adoption migration layer should be handled as a separate change.
-
-## Repair
-
-`repair` is for a current-version installed capsule. It restores/refreshes Core-managed structure and navigation without overwriting project-owned semantic documents.
-
-It does not silently bless recovered content as ready. Readiness is still governed by the semantic checkpoint.
+After `fgis-fsa-il`, `telegram-receiver` and `ai-agent-lab` are migrated and verified, the legacy transition layer may be removed in a separate change.
 
 ## Prohibited
 
-- reverse synchronization of project context into Core;
-- telemetry or a central installation/context registry;
-- silent migration of unknown historical content;
-- flattening richer legacy semantics merely to fit standard filenames;
-- copying routine runtime churn into durable context;
-- treating structural validation as proof of semantic readiness.
+- requiring the user to run Python or any Context Capsule executable locally;
+- installing `.context/tools/**` into target repositories;
+- maintaining a central copy of target-project context;
+- telemetry/installation statistics;
+- silent replacement of unknown project instructions;
+- treating structural validity as semantic readiness.
