@@ -4,8 +4,10 @@
 
 None.
 
-## Infrastructure note
+## CLOSED — GitHub-hosted runner availability
 
-GitHub-hosted Actions for this private repository currently terminate before runner assignment (`runner_id=0`, `steps=[]`). The exact implementation has therefore been independently verified byte-for-byte instead of treating the unavailable hosted runner as a product blocker.
+The earlier hosted-runner failure for the private repository is resolved after making `context-capsule` public.
 
-The CI workflow remains enabled for stable `main` and pull requests so normal hosted verification resumes automatically when GitHub assigns runners again.
+A rerun of the same stable `main` workflow received a GitHub-hosted `ubuntu-latest` runner and completed every CI step successfully.
+
+No product or CI blocker remains for v1.3.

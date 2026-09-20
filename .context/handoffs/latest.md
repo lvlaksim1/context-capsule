@@ -1,30 +1,28 @@
 # Latest handoff
 
-## Stable v1.3
+## Stable v1.3 — complete
 
-Context Capsule Core v1.3 is complete.
+Context Capsule Core v1.3 is released on `main` and fully verified.
 
-Exact implementation verification:
+Verification now exists in two independent forms:
 
-- verified implementation commit: `ab242959226218b3388de208da9a755e584740c9`;
-- compile: PASS;
-- permanent tests: 9/9 PASS;
-- self VALID: PASS;
-- self READY: PASS;
-- fresh-chat recovery smoke: PASS.
+1. exact-commit independent reconstruction and execution;
+2. successful GitHub-hosted CI on stable `main` after the repository became public.
 
-The verification used files reconstructed from that exact GitHub commit and matched to Git blob SHA values.
+Hosted CI passed:
 
-Subsequent commits changed only documentation, Core's own semantic state, and release metadata; lifecycle source and tests remained unchanged.
+- permanent tests;
+- compile;
+- self VALID;
+- self READY;
+- fresh-chat recovery smoke.
 
-The permanent product provides clean install, non-destructive repair, VALID, READY, bounded recover, managed bootstrap blocks, repository path/symlink confinement, manifest-extension preservation, installed redirect-topology preservation, exact Core provenance, and expected-parent atomic GitHub publication.
+The previous `runner_id=0`, `steps=[]` problem was infrastructure availability for the private repository, not a Context Capsule code failure. It is now resolved.
+
+The permanent product surface remains clean install, non-destructive repair, VALID, READY, bounded recover, managed bootstrap blocks, repository path/symlink confinement, manifest-extension preservation, installed redirect-topology preservation, exact Core provenance, and expected-parent atomic GitHub publication.
 
 All three known legacy projects were migrated before the temporary adapter was removed.
 
-## CI note
-
-The private repository's GitHub-hosted jobs currently fail before runner assignment. The workflow is retained on stable `main` and pull requests; no CI bypass or fake success status was introduced.
-
 ## Status
 
-No product release blocker remains. Future feature work starts from stable v1.3 as a new versioned change.
+No known product, migration, or CI blocker remains.
