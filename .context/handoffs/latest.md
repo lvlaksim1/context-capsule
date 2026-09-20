@@ -37,3 +37,5 @@ The managed `AGENTS.md` block is the repair propagation surface for this rule in
 
 Core now supports a permanent context-authority branch plus discovery-only default branch. This closes the stale-authority failure mode exposed when a feature branch is merged or closed after carrying the capsule.
 
+FGIS FSA IL is the first migrated permanent-context consumer: `main` is discovery-only and `context` is the durable authority. Fresh feature branches no longer carry Context Capsule authority.
+

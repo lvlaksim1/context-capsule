@@ -29,3 +29,5 @@ The same rule is also carried by the Core-managed `AGENTS.md` block, so `repair`
 
 Core now officially supports a permanent authoritative context branch with a discovery-only default branch for projects that use disposable feature branches. Feature branches no longer need to become Context Capsule authority.
 
+The fresh-chat feature-branch failure mode is now closed: Core supports a permanent authoritative context branch and discovery-only default branch, and FGIS FSA IL has been migrated to that topology.
+
