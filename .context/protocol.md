@@ -1,37 +1,36 @@
 # Context Capsule protocol
 
-## Principle
+## Purpose
 
-The repository is the durable memory for the project. Individual chats are ephemeral.
+A fresh chat or agent with no conversation history must be able to recover the project's durable meaning and continue from the repository alone.
 
-## Start of substantial work
+## Durable layers
 
-- bootstrap through `ENTRYPOINT.md`;
-- verify the authoritative context branch;
-- restore project semantics before reading deep history;
-- reconcile with live code/CI/runtime evidence;
-- do not infer missing historical facts.
+- `project/` — identity, goals, architecture, constraints.
+- `rules/` and `decisions/` — binding rules and accepted/rejected durable choices.
+- `current/` — compact current state, unresolved blockers, and next actions.
+- `handoffs/latest.md` — concise transfer to the next chat/agent.
+- `dialogues/` — evidence-rich investigations when chronology matters.
+- `history/` — older useful context.
 
-## Semantic sync triggers
+## VALID vs READY
 
-Persist a durable update when one of these changes: accepted decision; requirement or durable rule; persistent user preference; architecture/interface contract; blocker/root cause; rejected/superseded approach; milestone/release; active plan/priority; important verified finding.
+`VALID` means the capsule is structurally coherent and all indexed paths are safe and resolvable inside the repository.
 
-Do **not** copy every runtime event, heartbeat, queue transition, CI poll, or conversational turn into `.context/`.
+`READY` additionally means the semantic recovery set is populated enough for a fresh chat to understand the project and continue: identity, goals, architecture, constraints, current state, next action, handoff, and at least one substantive active rule or durable decision.
 
-If a project has a separate live-state authority such as `.agent/`, keep volatile execution state there. Promote only semantic consequences into Context Capsule.
+## Semantic sync
 
-## Working-set discipline
+Persist durable decisions, requirements, rules, architecture changes, root causes, rejected approaches, milestones, and priority changes.
 
-`project/` stores stable semantics. `current/state.md`, `current/blockers.md`, and `current/next.md` are compact working-set views. `handoffs/latest.md` is a concise transfer. Resolved material moves to decisions/dialogues/history.
+Do not copy routine runtime churn such as heartbeats, leases, polling ticks, queue transitions, or transient CI state into `.context/`.
 
-## Concurrency / CAS
+## Repository mutation
 
-Before writing context, re-read the authoritative branch and current HEAD. When an expected HEAD is supplied, abort on mismatch and merge concurrent changes instead of overwriting them.
+The canonical GitHub lifecycle prepares and validates the complete target snapshot before publication, creates one Git tree and one commit from the expected parent, rechecks the branch head, and performs a non-forced ref update.
 
-## End / handoff
-
-Update current state, blockers, next, durable decisions/rules, relevant dialogue evidence, manifest, and latest handoff.
+If the branch moved, the ref is not updated. Unpublished Git objects may exist, but the target branch remains unchanged.
 
 ## Privacy
 
-Never persist secret values, credentials, cookies, private keys, or unnecessary sensitive personal data.
+Never persist credentials, secret values, cookies, private keys, or unnecessary sensitive personal information.

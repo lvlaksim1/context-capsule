@@ -1,6 +1,6 @@
 {
   "schema": "context-capsule-manifest",
-  "schema_version": 2,
+  "schema_version": 3,
   "repository": "lvlaksim1/context-capsule",
   "authoritative_branch": "work/core-v1.3",
   "discovery_branch": "work/core-v1.3",
@@ -42,7 +42,7 @@
   "sync_policy": {
     "semantic_only": true,
     "volatile_runtime_excluded": true,
-    "cas_required_when_expected_head_supplied": true
+    "atomic_git_publication": true
   },
   "updated_at": "2026-09-20"
 }
