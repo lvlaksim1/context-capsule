@@ -1,9 +1,9 @@
 # Current blockers and open risks
 
-## OPEN
+## OPEN — exact Core CI execution
 
-Hosted verification of the exact published branch commit is blocked externally: GitHub Actions runs on `work/core-v1.3` terminate with `runner_id=0`, empty runner name, and `steps=[]`. Retrying produced the same result. This behavior already occurred when the branch contained the unchanged v1.2 baseline, so it is not evidence of a v1.3 test failure.
+GitHub Actions runs on the Core development branch have terminated without an assigned runner (`runner_id=0`, `steps=[]`). Exact-commit hosted verification is therefore still pending.
 
-A 17-test local development prototype passed, but its files are not byte-for-byte identical to the final published implementation. It is supporting evidence only, not a substitute for executing the exact branch commit.
+## CLOSED — real legacy adoption coverage
 
-Real migrations of `fgis-fsa-il`, `telegram-receiver`, and `ai-agent-lab` are intentionally outside items 1–9 and have not been performed.
+All three known legacy repositories have now been migrated successfully with their intended profile. There are no additional known legacy targets that justify keeping a broad compatibility framework.

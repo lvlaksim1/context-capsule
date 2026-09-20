@@ -2,18 +2,22 @@
 
 ## Completed
 
-v1.3 hardening and the temporary known-legacy adapter are implemented on `work/core-v1.3`.
+The v1.3 hardening foundation and all three planned real legacy migrations are complete.
 
-Current Core implementation commit: `822fb8500ae2c1b0192f4d0863a72678c877c928`.
+Current Core implementation SHA: `1018129caa6aae0677741c1da62504cf2ae3904e`.
 
-The first real legacy migration exercised the `ai-agent-lab` adapter against its discovery/authority branch split. The migration preserved its existing semantic files, archived superseded bootstrap/protocol files, retained the special manager bootstrap and volatile `.agent/` authority, and survived subsequent target runtime commits.
+Migrated targets:
 
-No target repository context is copied into Core; only Core's own development state records that the adapter behavior was exercised.
+- `ai-agent-lab` — authoritative `work-webhook-test` plus discovery `main`;
+- `fgis-fsa-il` — authoritative/default `main`;
+- `telegram-receiver` — authoritative/default `main`.
+
+Each target now has Context Capsule Core v1.3 metadata and a v3 manifest while preserving its project-specific semantics. No target project context is stored in Core.
 
 ## Verification boundary
 
-Hosted GitHub Actions on the Core development branch are still not executing steps because no runner is assigned. Do not describe Core CI as green until the exact branch commit is actually executed.
+The target migrations were validated against their live Git trees and manifest references. Core hosted CI remains externally blocked because Actions is not assigning a runner to this development branch.
 
 ## Next
 
-Continue only with the two remaining known legacy migrations when requested, then remove unnecessary temporary compatibility before preparing a stable v1.3 release.
+Remove or isolate the now-unneeded temporary legacy adapters, then perform exact Core verification and prepare the permanent v1.3 product surface.
