@@ -1,40 +1,27 @@
 # Lifecycle
 
-## Install
+## Clean install
 
-Use `install` for repositories without an existing capsule. It creates the v1.2 structure, technical metadata, navigation manifest, and compact project/current skeleton.
+A clean install refuses an existing `.context/`. Existing root bootstrap files are preserved outside the Context Capsule managed block.
 
-## Adopt
-
-Use `adopt` when useful legacy `.context/` already exists but there is no Core `capsule.json`.
-
-Adoption:
-- preserves existing project-owned files;
-- understands legacy manifest forms used by earlier Project Context Capsule installations;
-- detects `authoritative_context_branch`, old authoritative maps, richer rules, and `.agent/` runtime separation;
-- fills only missing standard semantic/current documents;
-- writes Core metadata and a v1.2 navigation manifest.
+The installer records the exact Core commit SHA and prepares a complete snapshot before publication.
 
 ## Validate
 
-Checks required system files, metadata, manifest v2, project/current references, runtime and semantic-sync policy.
+`validate` answers only whether the capsule is structurally coherent, repository-confined, and internally resolvable.
 
-## Audit
+## Ready
 
-Runs validation plus:
-- compactness warnings for oversized current-state/handoff working-set files;
-- Git lag warning when many commits have occurred since the last context/discovery update.
+`ready` is stricter. It requires substantive identity, goals, architecture, constraints, current state, next action, handoff, and at least one active rule or durable decision.
 
-Audit warnings are prompts for semantic review, not proof that the capsule is stale.
+## Recover
+
+`recover` emits a deterministic bounded fresh-chat recovery pack from a READY capsule. Deep dialogue/history is not loaded by default.
 
 ## Repair
 
-Restores missing standard files without overwriting project-owned content, then refreshes the manifest.
+Repair preserves unknown manifest extensions and nonstandard indexed paths. It updates only Core-owned structure and managed bootstrap blocks.
 
-## Upgrade
+## Legacy adopt
 
-Upgrades through the declared migration chain. v1.0 -> v1.1 -> v1.2 is supported without skipping explicit migration steps.
-
-## CAS-aware mutation
-
-`install`, `adopt`, `repair`, and `upgrade` accept `--expected-head`. When supplied, Core aborts if the checked-out repository HEAD differs, preventing blind overwrite after concurrent changes.
+Legacy adoption is a temporary, repository-name-gated bridge for three known projects. It is not a permanent arbitrary migration framework.

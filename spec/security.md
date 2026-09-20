@@ -1,13 +1,8 @@
-# Security and privacy
+# Security and integrity
 
-Context Capsule Core is stateless with respect to installed projects.
-
-It MUST NOT:
-
-- receive target project context;
-- maintain a registry of installed repositories;
-- collect telemetry or usage statistics;
-- copy target context into Core;
-- require a network callback during normal capsule operation.
-
-A target repository's access controls govern its own `.context/` content. Private repository context stays private to that repository and its authorized tooling.
+- Target project context never flows back into Core.
+- No telemetry or central installation registry.
+- Manifest paths interpreted by Core must be relative repository paths and may not escape through `..`, absolute paths, backslash ambiguity, or local symlink traversal.
+- Shared bootstrap files are modified only inside explicit managed markers.
+- GitHub publication is non-forced from an expected parent.
+- Secret values, credentials, cookies, private keys, and unnecessary sensitive personal information are excluded from durable context.

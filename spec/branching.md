@@ -1,12 +1,7 @@
-# Branch-aware context
+# Branching
 
-A project may keep the authoritative capsule on a branch other than the repository default branch.
+New installations are single-branch: the repository's primary working branch is both discovery and authority.
 
-Manifest fields:
-- `authoritative_branch` — full capsule and semantic authority;
-- `discovery_branch` — first branch a fresh agent is expected to see;
-- `branch_mode` — `single` or `redirect`.
+Lifecycle publication is based on an expected HEAD. The planned commit has that HEAD as its parent and the branch update is non-forced. If the branch advances concurrently, publication is rejected.
 
-For `redirect` mode, the discovery branch should contain minimal discovery shims that point to the authoritative context branch. Lifecycle mutation must be performed against the authoritative branch checkout.
-
-Do not accidentally install a second independent capsule into the discovery branch.
+The old discovery/authority redirect is retained only for the temporary `ai-agent-lab` migration profile.

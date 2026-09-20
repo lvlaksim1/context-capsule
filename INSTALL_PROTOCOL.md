@@ -1,29 +1,37 @@
-# Installation and adoption protocol
+# Canonical GitHub installation protocol
 
-## New repository
+## Clean installation
 
-1. Select an explicit stable Core version.
-2. Inspect the target for existing discovery/context files.
-3. Install on the authoritative context branch.
-4. Capture stable project identity/goals/architecture/constraints from repository evidence.
-5. Capture compact current state/blockers/next.
-6. Record rules, decisions, and handoff.
-7. Validate/audit and reconcile against live repository/CI/runtime state.
+1. Read the target branch HEAD and tree.
+2. Read existing `AI_CONTEXT.md` / `AGENTS.md` if present and confirm there is no existing `.context/`.
+3. Capture the target project's durable semantic context.
+4. Build the complete desired snapshot in memory using the pinned Core commit SHA.
+5. Run structural validation and recovery-readiness checks against that planned snapshot.
+6. Create one Git tree based on the original tree.
+7. Create one commit whose parent is the original expected HEAD.
+8. Re-read the branch HEAD. If it changed, stop without moving the branch.
+9. Update the branch ref non-forced. A concurrent advance must therefore reject publication.
 
-## Existing legacy capsule
+The only branch-visible mutation is the final ref update. A failed publication may leave unreachable Git objects, but it does not partially install the capsule on the target branch.
 
-Use `adopt`; never reinstall over useful `.context/`.
+## Shared bootstrap files
 
-Adoption preserves rich legacy paths, recognizes old authoritative maps, detects split context/discovery branches and `.agent/` runtime authority, and adds only missing standard structure.
+Context Capsule owns only text between:
 
-## Concurrency
+`<!-- context-capsule:begin -->`
 
-For mutating lifecycle operations, use `--expected-head` when a Git HEAD is known. A mismatch aborts rather than overwriting concurrent changes.
+and
 
-## Prohibited
+`<!-- context-capsule:end -->`
 
-- no reverse context sync into Core;
-- no telemetry/central registry;
-- no silent version upgrade;
-- no flattening of richer legacy context;
-- no copying routine runtime churn into durable `.context/`.
+Existing project instructions outside that block are preserved.
+
+## Legacy transition
+
+Temporary adoption is allowed only for:
+
+- `lvlaksim1/fgis-fsa-il`
+- `lvlaksim1/telegram-receiver`
+- `lvlaksim1/ai-agent-lab`
+
+Actual production migration of those repositories is a later stage and is not part of the clean-install foundation.

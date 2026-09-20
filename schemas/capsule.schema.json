@@ -1,46 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://context-capsule.local/schemas/capsule.schema.json",
-  "title": "Context Capsule installation metadata",
+  "title": "Context Capsule metadata v1.3",
   "type": "object",
-  "required": [
-    "schema",
-    "version",
-    "source",
-    "installed_at",
-    "repository",
-    "update_policy"
-  ],
-  "additionalProperties": false,
+  "required": ["schema", "version", "source", "core_commit", "installed_at", "repository", "update_policy"],
   "properties": {
-    "schema": {
-      "const": "context-capsule"
-    },
-    "version": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
-    },
-    "source": {
-      "type": "string",
-      "minLength": 1
-    },
-    "installed_at": {
-      "type": "string",
-      "format": "date"
-    },
-    "repository": {
-      "type": "string",
-      "pattern": "^[^/]+/[^/]+$"
-    },
-    "update_policy": {
-      "enum": [
-        "manual"
-      ],
-      "default": "manual"
-    },
-    "adopted_from": {
-      "type": "string",
-      "minLength": 1
-    }
-  }
+    "schema": {"const": "context-capsule"},
+    "version": {"const": "1.3.0"},
+    "source": {"const": "lvlaksim1/context-capsule"},
+    "core_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "installed_at": {"type": "string"},
+    "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+    "update_policy": {"const": "manual"},
+    "adopted_from": {"type": "string"}
+  },
+  "additionalProperties": true
 }

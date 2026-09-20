@@ -1,27 +1,29 @@
 # Context Capsule Core
 
-Context Capsule is a repository-local durable project-memory standard. This repository is the canonical Core implementation; it never stores context from installed target repositories.
+Context Capsule is repository-local durable project memory for fresh-chat continuation.
 
-## v1.2 model
+## v1.3 development model
 
-- `capsule.json` — technical installation/version passport.
-- `manifest.json` — navigation, branch topology, runtime authority, sync policy.
-- `project/` — stable identity, goals, architecture, constraints.
-- `current/` — compact state, blockers, next actions.
-- `decisions/`, `dialogues/`, `history/` — durable evidence/history layers.
-- optional separate runtime authorities such as `.agent/` remain volatile; only semantic consequences are promoted into `.context/`.
+The permanent product is intentionally small:
 
-## Lifecycle
+- clean installation into a repository without an existing capsule;
+- one repository-local semantic context;
+- structural `VALID` and separate recovery `READY`;
+- deterministic `recover` output for a fresh chat;
+- safe repository-relative paths;
+- managed Context Capsule blocks inside shared `AI_CONTEXT.md` and `AGENTS.md`;
+- preservation of project-owned manifest extensions;
+- exact Core provenance through `core_commit`;
+- one-commit GitHub publication from an expected parent.
+
+Legacy adoption is temporary and limited to the three known repositories named in `spec/v1.3.md`.
+
+## CLI
 
 ```bash
-python installer/capsulectl.py install --target /repo --repository owner/name --branch main
-python installer/capsulectl.py adopt --target /repo --repository owner/name --branch main
-python installer/capsulectl.py validate --target /repo
-python installer/capsulectl.py audit --target /repo
-python installer/capsulectl.py repair --target /repo --expected-head <sha>
-python installer/capsulectl.py upgrade --target /repo --expected-head <sha>
+python installer/capsulectl.py validate --target .
+python installer/capsulectl.py ready --target .
+python installer/capsulectl.py recover --target .
 ```
 
-For a context branch different from the discovery/default branch, pass `--branch <context-branch> --discovery-branch <default-branch>`.
-
-See `spec/architecture.md`, `spec/lifecycle.md`, `spec/semantic-sync.md`, and `spec/branching.md`.
+Local `install/adopt/repair` commands are development helpers. Canonical repository mutation follows `INSTALL_PROTOCOL.md` and is published to GitHub as one commit.
