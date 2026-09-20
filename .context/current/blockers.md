@@ -2,9 +2,10 @@
 
 ## OPEN
 
-- Run the complete v1.3 regression suite and inspect actual failures.
-- Add/verify Windows coverage for locking, atomic replacement and recovery.
-- Verify migration against copies of `fgis-fsa-il`, `telegram-receiver` and `ai-agent-lab` before touching the real repositories.
-- Recompute and mark the central `resume.json` checkpoint ready only after verification.
+- Run the cleaned GitHub-only test suite and fix any failures introduced by removing the local-runtime layer.
+- Verify the three production-derived legacy fixtures still migrate correctly.
+- Verify central self-validation/self-audit on the development branch.
+- Recompute the central continuation checkpoint after the cleanup is stable.
+- The recovery-pack hard byte budget remains scheduled for a later change; it must not become an access barrier to needed history.
 
-No known architectural blocker currently requires redesign; remaining work is verification and defect correction.
+No desktop/Windows/Python-user compatibility work is required.
