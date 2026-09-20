@@ -36,7 +36,7 @@ If such an event changes the durable meaning of the project, record that consequ
 
 ## Semantic index
 
-`index.json` is a routing layer, not a duplicate knowledge base. It should summarize durable records sufficiently for selective recall without replacing the original record.
+`index.json` is a navigation layer, not a duplicate knowledge base and not an access filter. It should help locate durable records without preventing the service/agent from reading any history that becomes relevant.
 
 Index entries preserve a stable id and path. Missing/extra index coverage is a readiness signal because a fresh chat may otherwise fail to discover relevant history.
 
