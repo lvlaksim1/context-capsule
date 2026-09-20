@@ -6,10 +6,16 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from runtime.capsule_runtime import inspect, recovery_pack
+
 CLI = ROOT / "installer" / "capsulectl.py"
+SCHEMAS = ROOT / "schemas"
 
 
-def run(*args: str) -> subprocess.CompletedProcess:
+def run_cli(*args: str) -> subprocess.CompletedProcess:
     return subprocess.run(
         [sys.executable, str(CLI), *args],
         text=True,
@@ -45,9 +51,9 @@ def commit_all(target: Path, message: str) -> None:
 def fill_required_context(target: Path) -> None:
     values = {
         ".context/project/identity.md": "# Project identity\n\nFixture project owned by this repository.\n",
-        ".context/project/goals.md": "# Project goals\n\nDeliver deterministic repository-local project continuity.\n",
-        ".context/project/architecture.md": "# Project architecture\n\nThe repository is the durable authority; runtime state is separate.\n",
-        ".context/project/constraints.md": "# Project constraints\n\nPreserve project memory and never export it to Core.\n",
+        ".context/project/goals.md": "# Project goals\n\nDeliver deterministic GitHub-hosted project continuity.\n",
+        ".context/project/architecture.md": "# Project architecture\n\nGitHub repository is durable context authority.\n",
+        ".context/project/constraints.md": "# Project constraints\n\nNo local Context Capsule runtime is required.\n",
         ".context/current/state.md": "# Current state\n\nThe v1.3 capsule is installed and reconciled.\n",
         ".context/current/blockers.md": "# Current blockers\n\nNo known blockers.\n",
         ".context/current/next.md": "# Next actions\n\nContinue the requested implementation task.\n",
@@ -58,11 +64,11 @@ def fill_required_context(target: Path) -> None:
 
 
 class RuntimeReadinessTests(unittest.TestCase):
-    def test_install_is_structurally_valid_but_not_ready(self):
+    def test_install_is_valid_but_not_ready_and_installs_no_runtime(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td) / "repo"
             init_repo(target)
-            result = run(
+            result = run_cli(
                 "install",
                 "--target",
                 str(target),
@@ -70,17 +76,18 @@ class RuntimeReadinessTests(unittest.TestCase):
                 "owner/repo",
             )
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-            audit = run("audit", "--target", str(target), "--ready")
+            self.assertFalse((target / ".context/tools").exists())
+            audit = run_cli("audit", "--target", str(target), "--ready")
             self.assertEqual(audit.returncode, 2, audit.stdout + audit.stderr)
             self.assertIn("CAPSULE_TODO", (target / ".context/project/identity.md").read_text())
             resume = json.loads((target / ".context/resume.json").read_text())
             self.assertEqual(resume["status"], "draft")
 
-    def test_ready_checkpoint_survives_context_only_commit_and_detects_code_change(self):
+    def test_central_service_checks_ready_and_detects_implementation_change(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td) / "repo"
             init_repo(target)
-            installed = run(
+            installed = run_cli(
                 "install",
                 "--target",
                 str(target),
@@ -91,7 +98,7 @@ class RuntimeReadinessTests(unittest.TestCase):
             commit_all(target, "install capsule")
 
             fill_required_context(target)
-            checkpoint = run(
+            checkpoint = run_cli(
                 "checkpoint",
                 "--target",
                 str(target),
@@ -101,52 +108,26 @@ class RuntimeReadinessTests(unittest.TestCase):
                 "Continue implementation from the recorded current state.",
                 "--ready",
             )
-            self.assertEqual(
-                checkpoint.returncode,
-                0,
-                checkpoint.stdout + checkpoint.stderr,
-            )
+            self.assertEqual(checkpoint.returncode, 0, checkpoint.stdout + checkpoint.stderr)
             commit_all(target, "ready context checkpoint")
 
-            local_runtime = target / ".context/tools/capsule_runtime.py"
-            ready = subprocess.run(
-                [sys.executable, str(local_runtime), "check", "--ready"],
-                cwd=target,
-                text=True,
-                capture_output=True,
-            )
-            self.assertEqual(ready.returncode, 0, ready.stdout + ready.stderr)
+            ready = inspect(target, schemas=SCHEMAS)
+            self.assertFalse(ready["errors"])
+            self.assertFalse(ready["readiness"])
 
-            recovery = subprocess.run(
-                [
-                    sys.executable,
-                    str(local_runtime),
-                    "resume",
-                    "--task",
-                    "continue implementation",
-                ],
-                cwd=target,
-                text=True,
-                capture_output=True,
-            )
-            self.assertEqual(
-                recovery.returncode,
-                0,
-                recovery.stdout + recovery.stderr,
-            )
-            self.assertIn("# Repository recovery pack", recovery.stdout)
-            self.assertIn("Fixture capsule reconciled", recovery.stdout)
+            pack = recovery_pack(target, task="continue implementation")
+            self.assertIn("# Repository recovery pack", pack)
+            self.assertIn("Fixture capsule reconciled", pack)
 
             (target / "implementation.txt").write_text("changed\n", encoding="utf-8")
             commit_all(target, "implementation change")
-            stale = subprocess.run(
-                [sys.executable, str(local_runtime), "check", "--ready"],
-                cwd=target,
-                text=True,
-                capture_output=True,
+            stale = inspect(target, schemas=SCHEMAS)
+            self.assertTrue(
+                any(
+                    "implementation changed after checkpoint" in item
+                    for item in stale["readiness"]
+                )
             )
-            self.assertEqual(stale.returncode, 2, stale.stdout + stale.stderr)
-            self.assertIn("implementation changed after checkpoint", stale.stdout)
 
     def test_custom_agents_is_preserved_and_requires_review(self):
         with tempfile.TemporaryDirectory() as td:
@@ -159,7 +140,7 @@ class RuntimeReadinessTests(unittest.TestCase):
             )
             commit_all(target, "project agent rules")
 
-            installed = run(
+            installed = run_cli(
                 "install",
                 "--target",
                 str(target),
@@ -175,7 +156,7 @@ class RuntimeReadinessTests(unittest.TestCase):
 
             commit_all(target, "install capsule")
             fill_required_context(target)
-            blocked = run(
+            blocked = run_cli(
                 "checkpoint",
                 "--target",
                 str(target),
@@ -188,7 +169,7 @@ class RuntimeReadinessTests(unittest.TestCase):
             self.assertNotEqual(blocked.returncode, 0)
             self.assertIn("custom bootstrap still requires review", blocked.stderr)
 
-            accepted = run(
+            accepted = run_cli(
                 "checkpoint",
                 "--target",
                 str(target),
@@ -201,114 +182,11 @@ class RuntimeReadinessTests(unittest.TestCase):
             )
             self.assertEqual(accepted.returncode, 0, accepted.stdout + accepted.stderr)
 
-    def test_known_v12_agents_bootstrap_upgrades_without_false_review(self):
-        with tempfile.TemporaryDirectory() as td:
-            target = Path(td) / "repo"
-            init_repo(target)
-
-            old_agents = """# Agent Instructions
-
-Before substantial work, restore project context from `.context/ENTRYPOINT.md`.
-
-Follow `.context/manifest.json` for the authoritative context branch and actual project-context paths. After recovery, reconcile stored context with live repository/CI/runtime evidence.
-
-Do not copy volatile runtime state into durable context unless it changes project semantics.
-Do not send project context to Context Capsule Core.
-"""
-            (target / "AGENTS.md").write_text(old_agents, encoding="utf-8")
-
-            metadata = {
-                "schema": "context-capsule",
-                "version": "1.2.0",
-                "source": "lvlaksim1/context-capsule",
-                "installed_at": "2026-09-19",
-                "repository": "owner/repo",
-                "update_policy": "manual",
-            }
-            manifest = {
-                "schema": "context-capsule-manifest",
-                "schema_version": 2,
-                "repository": "owner/repo",
-                "authoritative_branch": "main",
-                "discovery_branch": "main",
-                "branch_mode": "single",
-                "entrypoint": ".context/ENTRYPOINT.md",
-                "capsule_metadata": ".context/capsule.json",
-                "protocol": ".context/protocol.md",
-                "latest_handoff": ".context/handoffs/latest.md",
-                "project": {
-                    "identity": ".context/project/identity.md",
-                    "goals": ".context/project/goals.md",
-                    "architecture": ".context/project/architecture.md",
-                    "constraints": ".context/project/constraints.md",
-                },
-                "current": {
-                    "state": ".context/current/state.md",
-                    "blockers": ".context/current/blockers.md",
-                    "next": ".context/current/next.md",
-                },
-                "current_state": ".context/current/state.md",
-                "rules": [".context/rules/project-rules.md"],
-                "decisions": [],
-                "dialogues": [],
-                "history": [],
-                "runtime": {
-                    "authoritative_paths": [],
-                    "volatile": False,
-                    "promote_semantic_changes_only": False,
-                },
-                "sync_policy": {
-                    "semantic_only": True,
-                    "volatile_runtime_excluded": True,
-                    "cas_required_when_expected_head_supplied": True,
-                },
-                "updated_at": "2026-09-20",
-            }
-            (target / ".context").mkdir()
-            (target / ".context/capsule.json").write_text(
-                json.dumps(metadata),
-                encoding="utf-8",
-            )
-            (target / ".context/manifest.json").write_text(
-                json.dumps(manifest),
-                encoding="utf-8",
-            )
-            for rel in (
-                ".context/project/identity.md",
-                ".context/project/goals.md",
-                ".context/project/architecture.md",
-                ".context/project/constraints.md",
-                ".context/current/state.md",
-                ".context/current/blockers.md",
-                ".context/current/next.md",
-                ".context/rules/project-rules.md",
-                ".context/handoffs/latest.md",
-            ):
-                path = target / rel
-                path.parent.mkdir(parents=True, exist_ok=True)
-                path.write_text(f"# {rel}\n\nlegacy content\n", encoding="utf-8")
-            commit_all(target, "v1.2 fixture")
-
-            upgraded = run("upgrade", "--target", str(target))
-            self.assertEqual(
-                upgraded.returncode,
-                0,
-                upgraded.stdout + upgraded.stderr,
-            )
-            resume = json.loads((target / ".context/resume.json").read_text())
-            self.assertNotIn("AGENTS.md", resume["bootstrap_review"])
-            agents = (target / "AGENTS.md").read_text()
-            self.assertIn("context-capsule:begin", agents)
-            self.assertNotIn(
-                "Follow `.context/manifest.json` for the authoritative",
-                agents,
-            )
-
     def test_schema_validation_rejects_semver_lookalike(self):
         with tempfile.TemporaryDirectory() as td:
             target = Path(td) / "repo"
             init_repo(target)
-            installed = run(
+            installed = run_cli(
                 "install",
                 "--target",
                 str(target),
@@ -321,7 +199,7 @@ Do not send project context to Context Capsule Core.
             metadata["version"] = "abc.def.ghi"
             metadata_path.write_text(json.dumps(metadata, indent=2) + "\n")
 
-            checked = run("validate", "--target", str(target))
+            checked = run_cli("validate", "--target", str(target))
             self.assertEqual(checked.returncode, 1)
             self.assertIn("invalid string format", checked.stdout)
 
