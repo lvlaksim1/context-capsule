@@ -271,9 +271,9 @@ class HardeningTests(unittest.TestCase):
             with storage.locked(target) as gitdir:
                 recovered = storage.recover(target, gitdir)
                 self.assertTrue(recovered)
-            self.assertEqual(tracked.read_bytes(), b"before\n")
+            self.assertEqual(tracked.read_bytes(), before)
             self.assertFalse(
-                (target / ".git/context-capsule-transaction.json").exists()
+                (gitdir / "context-capsule-transaction.json").exists()
             )
 
     def test_transaction_rolls_back_after_mid_apply_failure(self):
