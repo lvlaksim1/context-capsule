@@ -62,6 +62,12 @@ def read(root: Path, rel: str, fallback: Path | None = None) -> str:
     return read_bytes(root, rel, fallback).decode("utf-8")
 
 
+def canonical_text_sha256(data: bytes) -> str:
+    text = data.decode("utf-8")
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n")
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
+
+
 def required_paths(manifest: dict) -> list[str]:
     return list(
         dict.fromkeys(
@@ -298,9 +304,9 @@ def inspect(
         try:
             if not rel.startswith(".context/tools/"):
                 raise ValueError(f"unsupported managed path: {rel}")
-            actual = hashlib.sha256(
+            actual = canonical_text_sha256(
                 read_bytes(root, rel, fallback)
-            ).hexdigest()
+            )
             if actual != expected:
                 errors.append(f"installed tool integrity mismatch: {rel}")
         except (ValueError, OSError) as exc:
