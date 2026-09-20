@@ -1,41 +1,30 @@
 # Latest handoff
 
-## Verified v1.3 result
+## Stable v1.3
 
-Context Capsule Core v1.3 is implementation-complete.
+Context Capsule Core v1.3 is complete.
 
-Exact verified implementation commit: `ab242959226218b3388de208da9a755e584740c9`.
+Exact implementation verification:
 
-Verification was performed against files reconstructed from that exact GitHub commit and matched to their Git blob SHA values.
-
-Results:
-
+- verified implementation commit: `ab242959226218b3388de208da9a755e584740c9`;
 - compile: PASS;
 - permanent tests: 9/9 PASS;
 - self VALID: PASS;
 - self READY: PASS;
 - fresh-chat recovery smoke: PASS.
 
-The permanent product surface is:
+The verification used files reconstructed from that exact GitHub commit and matched to Git blob SHA values.
 
-- clean install;
-- non-destructive repair;
-- VALID;
-- READY;
-- bounded fresh-chat recover;
-- managed bootstrap blocks;
-- safe repository paths and symlink confinement;
-- preservation of project-owned manifest extensions;
-- preservation of installed redirect branch topology;
-- exact Core SHA provenance;
-- atomic GitHub branch publication from an expected parent.
+Subsequent commits changed only documentation, Core's own semantic state, and release metadata; lifecycle source and tests remained unchanged.
 
-The temporary legacy migration layer is retired. The three known legacy repositories were migrated before removal.
+The permanent product provides clean install, non-destructive repair, VALID, READY, bounded recover, managed bootstrap blocks, repository path/symlink confinement, manifest-extension preservation, installed redirect-topology preservation, exact Core provenance, and expected-parent atomic GitHub publication.
 
-## CI infrastructure note
+All three known legacy projects were migrated before the temporary adapter was removed.
 
-GitHub-hosted Actions on this private repository still terminate before runner assignment (`runner_id=0`, `steps=[]`). Public hosted Actions in the same account run normally, while the private FGIS project uses its own self-hosted runner. This is treated as repository/account CI infrastructure, not a failed Context Capsule test.
+## CI note
 
-## Next
+The private repository's GitHub-hosted jobs currently fail before runner assignment. The workflow is retained on stable `main` and pull requests; no CI bypass or fake success status was introduced.
 
-Promote the verified v1.3 line to `main` and use the final stable commit SHA as the canonical immutable installation source.
+## Status
+
+No product release blocker remains. Future feature work starts from stable v1.3 as a new versioned change.

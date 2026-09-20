@@ -1,13 +1,11 @@
 # Current blockers and open risks
 
-## CLOSED — exact v1.3 verification
+## RELEASE BLOCKERS
 
-The exact implementation commit `ab242959226218b3388de208da9a755e584740c9` passed compile, all 9 permanent tests, self VALID, self READY, and fresh-chat recovery smoke using files matched to their Git blob SHA values.
+None.
 
-## OPEN — GitHub-hosted runner availability
+## Infrastructure note
 
-GitHub-hosted Actions for this private repository currently terminate before runner assignment. This affects convenience CI on this repository but does not invalidate the independent exact-commit verification.
+GitHub-hosted Actions for this private repository currently terminate before runner assignment (`runner_id=0`, `steps=[]`). The exact implementation has therefore been independently verified byte-for-byte instead of treating the unavailable hosted runner as a product blocker.
 
-## CLOSED — legacy compatibility
-
-All three known legacy repositories are migrated and the temporary compatibility layer is removed.
+The CI workflow remains enabled for stable `main` and pull requests so normal hosted verification resumes automatically when GitHub assigns runners again.

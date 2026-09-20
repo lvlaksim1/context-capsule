@@ -1,21 +1,21 @@
 # Current state
 
-## FACT — Current semantic state
+## FACT — Stable v1.3 state
 
-Context Capsule Core v1.3 permanent product is implementation-complete.
+Context Capsule Core v1.3 is complete and ready for stable `main`.
 
-Verified implementation commit: `ab242959226218b3388de208da9a755e584740c9`.
+The exact implementation commit `ab242959226218b3388de208da9a755e584740c9` was independently reconstructed from GitHub and matched by Git blob SHA before execution.
 
-The exact source, test and template blobs from that commit were independently reconstructed and matched against their Git blob SHA values. The exact permanent suite then passed:
+Verification results:
 
 - Python compile: PASS;
-- 9/9 focused tests: PASS;
+- permanent tests: 9/9 PASS;
 - self structural validation: VALID;
 - self recovery readiness: READY;
-- fresh-chat recovery smoke: PASS, producing a non-empty recovery pack containing identity, handoff, current state and next actions.
+- fresh-chat recovery smoke: PASS.
 
-The ninth test specifically proves that repair preserves an installed redirect topology and refuses repair from a non-authoritative branch.
+After that verification, only documentation/self-context/release-state changes were made; lifecycle source and permanent tests were not changed.
 
-The temporary legacy migration layer has been retired after all three known legacy repositories were migrated. Those target repositories do not depend on the removed adapter at runtime.
+The temporary legacy bridge has been removed after all three known legacy repositories were migrated successfully.
 
-GitHub-hosted Actions for this private repository still fail before runner assignment (`runner_id=0`, `steps=[]`). This is no longer treated as a product-code release blocker because the exact commit was verified independently and byte-for-byte.
+GitHub-hosted Actions for this private repository currently fail before runner assignment. This is recorded as CI infrastructure availability, not as a product test failure.

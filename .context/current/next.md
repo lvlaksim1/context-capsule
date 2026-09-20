@@ -1,6 +1,7 @@
 # Next actions
 
-1. Promote the verified v1.3 line to stable `main`.
-2. Treat the final stable commit SHA as the immutable canonical installation source.
-3. Do not reintroduce permanent repository-specific legacy compatibility.
-4. Separately investigate private-repository GitHub-hosted runner availability only as CI infrastructure maintenance; it is not a blocker for the verified v1.3 product.
+1. Operate v1.3 from stable `main`.
+2. Use the stable release commit SHA as the canonical immutable installation reference when installing new capsules.
+3. Do not reintroduce repository-specific legacy migration support into the permanent product.
+4. Treat future Context Capsule changes as new versioned work rather than continuing v1.3 hardening.
+5. Investigate private-repository GitHub-hosted runner availability separately only if CI maintenance is needed.
