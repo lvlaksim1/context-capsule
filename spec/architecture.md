@@ -1,80 +1,55 @@
 # Architecture
 
-Context Capsule provides durable repository-local context for human/AI project work. Core defines contracts and tooling; every target repository owns its memory and remains usable without Core.
+## Service boundary
+
+Context Capsule is a GitHub-only service.
+
+The central Core repository contains executable implementation, schemas and tests. A target repository contains its own durable context plus discovery/bootstrap text, but no executable Context Capsule runtime.
 
 ## Invariants
 
-1. Complete target-project context stays in the target repository.
-2. Core never stores, mirrors, indexes, receives or telemeters target-project context.
-3. Installed capsules operate autonomously during normal project work.
-4. Installed versions and managed-file integrity are pinned in `.context/capsule.json`.
-5. Clean installation is the permanent installation path.
-6. Legacy adoption/version migration is a temporary transition facility until the three known old installations are migrated.
-7. Project-owned semantic content is never overwritten merely to conform to a generic template.
-8. `.context/manifest.json` is the navigation contract for actual semantic paths and branch/runtime topology.
-9. Structural validity and continuation readiness are separate concepts.
-10. Recovery is incomplete until stored semantics are reconciled with live repository/CI/release/runtime evidence.
-11. Volatile runtime state remains in its runtime authority; only durable semantic consequences are promoted.
-12. Mutating lifecycle operations are planned before writing and use path confinement, concurrency checks, journaled atomic file replacement and rollback.
-13. Unknown bootstrap/project instructions are preserved and require explicit review rather than silent replacement.
+1. Complete target-project context remains in the target repository.
+2. Core never stores, mirrors or telemeters target-project context.
+3. Nothing must be installed or executed on the user's computer.
+4. Target repositories do not receive copied Python modules or schema bundles.
+5. Clean installation is the permanent product path.
+6. Legacy adoption/version migration is temporary until the three known old installations are migrated.
+7. Project-owned semantic content and unknown bootstrap text are preserved.
+8. `.context/manifest.json` maps actual semantic paths and branch/runtime topology.
+9. Structural validity and continuation readiness are distinct.
+10. Recovery must reconcile stored semantics with current GitHub repository/CI/release/runtime evidence.
+11. Volatile project runtime such as `.agent/` remains separate; only durable semantic consequences enter the capsule.
+12. GitHub branch/HEAD/CAS and coherent commit publication form the mutation/concurrency boundary.
 
-## Stable project semantics
+## Target repository content
 
-`.context/project/` contains durable meaning:
+The installed capsule is data-oriented:
 
-- `identity.md`;
-- `goals.md`;
-- `architecture.md`;
-- `constraints.md`.
+- stable project semantics in `project/`;
+- compact current working set in `current/`;
+- durable decisions/dialogues/history;
+- semantic navigation in `index.json`;
+- continuation checkpoint in `resume.json`;
+- managed discovery/bootstrap text.
 
-A clean installation marks these templates `CAPSULE_TODO`; presence alone is not readiness.
+No `.context/tools/` runtime is installed.
 
-## Compact current working set
+## Semantic index
 
-`.context/current/` contains:
-
-- `state.md`;
-- `blockers.md`;
-- `next.md`.
-
-Resolved/superseded material moves to decisions/dialogues/history rather than accumulating here.
-
-## Semantic history and selective recall
-
-Durable historical evidence may live in project-specific files referenced by the manifest. `.context/index.json` adds compact routing metadata: stable id, type, status, title, summary, tags and path.
-
-The index is not the source of truth for the record; the referenced record remains authoritative. A recovery pack loads mandatory working context and only a small task-relevant subset of indexed history.
+`index.json` is navigation metadata, not the source of truth and not an access barrier. Original referenced records remain authoritative.
 
 ## Continuation checkpoint
 
-`.context/resume.json` records:
+`resume.json` records draft/ready status, verified branch/commit, semantic fingerprint, evidence, next action and any unresolved bootstrap review.
 
-- `draft` or `ready`;
-- concise verified position and next action;
-- authoritative branch and verified Git commit;
-- semantic working-set fingerprint;
-- bootstrap-review obligations;
-- evidence references.
+## Managed bootstrap
 
-The fingerprint deliberately excludes the checkpoint itself and purely technical manifest refresh fields, so committing a context-only checkpoint does not invalidate itself. A later implementation change makes the checkpoint stale until reconciled.
+Core owns only its explicitly marked managed block in shared discovery Markdown. Text outside the block remains project-owned.
 
-## Core-managed vs project-owned content
+## Branch topology
 
-Core-managed discovery/runtime material is integrity-registered:
+`authoritative_branch` identifies the real capsule. `discovery_branch` identifies the branch a fresh agent encounters first. When different, `branch_mode=redirect`.
 
-- managed blocks inside `AGENTS.md`, `AI_CONTEXT.md`, `.context/ENTRYPOINT.md`, `.context/protocol.md`;
-- repository-local runtime and bundled schemas under `.context/tools/`.
+## Project runtime authority
 
-Core owns only the marked managed block inside bootstrap Markdown. Text outside the block remains project-owned.
-
-Project semantics under `project/`, `current/`, rules, decisions, dialogues, history and handoff remain project-owned.
-
-## Branch model
-
-`authoritative_branch` contains the real capsule. `discovery_branch` is where a fresh agent is expected to arrive. If they differ, `branch_mode=redirect`.
-
-Lifecycle mutation never interprets `--branch` as a checkout command. It must run from the authoritative branch and fails on mismatch.
-
-## Runtime authority
-
-Projects may declare separate live-state authorities such as `.agent/`. They remain authoritative for fast-changing execution state. Context Capsule persists only semantic consequences that matter across sessions.
+Projects may separately declare volatile runtime paths such as `.agent/`. These are project runtime authorities, not Context Capsule executables.
