@@ -21,13 +21,12 @@ if str(CORE_ROOT) not in sys.path:
     sys.path.insert(0, str(CORE_ROOT))
 
 from installer.legacy import md_files, merge_manifest
-from installer.storage import apply as transaction_apply
-from installer.storage import git, inventory, locked, recover
+from installer.storage import apply as checkout_apply
+from installer.storage import git, inventory
 from runtime.contracts import managed_block, safe_path, schema_errors
 
 TEMPLATES = CORE_ROOT / "templates"
 SCHEMAS = CORE_ROOT / "schemas"
-RUNTIME = CORE_ROOT / "runtime"
 VERSION = (CORE_ROOT / "VERSION").read_text(encoding="utf-8").strip()
 SOURCE = (CORE_ROOT / "SOURCE_REPOSITORY").read_text(encoding="utf-8").strip()
 SEMVER = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
@@ -53,15 +52,6 @@ PROJECT_SEED_FILES = {
     ".context/dialogues/README.md": TEMPLATES / ".context/dialogues/README.md",
     ".context/history/README.md": TEMPLATES / ".context/history/README.md",
 }
-TOOL_FILES = {
-    ".context/tools/contracts.py": RUNTIME / "contracts.py",
-    ".context/tools/capsule_runtime.py": RUNTIME / "capsule_runtime.py",
-    ".context/tools/schemas/capsule.schema.json": SCHEMAS / "capsule.schema.json",
-    ".context/tools/schemas/manifest.schema.json": SCHEMAS / "manifest.schema.json",
-    ".context/tools/schemas/index.schema.json": SCHEMAS / "index.schema.json",
-    ".context/tools/schemas/resume.schema.json": SCHEMAS / "resume.schema.json",
-}
-
 COMPACT_WARN_BYTES = {
     "current.state": 12_000,
     "current.blockers": 8_000,
@@ -274,8 +264,6 @@ def install_core_managed_files(
     for rel, source in SYSTEM_FILES.items():
         if merge_managed_bootstrap(snapshot, rel, source, hashes):
             review.append(rel)
-    for rel, source in TOOL_FILES.items():
-        snapshot[rel] = source.read_bytes()
     return review
 
 
@@ -290,10 +278,6 @@ def managed_hashes(snapshot: dict[str, bytes]) -> dict[str, str]:
         if block is None:
             raise CapsuleError(f"missing managed bootstrap block: {rel}")
         result[rel] = sha256(block.encode("utf-8"))
-    for rel in TOOL_FILES:
-        if rel not in snapshot:
-            raise CapsuleError(f"missing managed tool during planning: {rel}")
-        result[rel] = canonical_text_sha256(snapshot[rel])
     return result
 
 
@@ -980,44 +964,38 @@ def non_capsule_dirty_paths(target: Path) -> list[str]:
 
 
 def mutation_context(target: Path, args: argparse.Namespace):
-    lock = locked(target)
-    gitdir = lock.__enter__()
-    try:
-        recover(target, gitdir)
-        head = git(target, "rev-parse", "HEAD")
-        branch = git(target, "branch", "--show-current")
-        if not branch:
-            raise CapsuleError(
-                "mutating lifecycle operations require a named Git branch"
-            )
+    """Capture the stable GitHub workflow checkout state before planning."""
+    head = git(target, "rev-parse", "HEAD")
+    branch = git(target, "branch", "--show-current")
+    if not branch:
+        raise CapsuleError(
+            "mutating lifecycle operations require a named GitHub checkout branch"
+        )
 
-        requested_branch = getattr(args, "branch", None)
-        if requested_branch and requested_branch != branch:
-            raise CapsuleError(
-                f"wrong checkout branch: {branch}; requested authority is "
-                f"{requested_branch}"
-            )
+    requested_branch = getattr(args, "branch", None)
+    if requested_branch and requested_branch != branch:
+        raise CapsuleError(
+            f"wrong checkout branch: {branch}; requested authority is "
+            f"{requested_branch}"
+        )
 
-        expected_head = getattr(args, "expected_head", None)
-        if expected_head and expected_head != head:
-            raise CapsuleError(
-                f"CAS mismatch: expected HEAD {expected_head}, actual HEAD {head}"
-            )
+    expected_head = getattr(args, "expected_head", None)
+    if expected_head and expected_head != head:
+        raise CapsuleError(
+            f"CAS mismatch: expected HEAD {expected_head}, actual HEAD {head}"
+        )
 
-        if (
-            not getattr(args, "allow_dirty_context", False)
-            and dirty_capsule_state(target)
-        ):
-            raise CapsuleError(
-                "capsule/discovery files have uncommitted changes; "
-                "commit/stash them or use --allow-dirty-context explicitly"
-            )
+    if (
+        not getattr(args, "allow_dirty_context", False)
+        and dirty_capsule_state(target)
+    ):
+        raise CapsuleError(
+            "capsule/discovery files have uncommitted changes in the GitHub "
+            "workflow checkout"
+        )
 
-        before = inventory(target)
-        return lock, gitdir, head, branch, before
-    except BaseException:
-        lock.__exit__(*sys.exc_info())
-        raise
+    before = inventory(target)
+    return head, branch, before
 
 
 def prepare_install(
@@ -1063,7 +1041,7 @@ def prepare_install(
             "  + .context/manifest.json",
             "  + .context/index.json",
             "  + .context/resume.json (draft)",
-            "  + repository-local runtime and schemas",
+            "  + GitHub-managed context metadata",
         ]
     )
     return after, messages
@@ -1476,45 +1454,40 @@ def run_mutation(
     success_header: str | None = None,
 ) -> int:
     target = repo_root(args.target)
-    lock = None
-    try:
-        lock, gitdir, head, branch, before = mutation_context(target, args)
-        after, messages = planner(target, before, args, branch, head)
+    head, branch, before = mutation_context(target, args)
+    after, messages = planner(target, before, args, branch, head)
 
-        errors, warnings = validate_snapshot(
-            target,
-            after,
-            authoritative_checkout=branch,
-        )
-        manifest = snapshot_json(after, ".context/manifest.json")
-        if manifest:
-            discovery = manifest.get("discovery_branch")
-            if (
-                isinstance(discovery, str)
-                and discovery != branch
-                and not branch_exists(target, discovery)
-            ):
-                errors.append(
-                    f"manifest.json: discovery branch does not exist locally: "
-                    f"{discovery}"
-                )
-        if errors:
-            raise CapsuleError(
-                "planned mutation failed preflight:\n  - " + "\n  - ".join(errors)
+    errors, warnings = validate_snapshot(
+        target,
+        after,
+        authoritative_checkout=branch,
+    )
+    manifest = snapshot_json(after, ".context/manifest.json")
+    if manifest:
+        discovery = manifest.get("discovery_branch")
+        if (
+            isinstance(discovery, str)
+            and discovery != branch
+            and not branch_exists(target, discovery)
+        ):
+            errors.append(
+                f"manifest.json: discovery branch does not exist locally: "
+                f"{discovery}"
             )
+    if errors:
+        raise CapsuleError(
+            "planned mutation failed preflight:\n  - " + "\n  - ".join(errors)
+        )
 
-        transaction_apply(target, gitdir, before, after, head, branch)
+    checkout_apply(target, before, after, head, branch)
 
-        if success_header:
-            print(success_header)
-        for message in messages:
-            print(message)
-        for warning in warnings:
-            print(f"  ! {warning}")
-        return validate_target(target, quiet=False)
-    finally:
-        if lock is not None:
-            lock.__exit__(None, None, None)
+    if success_header:
+        print(success_header)
+    for message in messages:
+        print(message)
+    for warning in warnings:
+        print(f"  ! {warning}")
+    return validate_target(target, quiet=False)
 
 
 def install(args: argparse.Namespace) -> int:
