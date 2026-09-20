@@ -1,5 +1,4 @@
 import json
-import os
 import subprocess
 import sys
 import tempfile
@@ -154,7 +153,6 @@ class HardeningTests(unittest.TestCase):
             self.assertIn("uncommitted changes", repaired.stderr)
             self.assertEqual(state.read_text(encoding="utf-8"), "UNCOMMITTED USER STATE\n")
 
-    @unittest.skipIf(os.name == "nt", "not used by production GitHub runner")
     def test_symlink_escape_is_rejected_before_adoption(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
