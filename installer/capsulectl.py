@@ -687,7 +687,7 @@ def validate_managed_files(
     if not isinstance(managed, dict):
         return
 
-    expected_paths = set(SYSTEM_FILES) | set(TOOL_FILES)
+    expected_paths = set(SYSTEM_FILES)
     missing_registration = sorted(expected_paths - set(managed))
     for rel in missing_registration:
         errors.append(f"capsule.json: managed file is not registered: {rel}")
@@ -699,19 +699,16 @@ def validate_managed_files(
         if rel not in snapshot:
             errors.append(f"missing managed file: {rel}")
             continue
-        if rel in SYSTEM_FILES:
-            try:
-                text = snapshot[rel].decode("utf-8")
-                block = managed_block(text)
-            except (UnicodeDecodeError, ValueError) as exc:
-                errors.append(f"invalid managed bootstrap {rel}: {exc}")
-                continue
-            if block is None:
-                errors.append(f"missing managed block: {rel}")
-                continue
-            actual = sha256(block.encode("utf-8"))
-        else:
-            actual = canonical_text_sha256(snapshot[rel])
+        try:
+            text = snapshot[rel].decode("utf-8")
+            block = managed_block(text)
+        except (UnicodeDecodeError, ValueError) as exc:
+            errors.append(f"invalid managed bootstrap {rel}: {exc}")
+            continue
+        if block is None:
+            errors.append(f"missing managed block: {rel}")
+            continue
+        actual = sha256(block.encode("utf-8"))
         if actual != expected:
             errors.append(f"managed file integrity mismatch: {rel}")
 
