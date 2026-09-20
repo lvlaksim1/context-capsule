@@ -2,8 +2,19 @@
 
 ## FACT
 
-Released baseline remains Core v1.2.0 on `main` at `2965c17`. Development is isolated on `work/seamless-context-v1.3`; draft PR #1 is open and must not be merged yet.
+Released baseline remains Core v1.2.0 on `main` at `2965c17`. Development is isolated on `work/seamless-context-v1.3`; draft PR #1 remains unmerged.
 
-The v1.3 implementation is now integrated rather than merely drafted: lifecycle mutations are transaction-planned and journaled, repository paths/symlinks are confined, checkout/dirty-context preconditions are enforced, schema v3 is executable, managed bootstrap blocks preserve pre-existing project instructions, and each installed repository receives local validation/recovery tooling plus `index.json` and `resume.json`.
+The v1.3 branch has been corrected back to the intended product boundary: Context Capsule is GitHub-only. Target repositories contain context data and managed discovery text, not an executable runtime.
 
-The central repository itself has been migrated structurally to the v1.3 format. Final correctness is not yet claimed because the complete cross-platform test matrix and production-copy migration tests are still pending.
+The earlier target-installed `.context/tools/**`, Windows compatibility work, OS locking/journaling and cross-platform desktop CI have been removed. Lifecycle logic remains central and runs against GitHub-hosted repository checkouts.
+
+Still retained:
+- schema v3;
+- managed bootstrap blocks that preserve project text;
+- valid-vs-ready semantics;
+- semantic index;
+- resume/checkpoint;
+- path/branch/HEAD validation;
+- temporary migration support for the three real legacy capsules.
+
+Final verification of the cleaned GitHub-only branch is still pending.
