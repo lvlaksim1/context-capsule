@@ -78,7 +78,15 @@ class CapsuleCtlTests(unittest.TestCase):
             self.assertTrue((target / ".context/resume.json").exists())
             self.assertTrue((target / ".context/index.json").exists())
             self.assertFalse((target / ".context/tools").exists())
-            self.assertIn("managed_files", metadata)
+            self.assertEqual(
+                set(metadata["managed_files"]),
+                {
+                    "AGENTS.md",
+                    "AI_CONTEXT.md",
+                    ".context/ENTRYPOINT.md",
+                    ".context/protocol.md",
+                },
+            )
 
     def test_reinstall_refused(self):
         with tempfile.TemporaryDirectory() as td:
