@@ -109,6 +109,16 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def canonical_text_sha256(data: bytes) -> str:
+    """Hash UTF-8 text independent of CRLF/LF checkout conversion."""
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise CapsuleError("managed bootstrap is not UTF-8 text") from exc
+    normalized = text.replace("\r\n", "\n").replace("\r", "\n")
+    return sha256(normalized.encode("utf-8"))
+
+
 def parse_json_bytes(data: bytes, label: str) -> dict:
     try:
         value = json.loads(data.decode("utf-8"))
@@ -245,7 +255,7 @@ def merge_managed_bootstrap(
         ).encode("utf-8")
         return False
 
-    if sha256(existing) in hashes.get(rel, []):
+    if canonical_text_sha256(existing) in hashes.get(rel, []):
         snapshot[rel] = template_text.encode("utf-8")
         return False
 
