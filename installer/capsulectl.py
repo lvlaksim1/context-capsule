@@ -293,7 +293,7 @@ def managed_hashes(snapshot: dict[str, bytes]) -> dict[str, str]:
     for rel in TOOL_FILES:
         if rel not in snapshot:
             raise CapsuleError(f"missing managed tool during planning: {rel}")
-        result[rel] = sha256(snapshot[rel])
+        result[rel] = canonical_text_sha256(snapshot[rel])
     return result
 
 
@@ -727,7 +727,7 @@ def validate_managed_files(
                 continue
             actual = sha256(block.encode("utf-8"))
         else:
-            actual = sha256(snapshot[rel])
+            actual = canonical_text_sha256(snapshot[rel])
         if actual != expected:
             errors.append(f"managed file integrity mismatch: {rel}")
 
