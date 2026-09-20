@@ -155,7 +155,7 @@ def adopt_known_legacy_changes(
     *,
     semantic_overrides: dict[str, str] | None = None,
 ) -> dict[str, str]:
-    detect_known_profile(repository)
+    profile = detect_known_profile(repository)
     validate_core_commit(core_commit)
     if ".context/capsule.json" in files:
         raise CapsuleModelError("legacy adoption refused: capsule metadata already exists")
@@ -172,6 +172,18 @@ def adopt_known_legacy_changes(
 
     provisional = dict(files)
     changes = bootstrap_changes(files, template_root)
+
+    if profile == "ai-agent-lab":
+        clean_bootstrap = bootstrap_changes({}, template_root)
+        for rel, archive_name in (
+            ("AI_CONTEXT.md", ".context/history/legacy-AI_CONTEXT-before-v1.3.md"),
+            ("AGENTS.md", ".context/history/legacy-AGENTS-before-v1.3.md"),
+        ):
+            old = files.get(rel)
+            if old is not None and archive_name not in provisional:
+                provisional[archive_name] = old
+            changes[rel] = clean_bootstrap[rel]
+
     provisional.update(changes)
 
     for rel, archive_name in (
@@ -182,6 +194,24 @@ def adopt_known_legacy_changes(
         new = _load_template(template_root, rel)
         if old is not None and old != new and archive_name not in provisional:
             provisional[archive_name] = old
+        if profile == "ai-agent-lab" and rel == ".context/ENTRYPOINT.md":
+            new += (
+                "\n## AI Agent Lab runtime integration\n\n"
+                "Durable project semantics live in `.context/`; live mutable execution state remains authoritative in `.agent/`.\n\n"
+                "After semantic recovery, inspect the live `.agent/` paths needed for the current task. "
+                "When acting as «Начальник участка», also read `.agent/management/interactive-bootstrap.md` "
+                "before issuing management commands or reporting manager state.\n\n"
+                "Do not promote routine queue, lease, heartbeat, wake, or polling churn into durable context.\n"
+            )
+        if profile == "ai-agent-lab" and rel == ".context/protocol.md":
+            new += (
+                "\n## AI Agent Lab project-specific persistence\n\n"
+                "- `.agent/` remains authoritative for queue, leases, worker/OTK runtime, manager state, and object execution state.\n"
+                "- A substantial interactive Chat must recover `.context/` first and then reconcile the relevant live `.agent/` state.\n"
+                "- A Chat acting as «Начальник участка» must materialize manager identity from `.agent/management/interactive-bootstrap.md`.\n"
+                "- Persist semantic consequences of runtime changes, not routine volatile transitions.\n"
+                "- Use SHA/CAS-aware writes for concurrent GitHub state changes.\n"
+            )
         provisional[rel] = new
 
     rich_prefixes = {
@@ -205,7 +235,7 @@ def adopt_known_legacy_changes(
                 raise CapsuleModelError(f"semantic override must be inside .context/: {path}")
             provisional[path] = content
 
-    meta = build_capsule_metadata(repository, core_commit, adopted_from=f"legacy:{detect_known_profile(repository)}")
+    meta = build_capsule_metadata(repository, core_commit, adopted_from=f"legacy:{profile}")
     provisional[".context/capsule.json"] = canonical_json(meta)
     manifest = build_manifest(
         provisional,

@@ -222,7 +222,8 @@ class ContextCapsuleV13Tests(unittest.TestCase):
             ".context/current/state.md": "# State\n\nWorkshop control plane and worker state machine are active.\n",
             ".context/rules/ai-rules.md": "# Rules\n\nKeep durable semantics separate from volatile runtime state.\n",
             ".context/handoffs/latest.md": "# Handoff\n\nContinue control-plane hardening from the accepted management decision.\n",
-            ".agent/runtime.json": "{}"
+            ".agent/runtime.json": "{}",
+            ".agent/management/interactive-bootstrap.md": "# Manager\\n\\nMaterialize persistent manager identity before management work.\\n"
         }
         files[".context/manifest.json"] = json.dumps({
             "repository": "lvlaksim1/ai-agent-lab", "default_branch": "main",
@@ -252,6 +253,11 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         self.assertIn(".agent/", manifest["runtime"]["authoritative_paths"])
         self.assertNotIn(".context/rules/project-rules.md", adopted)
         self.assertNotIn(".context/dialogues/README.md", adopted)
+        self.assertIn(".context/history/legacy-AI_CONTEXT-before-v1.3.md", adopted)
+        self.assertIn(".context/history/legacy-AGENTS-before-v1.3.md", adopted)
+        self.assertIn("Начальник участка", adopted[".context/ENTRYPOINT.md"])
+        self.assertIn(".agent/management/interactive-bootstrap.md", adopted[".context/ENTRYPOINT.md"])
+        self.assertNotIn("Project Context Capsule v1.0", adopted["AI_CONTEXT.md"])
         with self.assertRaises(CapsuleModelError):
             adopt_known_legacy_changes(files, TEMPLATES, "lvlaksim1/ai-agent-lab", "main", CORE_SHA)
 
