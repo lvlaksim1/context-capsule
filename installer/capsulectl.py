@@ -11,7 +11,6 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from installer.legacy import adopt_known_legacy_changes
 from installer.model import (
     CapsuleModelError,
     VERSION,
@@ -163,26 +162,6 @@ def cmd_install(args: argparse.Namespace) -> int:
     return cmd_validate(argparse.Namespace(target=str(target)))
 
 
-def cmd_adopt(args: argparse.Namespace) -> int:
-    target = target_root(args.target)
-    ensure_branch(target, args.branch)
-    files = load_snapshot(target)
-    try:
-        changes = adopt_known_legacy_changes(
-            files,
-            TEMPLATES,
-            args.repository,
-            args.branch,
-            infer_core_commit(args.core_commit),
-        )
-    except (CapsuleModelError, CapsuleSafetyError) as exc:
-        print(f"Context Capsule legacy adoption: FAIL\n  - {exc}")
-        return 2
-    apply_local_changes(target, changes)
-    print(f"Known legacy capsule adopted locally ({len(changes)} changed files).")
-    return cmd_validate(argparse.Namespace(target=str(target)))
-
-
 def cmd_repair(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     ensure_branch(target, args.branch)
@@ -258,13 +237,6 @@ def build_parser() -> argparse.ArgumentParser:
     install.add_argument("--branch", default="main")
     install.add_argument("--core-commit")
     install.set_defaults(func=cmd_install)
-
-    adopt = sub.add_parser("adopt", help="temporary known-legacy adoption helper")
-    adopt.add_argument("--target", required=True)
-    adopt.add_argument("--repository", required=True)
-    adopt.add_argument("--branch", required=True)
-    adopt.add_argument("--core-commit")
-    adopt.set_defaults(func=cmd_adopt)
 
     repair = sub.add_parser("repair", help="repair a v1.3 capsule without discarding manifest extensions")
     repair.add_argument("--target", required=True)

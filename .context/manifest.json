@@ -30,7 +30,8 @@
     ".context/decisions/DEC-0003-repository-bootstrap.md",
     ".context/decisions/DEC-0004-semantic-manifest-and-adoption.md",
     ".context/decisions/DEC-0005-rich-context-working-set.md",
-    ".context/decisions/DEC-0006-v1.3-product-boundary.md"
+    ".context/decisions/DEC-0006-v1.3-product-boundary.md",
+    ".context/decisions/DEC-0007-retire-legacy-adoption.md"
   ],
   "dialogues": [],
   "history": [],

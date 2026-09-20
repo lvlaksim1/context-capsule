@@ -1,4 +1,4 @@
-# Canonical GitHub installation protocol
+# Canonical GitHub lifecycle protocol
 
 ## Clean installation
 
@@ -10,9 +10,18 @@
 6. Create one Git tree based on the original tree.
 7. Create one commit whose parent is the original expected HEAD.
 8. Re-read the branch HEAD. If it changed, stop without moving the branch.
-9. Update the branch ref non-forced. A concurrent advance must therefore reject publication.
+9. Update the branch ref non-forced.
 
 The only branch-visible mutation is the final ref update. A failed publication may leave unreachable Git objects, but it does not partially install the capsule on the target branch.
+
+## Repair / Core refresh
+
+For an installed v1.3 capsule, repair/refresh must:
+
+- preserve project-owned semantic files and unknown safe manifest extensions;
+- update only Core-managed bootstrap/metadata/index structure;
+- use the same expected-parent, one-commit publication model;
+- never reinterpret an unknown historical capsule format as a supported legacy migration.
 
 ## Shared bootstrap files
 
@@ -26,12 +35,8 @@ and
 
 Existing project instructions outside that block are preserved.
 
-## Legacy transition
+## Legacy policy
 
-Temporary adoption is allowed only for:
+The one-time migration bridge for `fgis-fsa-il`, `telegram-receiver`, and `ai-agent-lab` completed on 2026-09-20 and has been removed from the permanent Core.
 
-- `lvlaksim1/fgis-fsa-il`
-- `lvlaksim1/telegram-receiver`
-- `lvlaksim1/ai-agent-lab`
-
-Actual production migration of those repositories is a later stage and is not part of the clean-install foundation.
+Future unknown legacy layouts are not automatically adopted. A deliberate one-off migration must first be designed from the repository's actual evidence rather than expanding the permanent compatibility surface.

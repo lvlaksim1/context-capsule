@@ -6,7 +6,6 @@ import unittest
 from pathlib import Path
 
 from installer.github_atomic import ConcurrentBranchUpdate, HeadState, MutationPlan, publish_single_commit
-from installer.legacy import adopt_known_legacy_changes, detect_known_profile
 from installer.model import CapsuleModelError, build_recovery_pack, clean_install_changes, readiness_snapshot, repair_changes, validate_snapshot
 from installer.safety import CapsuleSafetyError, BEGIN_MARKER, END_MARKER, render_managed_block
 
@@ -144,126 +143,6 @@ class ContextCapsuleV13Tests(unittest.TestCase):
     def test_clean_install_refuses_existing_context(self):
         with self.assertRaises(CapsuleModelError):
             clean_install_changes({".context/anything": "x"}, TEMPLATES, "owner/repo", "main", CORE_SHA)
-
-    def test_known_legacy_scope_is_closed(self):
-        self.assertEqual(detect_known_profile("lvlaksim1/fgis-fsa-il"), "fgis-fsa-il")
-        self.assertEqual(detect_known_profile("lvlaksim1/telegram-receiver"), "telegram-receiver")
-        self.assertEqual(detect_known_profile("lvlaksim1/ai-agent-lab"), "ai-agent-lab")
-        with self.assertRaises(CapsuleModelError):
-            detect_known_profile("owner/random-old-repo")
-
-    def test_fgis_legacy_profile_preserves_rich_paths(self):
-        files = {
-            "AI_CONTEXT.md": "legacy", "AGENTS.md": "legacy",
-            ".context/ENTRYPOINT.md": "legacy entry", ".context/protocol.md": "legacy protocol",
-            ".context/project/identity.md": "# Identity\n\nFGIS project repository responsibility and identity are known.\n",
-            ".context/project/goals.md": "# Goals\n\nMaintain verified accreditation automation while preserving project rules.\n",
-            ".context/project/architecture.md": "# Architecture\n\nTwo Excel VBA books use repository baselines and controlled release specifications.\n",
-            ".context/project/constraints.md": "# Constraints\n\nPreserve mandatory VBA standards and confirmed workbook baselines.\n",
-            ".context/current/state.md": "# State\n\nCurrent implementation is verified by simulation and controlled Excel testing.\n",
-            ".context/current/blockers.md": "# Blockers\n\nNo active blocker exists in this fixture.\n",
-            ".context/current/next.md": "# Next\n\nContinue the verified indicator-ID workflow from the accepted state.\n",
-            ".context/rules/user-rules.md": "# Rules\n\nUse mandatory VBA methodology and preserve the confirmed XLSM baseline.\n",
-            ".context/handoffs/latest.md": "# Handoff\n\nResume from the accepted verification stage and preserve both test layers.\n",
-        }
-        files[".context/manifest.json"] = json.dumps({
-            "repository": "lvlaksim1/fgis-fsa-il", "default_branch": "main",
-            "active_handoff": ".context/handoffs/latest.md",
-            "authoritative": {
-                "identity": ".context/project/identity.md", "goals": ".context/project/goals.md",
-                "architecture": ".context/project/architecture.md", "constraints": ".context/project/constraints.md",
-                "current_state": ".context/current/state.md", "blockers": ".context/current/blockers.md",
-                "next": ".context/current/next.md", "user_rules": ".context/rules/user-rules.md"
-            },
-            "custom_legacy_field": {"keep": True}
-        })
-        adopted = apply(files, adopt_known_legacy_changes(
-            files, TEMPLATES, "lvlaksim1/fgis-fsa-il", "main", CORE_SHA
-        ))
-        manifest = json.loads(adopted[".context/manifest.json"])
-        self.assertTrue(manifest["custom_legacy_field"]["keep"])
-        self.assertEqual(manifest["context_version"], "1.3.0")
-        self.assertEqual(manifest["legacy_context_version"], "1.0")
-        self.assertEqual(manifest["capsule_installer_version"], "1.3.0")
-        self.assertEqual(manifest["installation_status"], "adopted-v1.3")
-        self.assertIn(".context/rules/user-rules.md", manifest["rules"])
-        self.assertIn(".context/history/legacy-entrypoint-before-v1.3.md", adopted)
-        self.assertNotIn(".context/rules/project-rules.md", adopted)
-        self.assertNotIn(".context/decisions/README.md", adopted)
-
-    def test_telegram_legacy_profile(self):
-        files = {
-            "AI_CONTEXT.md": "legacy", "AGENTS.md": "legacy",
-            ".context/ENTRYPOINT.md": "legacy entry", ".context/protocol.md": "legacy protocol",
-            ".context/current/state.md": "# State\n\nDirect FIFO receiver is the accepted and verified architecture.\n",
-            ".context/rules/project.md": "# Rules\n\nProcess updates sequentially and keep credentials out of the consumer.\n",
-            ".context/handoffs/latest.md": "# Handoff\n\nReceiver is operational; next verify one immediate ordinary response.\n",
-            ".context/decisions/direct-fifo.md": "# Decision\n\nUse direct FIFO getUpdates to consumer to sendMessage processing.\n",
-        }
-        files[".context/manifest.json"] = json.dumps({
-            "repository": "lvlaksim1/telegram-receiver", "authoritative_branch": "main",
-            "current_state": ".context/current/state.md", "latest_handoff": ".context/handoffs/latest.md",
-            "protocol": ".context/protocol.md", "rules": [".context/rules/project.md"],
-            "decisions": [".context/decisions/direct-fifo.md"]
-        })
-        overrides = {
-            ".context/project/identity.md": "# Identity\n\nTelegram receiver provides ordered two-way bot message processing.\n",
-            ".context/project/goals.md": "# Goals\n\nDeliver accepted Telegram updates promptly and in strict FIFO order.\n",
-            ".context/project/architecture.md": "# Architecture\n\ngetUpdates flows through one receiver, isolated consumer, then sendMessage.\n",
-            ".context/project/constraints.md": "# Constraints\n\nDo not restore per-message Actions or repository writes to the hot path.\n",
-            ".context/current/blockers.md": "# Blockers\n\nDuplicate reply window remains a documented non-blocking limitation.\n",
-            ".context/current/next.md": "# Next\n\nVerify one ordinary message receives an immediate correctly bound reply.\n",
-        }
-        adopted = apply(files, adopt_known_legacy_changes(
-            files, TEMPLATES, "lvlaksim1/telegram-receiver", "main", CORE_SHA, semantic_overrides=overrides
-        ))
-        self.assertEqual(validate_snapshot(adopted), [])
-
-    def test_ai_agent_legacy_profile_preserves_redirect_and_runtime(self):
-        files = {
-            "AI_CONTEXT.md": "legacy", "AGENTS.md": "legacy",
-            ".context/ENTRYPOINT.md": "legacy entry", ".context/protocol.md": "legacy protocol",
-            ".context/current/state.md": "# State\n\nWorkshop control plane and worker state machine are active.\n",
-            ".context/rules/ai-rules.md": "# Rules\n\nKeep durable semantics separate from volatile runtime state.\n",
-            ".context/handoffs/latest.md": "# Handoff\n\nContinue control-plane hardening from the accepted management decision.\n",
-            ".agent/runtime.json": "{}",
-            ".agent/management/interactive-bootstrap.md": "# Manager\\n\\nMaterialize persistent manager identity before management work.\\n"
-        }
-        files[".context/manifest.json"] = json.dumps({
-            "repository": "lvlaksim1/ai-agent-lab", "default_branch": "main",
-            "authoritative_context_branch": "work-webhook-test",
-            "current_state": ".context/current/state.md", "active_handoff": ".context/handoffs/latest.md",
-            "rules": [".context/rules/ai-rules.md"], "authoritative_files": {"live_runtime": ".agent/"}
-        })
-        overrides = {
-            ".context/project/identity.md": "# Identity\n\nAI Agent Lab is the autonomous GitHub workshop and control-plane experiment.\n",
-            ".context/project/goals.md": "# Goals\n\nProvide durable autonomous work with controlled handoff, stopping, commands, and reports.\n",
-            ".context/project/architecture.md": "# Architecture\n\nDurable meaning lives in .context; queues, leases, and heartbeat live in .agent.\n",
-            ".context/project/constraints.md": "# Constraints\n\nDo not weaken control-plane invariants or copy routine .agent churn into semantic context.\n",
-            ".context/current/blockers.md": "# Blockers\n\nNo fixture blocker prevents recovery.\n",
-            ".context/current/next.md": "# Next\n\nResume the latest control-plane hardening task from the verified handoff.\n",
-        }
-        adopted = apply(files, adopt_known_legacy_changes(
-            files, TEMPLATES, "lvlaksim1/ai-agent-lab", "work-webhook-test", CORE_SHA,
-            semantic_overrides=overrides
-        ))
-        manifest = json.loads(adopted[".context/manifest.json"])
-        self.assertEqual(manifest["authoritative_branch"], "work-webhook-test")
-        self.assertEqual(manifest["discovery_branch"], "main")
-        self.assertEqual(manifest["branch_mode"], "redirect")
-        self.assertEqual(manifest["context_version"], "1.3.0")
-        self.assertEqual(manifest["legacy_context_version"], "1.0")
-        self.assertEqual(manifest["installation_status"], "adopted-v1.3")
-        self.assertIn(".agent/", manifest["runtime"]["authoritative_paths"])
-        self.assertNotIn(".context/rules/project-rules.md", adopted)
-        self.assertNotIn(".context/dialogues/README.md", adopted)
-        self.assertIn(".context/history/legacy-AI_CONTEXT-before-v1.3.md", adopted)
-        self.assertIn(".context/history/legacy-AGENTS-before-v1.3.md", adopted)
-        self.assertIn("Начальник участка", adopted[".context/ENTRYPOINT.md"])
-        self.assertIn(".agent/management/interactive-bootstrap.md", adopted[".context/ENTRYPOINT.md"])
-        self.assertNotIn("Project Context Capsule v1.0", adopted["AI_CONTEXT.md"])
-        with self.assertRaises(CapsuleModelError):
-            adopt_known_legacy_changes(files, TEMPLATES, "lvlaksim1/ai-agent-lab", "main", CORE_SHA)
 
     def test_local_symlink_escape_is_rejected(self):
         from installer.capsulectl import load_snapshot

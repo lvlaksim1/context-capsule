@@ -2,10 +2,5 @@
   "schema": "context-capsule-migrations",
   "current": "1.3.0",
   "status": "development",
-  "migrations": [],
-  "temporary_legacy_profiles": [
-    "lvlaksim1/fgis-fsa-il",
-    "lvlaksim1/telegram-receiver",
-    "lvlaksim1/ai-agent-lab"
-  ]
+  "migrations": []
 }

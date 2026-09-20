@@ -16,12 +16,12 @@ The installer records the exact Core commit SHA and prepares a complete snapshot
 
 ## Recover
 
-`recover` emits a deterministic bounded fresh-chat recovery pack from a READY capsule. Deep dialogue/history is not loaded by default.
+`recover` emits a deterministic bounded fresh-chat recovery pack from a READY capsule. Active state/handoff is prioritized ahead of deeper decision history.
 
 ## Repair
 
-Repair preserves unknown manifest extensions and nonstandard indexed paths. It updates only Core-owned structure and managed bootstrap blocks.
+Repair preserves unknown manifest extensions and nonstandard indexed paths. It updates Core-managed structure without flattening project-owned semantic context.
 
-## Legacy adopt
+## Legacy layouts
 
-Legacy adoption is a temporary, repository-name-gated bridge for three known projects. It is not a permanent arbitrary migration framework.
+Legacy adoption is not a permanent lifecycle operation. The known v1-era repositories were migrated during v1.3 hardening; the temporary `adopt` command and repository-specific adapter code were then retired.
