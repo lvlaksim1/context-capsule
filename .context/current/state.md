@@ -25,3 +25,7 @@ Core v1.3 now states explicitly that significant durable project changes are wri
 
 The same rule is also carried by the Core-managed `AGENTS.md` block, so `repair` propagates it to already-installed v1.3 capsules without overwriting project-owned instructions outside the managed block.
 
+## FACT — Permanent authoritative context branch
+
+Core now officially supports a permanent authoritative context branch with a discovery-only default branch for projects that use disposable feature branches. Feature branches no longer need to become Context Capsule authority.
+

@@ -25,3 +25,7 @@ Repair preserves unknown manifest extensions and nonstandard indexed paths. It u
 ## Legacy layouts
 
 Legacy adoption is not a permanent lifecycle operation. The known v1-era repositories were migrated during v1.3 hardening; the temporary `adopt` command and repository-specific adapter code were then retired.
+
+## Permanent redirect topology
+
+For feature-branch projects, Context Capsule supports a permanent authoritative branch plus a discovery-only default branch. The discovery branch contains only redirect bootstrap, while the full READY capsule remains on the permanent authoritative branch. Feature branches are never promoted to context authority.

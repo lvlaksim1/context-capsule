@@ -40,3 +40,14 @@ Existing project instructions outside that block are preserved.
 The one-time migration bridge for `fgis-fsa-il`, `telegram-receiver`, and `ai-agent-lab` completed on 2026-09-20 and has been removed from the permanent Core.
 
 Future unknown legacy layouts are not automatically adopted. A deliberate one-off migration must first be designed from the repository's actual evidence rather than expanding the permanent compatibility surface.
+
+## Permanent authoritative context branch
+
+For repositories that routinely use temporary feature branches, prefer a permanent authoritative context branch.
+
+1. Create or update the permanent context branch first and make its manifest authoritative_branch=<context branch>, discovery_branch=<default branch>, branch_mode=redirect.
+2. Validate and READY-check the authoritative snapshot before exposing the redirect.
+3. Convert the default branch to discovery-only bootstrap: managed AI_CONTEXT.md, managed AGENTS.md, and .context/ENTRYPOINT.md redirect only. A discovery branch must not retain .context/capsule.json, .context/manifest.json, or semantic working-set files that can be mistaken for current authority.
+4. Publish the authoritative branch first, then the discovery branch. Each branch update uses its own expected-parent atomic commit and non-forced ref update.
+5. Feature branches never become Context Capsule authority. Their names, PRs, tests, and work state are recorded as semantic facts in the permanent context branch.
+6. After merge or release, update the same permanent context branch; no authority handoff back to main is required.

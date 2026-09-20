@@ -33,3 +33,7 @@ The universal v1.3 templates now explicitly require semantic write-back during n
 
 The managed `AGENTS.md` block is the repair propagation surface for this rule in existing v1.3 installations; project-owned text outside the managed block remains untouched.
 
+## Permanent authoritative context branch
+
+Core now supports a permanent context-authority branch plus discovery-only default branch. This closes the stale-authority failure mode exposed when a feature branch is merged or closed after carrying the capsule.
+
