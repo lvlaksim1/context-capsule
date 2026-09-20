@@ -1,83 +1,63 @@
 # Context Capsule Core
 
-Context Capsule is a repository-local durable project-context standard for continuity across independent human/AI sessions. The target repository owns its complete context; Core supplies the format, installer and verification tooling and never receives project memory back.
+Context Capsule is a GitHub-only service for durable project context across independent chats/agents.
 
-## v1.3 model
+The central repository `lvlaksim1/context-capsule` contains all executable logic. Target repositories contain only their own context data and lightweight discovery instructions. Nothing from Context Capsule is installed or executed on the user's computer.
 
-Every installed capsule has two distinct states:
+## v1.3 target-repository model
 
-- **structurally valid** — files, schemas, references and managed runtime are internally consistent;
-- **continuation-ready** — project-specific semantics have been filled, reconciled with live evidence, indexed, fingerprinted and recorded in an evidence-backed checkpoint.
+A target repository may contain:
 
-Core files:
-
-- `.context/capsule.json` — pinned Core version plus integrity hashes for Core-managed bootstrap/runtime files;
-- `.context/manifest.json` — semantic navigation, branch topology, runtime authority and sync policy;
+- `.context/capsule.json` — installed Core version and managed bootstrap hashes;
+- `.context/manifest.json` — branch topology and navigation to project context;
 - `.context/project/` — stable identity, goals, architecture and constraints;
 - `.context/current/` — compact current state, blockers and next actions;
-- `.context/decisions/`, `dialogues/`, `history/` — durable evidence/history;
-- `.context/index.json` — small semantic routing index for selective recall;
+- `.context/decisions/`, `.context/dialogues/`, `.context/history/` — durable semantic evidence;
+- `.context/index.json` — navigation metadata for durable history;
 - `.context/resume.json` — evidence-backed continuation checkpoint;
-- `.context/tools/` — repository-local offline validator/recovery runtime and bundled schemas.
+- `AGENTS.md`, `AI_CONTEXT.md`, `.context/ENTRYPOINT.md`, `.context/protocol.md` — discovery/bootstrap text.
 
-Optional fast-changing authorities such as `.agent/` remain separate. Only their durable semantic consequences belong in Context Capsule.
+There is no installed Python runtime, bundled schema copy, local daemon or desktop component in a target repository.
 
-## Clean installation
+## Execution boundary
 
-Clean installation is the permanent product path:
+Installation, validation, migration, repair, indexing, readiness checks and future maintenance are executed by GitHub automation from the central Core repository.
 
-```bash
-python installer/capsulectl.py install \
-  --target /repo \
-  --repository owner/name
-```
+The internal Python modules are implementation details of the GitHub service. They run on the GitHub runner, not on the user's machine.
 
-The installer refuses an existing `.context/`, preserves pre-existing `AGENTS.md` / `AI_CONTEXT.md` text, adds a Core-managed discovery block and creates a **draft** checkpoint. The project-specific `CAPSULE_TODO` documents must then be filled from verified repository evidence.
+## Valid vs ready
 
-After reconciliation:
+A capsule can be structurally valid but not yet ready for seamless continuation.
 
-```bash
-python installer/capsulectl.py checkpoint \
-  --target /repo \
-  --summary "Verified current position" \
-  --next-action "Next concrete action" \
-  --evidence-file path/to/evidence \
-  --ready
-```
+- **valid** — metadata, references and managed bootstrap are structurally consistent;
+- **ready** — repository-specific semantics have been captured, reconciled with current GitHub evidence, indexed and checkpointed.
 
-A ready checkpoint is not a claim that an LLM will understand or obey the project. It is an evidence-backed statement that the repository contains the required continuation material and that the working set has not semantically changed since the checkpoint.
+Fresh clean installation intentionally starts valid-but-draft until project-specific context is populated.
 
-## Validation and recovery
+## Safety
 
-```bash
-python installer/capsulectl.py validate --target /repo
-python installer/capsulectl.py audit --target /repo --ready
-python .context/tools/capsule_runtime.py check --ready
-python .context/tools/capsule_runtime.py resume --task "current task"
-```
+The GitHub service:
 
-`resume` builds a bounded recovery pack: mandatory project/current/rule/handoff context plus a small number of task-relevant indexed records. It fails rather than silently dropping required constraints when the configured byte budget is exceeded.
+- plans the target state before modifying the workflow checkout;
+- confines managed paths to the repository;
+- rejects symlink/path traversal;
+- verifies authoritative branch and optional expected HEAD;
+- refuses stale/dirty context writes;
+- preserves unknown project-owned bootstrap text;
+- publishes changes through normal Git/GitHub concurrency controls.
 
-## Safe lifecycle mutation
+The remote Git repository is the transaction boundary; no desktop OS lock or local crash journal is part of the product.
 
-Mutating commands operate as:
+## Temporary legacy support
 
-`preflight -> complete mutation plan -> repository lock -> snapshot recheck -> journal -> atomic per-file replace -> commit journal state / rollback`.
-
-They also enforce repository path confinement, reject symlink/special-file escape, verify the checked-out authoritative branch, guard HEAD when requested and refuse dirty capsule/discovery files unless explicitly allowed.
-
-The lock protects cooperating Context Capsule writers. It is not global isolation from arbitrary external processes; snapshot/file checks detect relevant concurrent edits before overwrite.
-
-## Temporary legacy transition
-
-`adopt` and chained legacy `upgrade` support are intentionally temporary. They exist only to migrate and verify the pre-Core capsules currently installed in:
+`adopt` and chained legacy migrations are temporary mechanisms retained only until the existing old capsules in:
 
 - `lvlaksim1/fgis-fsa-il`;
 - `lvlaksim1/telegram-receiver`;
-- `lvlaksim1/ai-agent-lab`.
+- `lvlaksim1/ai-agent-lab`
 
-They preserve richer legacy layouts, custom manifest fields, custom bootstrap instructions, branch redirects and separate runtime authority. Unknown bootstrap text is preserved and blocks a ready checkpoint until explicitly reviewed.
+are migrated and verified.
 
-Do not remove these mechanisms until all three real migrations are complete and verified. Their later removal is a separate evidence-gated change.
+They are not part of the permanent clean-install architecture.
 
 See `INSTALL_PROTOCOL.md` and `spec/`.
