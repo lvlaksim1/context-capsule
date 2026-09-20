@@ -181,6 +181,8 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         self.assertTrue(manifest["custom_legacy_field"]["keep"])
         self.assertIn(".context/rules/user-rules.md", manifest["rules"])
         self.assertIn(".context/history/legacy-entrypoint-before-v1.3.md", adopted)
+        self.assertNotIn(".context/rules/project-rules.md", adopted)
+        self.assertNotIn(".context/decisions/README.md", adopted)
 
     def test_telegram_legacy_profile(self):
         files = {
@@ -242,6 +244,8 @@ class ContextCapsuleV13Tests(unittest.TestCase):
         self.assertEqual(manifest["discovery_branch"], "main")
         self.assertEqual(manifest["branch_mode"], "redirect")
         self.assertIn(".agent/", manifest["runtime"]["authoritative_paths"])
+        self.assertNotIn(".context/rules/project-rules.md", adopted)
+        self.assertNotIn(".context/dialogues/README.md", adopted)
         with self.assertRaises(CapsuleModelError):
             adopt_known_legacy_changes(files, TEMPLATES, "lvlaksim1/ai-agent-lab", "main", CORE_SHA)
 

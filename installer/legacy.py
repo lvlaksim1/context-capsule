@@ -176,9 +176,19 @@ def adopt_known_legacy_changes(
             provisional[archive_name] = old
         provisional[rel] = new
 
+    rich_prefixes = {
+        ".context/rules/project-rules.md": ".context/rules/",
+        ".context/decisions/README.md": ".context/decisions/",
+        ".context/dialogues/README.md": ".context/dialogues/",
+        ".context/history/README.md": ".context/history/",
+    }
     for rel in PROJECT_SEED_PATHS:
-        if rel not in provisional:
-            provisional[rel] = _load_template(template_root, rel)
+        if rel in provisional:
+            continue
+        prefix = rich_prefixes.get(rel)
+        if prefix and any(path.startswith(prefix) for path in provisional):
+            continue
+        provisional[rel] = _load_template(template_root, rel)
 
     if semantic_overrides:
         for raw_path, content in semantic_overrides.items():
