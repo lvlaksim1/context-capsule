@@ -119,7 +119,7 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         self.assertIn("new runtime instance of the existing Project Manager", pack)
         self.assertIn("Manager ID: project-manager", pack)
         self.assertIn("Verify fresh-runtime continuity", pack)
-        self.assertLess(pack.index("## MANAGER PROTOCOL"), pack.index("## CURRENT STATE"))
+        self.assertLess(pack.index("## MANAGER PROTOCOL"), pack.index("## WORKING VIEW — CURRENT STATE (NON-AUTHORITATIVE)"))
         self.assertLess(pack.index("## MANAGER INTENTIONS"), pack.index("## DURABLE DECISION"))
 
     def test_handoff_is_not_required_for_v2_ready(self):
@@ -139,6 +139,23 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         ready, reasons = readiness_snapshot(installed)
         self.assertFalse(ready)
         self.assertTrue(any("source:" in x and "authority:" in x for x in reasons))
+
+    def test_working_views_are_non_authoritative_and_recovery_marks_them(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        manifest = json.loads(installed[".context/manifest.json"])
+        self.assertTrue(manifest["sync_policy"]["working_views_non_authoritative"])
+        pack = build_recovery_pack(installed)
+        self.assertIn("WORKING VIEW — CURRENT STATE (NON-AUTHORITATIVE)", pack)
+        self.assertIn("If they conflict with manager BDI state or newer live evidence", pack)
+
+        manifest["sync_policy"]["working_views_non_authoritative"] = False
+        installed[".context/manifest.json"] = json.dumps(manifest)
+        self.assertTrue(any(
+            "working views must be non-authoritative" in error
+            for error in validate_snapshot(installed)
+        ))
 
     def test_runtime_checkpoint_is_explicitly_not_capsule_state(self):
         installed = apply({}, clean_install_changes(
