@@ -8,10 +8,11 @@
 4. Run local and GitHub-hosted self VALID/READY/recover checks.
 5. Use the first cold-reinstantiation acceptance test to identify and fix stale working-view semantics.
 6. Separate manager-state authority from product authority after the same acceptance test exposed their ambiguity.
+7. Verify the split-authority implementation with GitHub-hosted CI.
 
 ## Next stage
 
-1. Verify split authority on GitHub-hosted CI and a second clean runtime.
+1. Repeat cold reinstantiation in a completely new runtime and verify the two authority coordinates are understood without interpretation tricks.
 2. Exercise adversarial memory/provenance and explicit belief supersession.
 3. Exercise commitment completion, cancellation, and invalidation across runtime replacement.
 4. Exercise concurrent-runtime conflict detection and bounded long-term recovery.

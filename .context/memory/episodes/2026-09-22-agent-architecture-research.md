@@ -17,3 +17,16 @@ The project direction changed from storing project experience to carrying a pers
 ## Consequence
 
 v2 uses a universal Manager Protocol, stable manager identity, BDI-style active state, typed memory, explicit belief provenance, a runtime-checkpoint boundary, and explicit major-version upgrade.
+
+## Follow-up — authority locus
+
+The first live cold-reinstantiation test revealed that product authority and persistent manager-state authority must be separate coordinates.
+
+External practice reviewed for this correction:
+
+- Letta MemFS projects agent memory into a git-backed memory repository; memory changes become future context after commit, and memory maintenance can occur in sibling git worktrees before merge.
+- Letta also supports binding persistent memory to a custom memory repository, reinforcing that persistent agent context need not be identical to the product workspace.
+- Microsoft Agent Framework rehydration requires stable logical agent/executor identities across reconstructed workflow instances and explicitly separates checkpoint/run state from the logical agent identity.
+
+Manager synthesis: Context Capsule should not infer persistent-manager authority from whichever code branch happens to be executing. Durable manager state needs an explicit authority locus; product truth needs a separate baseline. This led to DEC-0012.
+

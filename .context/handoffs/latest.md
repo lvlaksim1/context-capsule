@@ -1,21 +1,27 @@
 # Latest handoff
 
-## v2 Project Manager implementation verified
+## v2 Project Manager split-authority model verified
 
-Context Capsule v1.3.1 remains the stable released production line. The owner approved development of v2 as a portable Project Manager rather than a passive context archive.
+Context Capsule v1.3.1 remains the stable production line on `main`. No consumer repository has been migrated to v2.
 
-The first complete v2 implementation is now published on `v2-manager-runtime` and verified. It introduces a universal Manager Protocol, stable runtime-independent manager identity, bounded project mandate, BDI active state, typed memory, provenance-bearing beliefs, explicit major upgrade, manager-aware READY/recover, and strict separation of durable manager state from runtime checkpoints.
+The v2 Project Manager development line lives on `v2-manager-runtime`. The first cold-reinstantiation acceptance test proved identity/mandate/commitment recovery and live reconciliation, and also exposed two design flaws:
 
-Implementation Core commit: `4de7da1d835aa74b80313b4089994037e5e2a808`.
+1. stale `current/*` views could contradict newer BDI/live evidence;
+2. one historical `authoritative_branch` field ambiguously represented both product authority and manager-state authority.
 
-Verification:
+Both are now hardened.
 
-- local permanent tests: 14/14 PASS;
-- final GitHub-hosted CI run `35751992546`: success;
-- self VALID: PASS;
-- Project Manager READY: PASS;
-- reinstantiation smoke: PASS.
+Current authority coordinates:
 
-The temporary publication workflow and upload fragments were removed. Stable `main` and the v1.3.1 consumers were not modified.
+- manager-state authority: `v2-manager-runtime`;
+- product authority: `main`;
+- `authoritative_branch` is only a compatibility alias of manager-state authority;
+- discovery is a separate bootstrap coordinate.
 
-Next: review and harden the v2 manager model. Do not publish stable v2 or migrate consumers without explicit owner approval.
+Current development Core source: `d591ac34d19c290630ef5382c4ecac603659a89c`.
+
+Verification on GitHub Actions run `35766480844`: permanent tests PASS, compile PASS, self VALID, Project Manager READY, reinstantiation smoke PASS.
+
+Next acceptance test: reinstate the manager in a completely new runtime and confirm it reports the two authority branches distinctly and reconciles production facts against `main` while preserving manager state on `v2-manager-runtime`.
+
+Do not publish stable v2 or migrate consumers without explicit owner approval.
