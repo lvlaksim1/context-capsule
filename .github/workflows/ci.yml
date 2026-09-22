@@ -32,3 +32,16 @@ jobs:
           test -s /tmp/context-recovery.txt
           grep -q "Manager ID: context-capsule-project-manager" /tmp/context-recovery.txt
           grep -q "new runtime instance of the existing Project Manager" /tmp/context-recovery.txt
+          grep -q "## MANAGER CONTRACT" /tmp/context-recovery.txt
+
+      - name: Isolated consumer compatibility smoke
+        if: github.ref == 'refs/heads/v2-manager-runtime'
+        run: |
+          git clone --depth 1 https://github.com/lvlaksim1/evrasia-hd-testbed.git /tmp/evrasia-hd-testbed
+          python installer/capsulectl.py repair             --target /tmp/evrasia-hd-testbed             --repository lvlaksim1/evrasia-hd-testbed             --branch main             --core-commit "$GITHUB_SHA"
+          python installer/capsulectl.py validate --target /tmp/evrasia-hd-testbed
+          python installer/capsulectl.py ready --target /tmp/evrasia-hd-testbed
+          python installer/capsulectl.py recover --target /tmp/evrasia-hd-testbed --max-chars 50000 > /tmp/consumer-recovery.txt
+          test -s /tmp/consumer-recovery.txt
+          grep -q "Manager ID: evrasia-hd-project-manager" /tmp/consumer-recovery.txt
+          grep -q "## MANAGER CONTRACT" /tmp/consumer-recovery.txt
