@@ -4,13 +4,14 @@
 
 1. Read the target authoritative branch HEAD and tree.
 2. Read existing `AI_CONTEXT.md` / `AGENTS.md` if present and confirm there is no existing `.context/`.
-3. Capture project semantics plus the repository-specific Project Manager mandate and initial BDI state.
-4. Build the complete desired snapshot in memory using the pinned Core commit SHA.
-5. Run `VALID`; run `READY` only after the manager/project semantics are substantive.
-6. Create one Git tree based on the original tree.
+3. Declare authority coordinates before capture: the manager-state authority branch owns durable manager state; the product authority branch is the default product baseline. They may be the same branch.
+4. Capture project semantics plus the repository-specific Project Manager mandate and initial BDI state.
+5. Build the complete desired snapshot in memory using the pinned Core commit SHA.
+6. Run `VALID`; run `READY` only after the manager/project semantics are substantive.
+8. Create one Git tree based on the original tree.
 7. Create one commit whose parent is the original expected HEAD.
-8. Re-read the branch HEAD. If it changed, stop without moving the branch.
-9. Update the branch ref non-forced.
+9. Re-read the branch HEAD. If it changed, stop without moving the branch.
+10. Update the branch ref non-forced.
 
 The only branch-visible mutation is the final ref update.
 
@@ -57,9 +58,11 @@ The durable Project Manager includes repository-scoped identity, mandate, BDI-st
 
 Conversation history, pending tool calls, hidden reasoning, leases, heartbeats, and runtime checkpoints are not Project Manager identity. Runtime systems may persist checkpoints separately.
 
-## Permanent authoritative context branch
+## Manager-state authority, product authority, and discovery
 
-For repositories using disposable feature/runtime branches, keep one permanent authoritative context branch and a discovery-only default branch. Publish and validate authority first, then publish discovery redirect. Feature branches never become durable Project Manager authority merely because execution occurs there.
+For repositories using disposable feature/runtime branches, keep one permanent manager-state authority branch. The product authority branch may be different, typically `main`. A discovery-only branch may point runtimes to the manager-state branch.
+
+Publish and validate manager-state authority first, then publish any discovery redirect. Feature branches never become durable Project Manager authority or product authority merely because execution occurs there. The compatibility field `authoritative_branch` always aliases manager-state authority in v2.
 
 ## Legacy policy
 

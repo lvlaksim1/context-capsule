@@ -16,6 +16,17 @@ The runtime is replaceable. The manager identity, mandate, durable beliefs, goal
 - `handoffs/latest.md` — emergency/convenience summary only; it is not the identity or primary continuity mechanism.
 - `dialogues/` and `history/` — deeper evidence and historical context.
 
+## Authority coordinates
+
+Context Capsule v2 separates two branch roles:
+
+- `authority.manager_state_branch` — the branch that owns the durable Project Manager identity, BDI state, memory, and working views;
+- `authority.product_branch` — the default branch whose live repository state represents the product baseline the manager reconciles against.
+
+The compatibility field `authoritative_branch` is an alias for `authority.manager_state_branch`; it never means product authority in v2. `discovery_branch` is only a bootstrap/discovery coordinate.
+
+A feature/runtime branch does not become manager-state or product authority merely because work executes there.
+
 ## Runtime boundary
 
 Conversation history, pending tool calls, chain-of-thought, transient execution state, leases, heartbeats, and runtime checkpoints are not Project Manager identity. A runtime may persist its own checkpoint separately, but Context Capsule does not require or impersonate that checkpoint.
