@@ -180,6 +180,7 @@ def cmd_install(args: argparse.Namespace) -> int:
             args.branch,
             infer_core_commit(args.core_commit),
             discovery_branch=args.discovery_branch,
+            product_branch=args.product_branch,
         ),
     )
 
@@ -197,6 +198,7 @@ def cmd_upgrade(args: argparse.Namespace) -> int:
             repository=args.repository,
             branch=args.branch,
             core_commit=infer_core_commit(args.core_commit),
+            product_branch=args.product_branch,
         ),
     )
 
@@ -292,6 +294,7 @@ def build_parser() -> argparse.ArgumentParser:
     install.add_argument("--branch", default="main")
     install.add_argument("--core-commit")
     install.add_argument("--discovery-branch")
+    install.add_argument("--product-branch", help="product baseline branch; defaults to manager-state authority (or discovery branch in redirect mode)")
     install.set_defaults(func=cmd_install)
 
     upgrade = sub.add_parser("upgrade", help="explicitly upgrade an installed v1.3.x capsule to v2")
@@ -299,6 +302,7 @@ def build_parser() -> argparse.ArgumentParser:
     upgrade.add_argument("--repository", required=True)
     upgrade.add_argument("--branch", required=True)
     upgrade.add_argument("--core-commit")
+    upgrade.add_argument("--product-branch", help="product baseline branch; inferred from existing topology when omitted")
     upgrade.set_defaults(func=cmd_upgrade)
 
     discovery = sub.add_parser("discovery", help="prepare a discovery-only branch redirect")

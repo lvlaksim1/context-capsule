@@ -6,6 +6,7 @@
     "schema",
     "schema_version",
     "repository",
+    "authority",
     "authoritative_branch",
     "discovery_branch",
     "branch_mode",
@@ -170,6 +171,24 @@
           "const": true
         }
       }
+    },
+    "authority": {
+      "type": "object",
+      "required": [
+        "manager_state_branch",
+        "product_branch"
+      ],
+      "properties": {
+        "manager_state_branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "product_branch": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
     }
   },
   "additionalProperties": true

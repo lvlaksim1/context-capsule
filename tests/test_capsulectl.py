@@ -109,6 +109,9 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         identity = json.loads(installed[".context/manager/identity.json"])
         self.assertEqual(identity["manager_id"], "project-manager")
         self.assertEqual(identity["continuity"], "runtime-independent")
+        manifest = json.loads(installed[".context/manifest.json"])
+        self.assertEqual(manifest["authority"]["manager_state_branch"], "main")
+        self.assertEqual(manifest["authority"]["product_branch"], "main")
 
     def test_manager_reinstantiation_pack_preserves_identity_and_commitment(self):
         installed = apply({}, clean_install_changes(
@@ -118,9 +121,31 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         pack = build_recovery_pack(installed)
         self.assertIn("new runtime instance of the existing Project Manager", pack)
         self.assertIn("Manager ID: project-manager", pack)
+        self.assertIn("Manager state authority branch: main", pack)
+        self.assertIn("Product authority branch: main", pack)
         self.assertIn("Verify fresh-runtime continuity", pack)
         self.assertLess(pack.index("## MANAGER PROTOCOL"), pack.index("## WORKING VIEW — CURRENT STATE (NON-AUTHORITATIVE)"))
         self.assertLess(pack.index("## MANAGER INTENTIONS"), pack.index("## DURABLE DECISION"))
+
+    def test_product_and_manager_state_authority_are_distinct(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "v2-manager-runtime", CORE_SHA,
+            semantic_overrides=ready_overrides(), product_branch="main"
+        ))
+        manifest = json.loads(installed[".context/manifest.json"])
+        self.assertEqual(manifest["authoritative_branch"], "v2-manager-runtime")
+        self.assertEqual(manifest["authority"]["manager_state_branch"], "v2-manager-runtime")
+        self.assertEqual(manifest["authority"]["product_branch"], "main")
+        pack = build_recovery_pack(installed)
+        self.assertIn("Manager state authority branch: v2-manager-runtime", pack)
+        self.assertIn("Product authority branch: main", pack)
+
+        manifest["authority"]["manager_state_branch"] = "main"
+        installed[".context/manifest.json"] = json.dumps(manifest)
+        self.assertTrue(any(
+            "authoritative_branch must alias authority.manager_state_branch" in error
+            for error in validate_snapshot(installed)
+        ))
 
     def test_handoff_is_not_required_for_v2_ready(self):
         overrides = ready_overrides()
@@ -254,6 +279,8 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         ))
         manifest = json.loads(full[".context/manifest.json"])
         self.assertEqual(manifest["branch_mode"], "redirect")
+        self.assertEqual(manifest["authority"]["manager_state_branch"], "context")
+        self.assertEqual(manifest["authority"]["product_branch"], "main")
         discovery = apply(full, discovery_redirect_changes(
             full, TEMPLATES, authoritative_branch="context", discovery_branch="main"
         ))

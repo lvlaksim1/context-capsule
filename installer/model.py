@@ -228,6 +228,7 @@ def build_manifest(
     *,
     existing: dict | None = None,
     redirect_topology: tuple[str, str] | None = None,
+    product_branch: str | None = None,
 ) -> dict:
     old = copy.deepcopy(existing or {})
     manifest = old
@@ -245,6 +246,17 @@ def build_manifest(
         authoritative_branch = branch
         discovery_branch = branch
         branch_mode = "single"
+
+    authority_old = _copy_nested(old, "authority")
+    product_authority_branch = product_branch or authority_old.get("product_branch")
+    if not isinstance(product_authority_branch, str) or not product_authority_branch:
+        product_authority_branch = discovery_branch if branch_mode == "redirect" else authoritative_branch
+    authority_old.update(
+        {
+            "manager_state_branch": authoritative_branch,
+            "product_branch": product_authority_branch,
+        }
+    )
 
     project_old = _copy_nested(old, "project")
     project_old.update(
@@ -321,6 +333,7 @@ def build_manifest(
             "schema": "context-capsule-manifest",
             "schema_version": MANIFEST_SCHEMA_VERSION,
             "repository": repository,
+            "authority": authority_old,
             "authoritative_branch": authoritative_branch,
             "discovery_branch": discovery_branch,
             "branch_mode": branch_mode,
@@ -459,6 +472,18 @@ def validate_snapshot(files: dict[str, str]) -> list[str]:
             errors.append("manifest.json: invalid schema")
         if manifest.get("schema_version") != MANIFEST_SCHEMA_VERSION:
             errors.append(f"manifest.json: schema_version must be {MANIFEST_SCHEMA_VERSION}")
+        authority = manifest.get("authority")
+        if not isinstance(authority, dict):
+            errors.append("manifest.json: authority section is required")
+        else:
+            manager_state_branch = authority.get("manager_state_branch")
+            product_authority_branch = authority.get("product_branch")
+            if not isinstance(manager_state_branch, str) or not manager_state_branch:
+                errors.append("manifest.json: authority.manager_state_branch is required")
+            if not isinstance(product_authority_branch, str) or not product_authority_branch:
+                errors.append("manifest.json: authority.product_branch is required")
+            if manager_state_branch != manifest.get("authoritative_branch"):
+                errors.append("manifest.json: authoritative_branch must alias authority.manager_state_branch")
         if manifest.get("branch_mode") not in ("single", "redirect"):
             errors.append("manifest.json: branch_mode must be single or redirect")
         if not isinstance(manifest.get("authoritative_branch"), str) or not manifest.get("authoritative_branch"):
@@ -604,7 +629,8 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str
         "# CONTEXT CAPSULE PROJECT MANAGER REINSTANTIATION PACK",
         "",
         f"Repository: {manifest.get('repository')}",
-        f"Authoritative branch: {manifest.get('authoritative_branch')}",
+        f"Manager state authority branch: {manifest.get('authority', {}).get('manager_state_branch')}",
+        f"Product authority branch: {manifest.get('authority', {}).get('product_branch')}",
         f"Manager ID: {manager_id}",
         "",
         "You are a new runtime instance of the existing Project Manager, not a new manager.",
@@ -662,6 +688,7 @@ def clean_install_changes(
     *,
     semantic_overrides: dict[str, str] | None = None,
     discovery_branch: str | None = None,
+    product_branch: str | None = None,
 ) -> dict[str, str]:
     if any(path == ".context" or path.startswith(".context/") for path in files):
         raise CapsuleModelError("clean install refused: existing .context content found")
@@ -682,7 +709,13 @@ def clean_install_changes(
     redirect_topology = None
     if discovery_branch and discovery_branch != branch:
         redirect_topology = (branch, discovery_branch)
-    manifest = build_manifest(provisional, repository, branch, redirect_topology=redirect_topology)
+    manifest = build_manifest(
+        provisional,
+        repository,
+        branch,
+        redirect_topology=redirect_topology,
+        product_branch=product_branch,
+    )
     provisional[".context/manifest.json"] = canonical_json(manifest)
 
     errors = validate_snapshot(provisional)
@@ -698,6 +731,7 @@ def upgrade_changes(
     repository: str,
     branch: str,
     core_commit: str,
+    product_branch: str | None = None,
 ) -> dict[str, str]:
     existing_manifest = parse_json_text(files, ".context/manifest.json") or {}
     existing_meta = parse_json_text(files, ".context/capsule.json") or {}
@@ -717,7 +751,13 @@ def upgrade_changes(
         build_capsule_metadata(repository, core_commit, existing=existing_meta)
     )
     provisional[".context/manifest.json"] = canonical_json(
-        build_manifest(provisional, repository, branch, existing=existing_manifest)
+        build_manifest(
+            provisional,
+            repository,
+            branch,
+            existing=existing_manifest,
+            product_branch=product_branch,
+        )
     )
     errors = validate_snapshot(provisional)
     if errors:
