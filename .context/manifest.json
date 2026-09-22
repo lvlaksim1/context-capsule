@@ -33,7 +33,8 @@
     ".context/decisions/DEC-0006-v1.3-product-boundary.md",
     ".context/decisions/DEC-0007-retire-legacy-adoption.md",
     ".context/decisions/DEC-0008-default-semantic-writeback.md",
-    ".context/decisions/DEC-0009-permanent-authoritative-context-branch.md"
+    ".context/decisions/DEC-0009-permanent-authoritative-context-branch.md",
+    ".context/decisions/DEC-0010-canonical-v1.3.1.md"
   ],
   "dialogues": [],
   "history": [],
@@ -47,5 +48,6 @@
     "volatile_runtime_excluded": true,
     "atomic_git_publication": true
   },
-  "updated_at": "2026-09-20"
+  "updated_at": "2026-09-22",
+  "context_version": "1.3.1"
 }

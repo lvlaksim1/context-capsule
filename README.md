@@ -1,5 +1,7 @@
 # Context Capsule Core
 
+**Current stable patch: v1.3.1.** v1.3.0 remains historical; v1.3.1 establishes one immutable canonical Core commit for installation provenance.
+
 Context Capsule is repository-local durable project memory for fresh-chat continuation.
 
 ## v1.3 permanent product

@@ -39,3 +39,6 @@ Core now supports a permanent context-authority branch plus discovery-only defau
 
 FGIS FSA IL is the first migrated permanent-context consumer: `main` is discovery-only and `context` is the durable authority. Fresh feature branches no longer carry Context Capsule authority.
 
+## Canonical v1.3.1 patch
+
+v1.3.1 is the provenance-hardening patch. It gives the stable v1.3 product line one canonical immutable Core source and requires installed consumers to record that exact Core SHA. The three known consumers are to be refreshed to this same canonical commit without changing project-owned semantic context.

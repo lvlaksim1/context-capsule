@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 from installer.github_atomic import ConcurrentBranchUpdate, HeadState, MutationPlan, publish_single_commit
-from installer.model import CapsuleModelError, build_recovery_pack, clean_install_changes, discovery_redirect_changes, readiness_snapshot, repair_changes, validate_snapshot
+from installer.model import CapsuleModelError, VERSION, build_recovery_pack, clean_install_changes, discovery_redirect_changes, readiness_snapshot, repair_changes, validate_snapshot
 from installer.safety import CapsuleSafetyError, BEGIN_MARKER, END_MARKER, render_managed_block
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -68,6 +68,13 @@ class FakeBackend:
 
 
 class ContextCapsuleV13Tests(unittest.TestCase):
+    def test_version_surfaces_stay_in_lockstep(self):
+        self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), VERSION)
+        registry = json.loads((ROOT / "migrations" / "registry.json").read_text(encoding="utf-8"))
+        self.assertEqual(registry["current"], VERSION)
+        capsule = json.loads((ROOT / ".context" / "capsule.json").read_text(encoding="utf-8"))
+        self.assertEqual(capsule["version"], VERSION)
+
     def test_atomic_publication_and_concurrent_abort(self):
         plan = MutationPlan("owner/repo", "main", "1" * 40, "install", {"AGENTS.md": "x"})
         ok = FakeBackend()

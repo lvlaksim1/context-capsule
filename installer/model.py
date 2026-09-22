@@ -8,7 +8,7 @@ from typing import Iterable
 
 from .safety import CapsuleSafetyError, normalize_repo_path, render_managed_block, validate_core_commit
 
-VERSION = "1.3.0"
+VERSION = "1.3.1"
 SOURCE_REPOSITORY = "lvlaksim1/context-capsule"
 MANIFEST_SCHEMA_VERSION = 3
 

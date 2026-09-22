@@ -31,3 +31,6 @@ Core now officially supports a permanent authoritative context branch with a dis
 
 The fresh-chat feature-branch failure mode is now closed: Core supports a permanent authoritative context branch and discovery-only default branch, and FGIS FSA IL has been migrated to that topology.
 
+## FACT — Canonical v1.3.1 provenance
+
+v1.3.1 resolves the v1.3.0 provenance ambiguity. One immutable release commit is the canonical Core source for all installed v1.3.1 capsules. Installed consumers must record that exact commit in `.context/capsule.json`; a version label alone is not sufficient provenance.
