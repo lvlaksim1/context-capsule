@@ -1,0 +1,1 @@
+# Service beliefs\n\nRecord current durable professional/system beliefs with source: and authority: provenance.\n

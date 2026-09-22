@@ -1,0 +1,1 @@
+# Principal model\n\nDefine who may invoke this Service Agent, whose directives have what authority, and how requester identity is verified.\n

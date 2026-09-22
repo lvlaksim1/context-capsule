@@ -1,0 +1,1 @@
+# Service Agent mandate\n\nDefine the Service Agent's autonomous authority, approval requirements, escalation boundary, and forbidden actions.\n

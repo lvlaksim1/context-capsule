@@ -1,0 +1,1 @@
+# Professional semantic memory\n\nRecord reusable professional knowledge with provenance; do not copy unnecessary target-specific context.\n
