@@ -14,4 +14,6 @@
 
 - Evidence pointer `35774586971` successfully verified the evidence-revision Core state; this run ID is supporting evidence, not a field that must always equal the numerically latest confirming run. source: GitHub Actions run 35774586971; authority: verified-repository.
 - Fresh-runtime recovery has independently confirmed manager identity continuity, authority separation, live reconciliation, and evidence-revision behavior. source: owner-observed fresh-runtime exercises on 2026-09-22 plus live GitHub verification; authority: verified-repository plus owner-observed acceptance.
-- Current development Core provenance is `6b8477d382bbf5cd8d13bd914b2374473560a43d`. source: .context/capsule.json and repository commit; authority: verified-repository.
+- Routine v2 verification should be automation-first rather than requiring repeated manual multi-chat experiments; isolated consumer testbeds are for occasional behavioral smoke only. source: owner directive on 2026-09-23; authority: owner-directive.
+- Bounded recovery must never silently omit mandatory manager state; if protocol, identity, mandate, active BDI, project authority context, or active rules cannot fit the configured budget, recovery must fail explicitly. source: Core implementation and specification verified by GitHub Actions run 35788332122; authority: verified-repository.
+- Current development Core provenance is `585d29c2bf3fd371b9509fde48f0c62355540f72`. source: .context/capsule.json and repository commit; authority: verified-repository.
