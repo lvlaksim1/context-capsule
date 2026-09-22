@@ -18,10 +18,13 @@ Current authority coordinates:
 - `authoritative_branch` is only a compatibility alias of manager-state authority;
 - discovery is a separate bootstrap coordinate.
 
-Current development Core source: `d591ac34d19c290630ef5382c4ecac603659a89c`.
+Current development Core source: `6b8477d382bbf5cd8d13bd914b2374473560a43d`.
 
-Verification on GitHub Actions run `35766480844`: permanent tests PASS, compile PASS, self VALID, Project Manager READY, reinstantiation smoke PASS.
+Verification evidence includes GitHub Actions run `35774586971`: permanent tests PASS, compile PASS, self VALID, Project Manager READY, reinstantiation smoke PASS. This is a supporting evidence pointer, not a requirement to track the latest confirming run ID.
 
 Next acceptance test: reinstate the manager in a completely new runtime and confirm it reports the two authority branches distinctly and reconciles production facts against `main` while preserving manager state on `v2-manager-runtime`.
 
 Do not publish stable v2 or migrate consumers without explicit owner approval.
+
+
+Evidence revision is now explicit: classify new evidence as confirm, supersede, or conflict. Freshness alone never implies supersession. The stale mutable SHA was removed from active commitments; Core provenance is read from `.context/capsule.json.core_commit`.

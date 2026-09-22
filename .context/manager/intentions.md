@@ -11,5 +11,5 @@
 ## Active commitments
 
 - Keep stable `main` and all v1.3.1 consumers untouched until the owner explicitly approves v2 promotion or migration.
-- Preserve exact Core provenance: this development capsule identifies implementation commit `4de7da1d835aa74b80313b4089994037e5e2a808`.
+- Preserve exact Core provenance through the canonical `.context/capsule.json.core_commit` field. Do not duplicate the mutable SHA inside long-lived commitments.
 - Treat stable v2 release and consumer migration as separate owner-authorized lifecycle operations, not an automatic consequence of successful development CI.

@@ -22,17 +22,17 @@ Implemented product surface:
 - runtime checkpoints explicitly separated from durable manager state;
 - `handoff` retained as an optional operational snapshot rather than the root of manager continuity.
 
-The current split-authority development Core source is `d591ac34d19c290630ef5382c4ecac603659a89c`, and this exact SHA is recorded by the development capsule.
+The current development Core source is `6b8477d382bbf5cd8d13bd914b2374473560a43d`, and this exact SHA is recorded by the development capsule.
 
-Verification of the split-authority Core completed on 2026-09-22:
+Verification evidence for the current Core includes GitHub Actions run `35774586971` with conclusion `success`:
 
-- GitHub-hosted permanent tests: PASS;
+- permanent tests: PASS;
 - Python compile: PASS;
 - self validation: VALID;
 - self Project Manager readiness: READY;
 - Project Manager reinstantiation smoke: PASS.
 
-Clean-head GitHub Actions run: `35766480844`, conclusion `success`.
+This run ID is an evidence pointer, not a "latest run" field. A later successful run that confirms the same semantic state does not make this working view stale.
 
 The stable `main` branch and all installed v1.3.1 consumers remain untouched.
 
@@ -48,3 +48,15 @@ v2 now separates the roles explicitly:
 
 The same hardening line marks `current/*` and handoff as non-authoritative working views so stale summaries cannot override BDI state or newer verified evidence.
 
+
+
+## FACT — evidence revision semantics hardened
+
+The second cold-reinstantiation acceptance test distinguished a real supersession from mere freshness.
+
+- The old mutable Core SHA embedded in an active commitment was genuinely stale and has been removed from the commitment.
+- A later successful CI run that confirms the same verified state is confirming evidence, not semantic supersession.
+- New evidence is classified as `confirm`, `supersede`, or `conflict`.
+- Working views become stale only when their semantic projection is false or materially misleading.
+
+This prevents the self-generated loop `write → CI → record newer CI → write → CI`.
