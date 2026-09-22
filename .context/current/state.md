@@ -22,7 +22,7 @@ Implemented product surface:
 - runtime checkpoints explicitly separated from durable manager state;
 - `handoff` retained as an optional operational snapshot rather than the root of manager continuity.
 
-The current development Core source is `6b8477d382bbf5cd8d13bd914b2374473560a43d`, and this exact SHA is recorded by the development capsule.
+The current development Core source is `13ef0996789ded21d33fe30af9906898816240e2`, and this exact SHA is recorded by the development capsule.
 
 Verification evidence for the current Core includes GitHub Actions run `35774586971` with conclusion `success`:
 
@@ -60,3 +60,18 @@ The second cold-reinstantiation acceptance test distinguished a real supersessio
 - Working views become stale only when their semantic projection is false or materially misleading.
 
 This prevents the self-generated loop `write → CI → record newer CI → write → CI`.
+
+## FACT — behavioral acceptance PM-001..PM-003 passed
+
+A fresh repository-only runtime successfully reinstantiated the same Project Manager and performed live reconciliation without prior-chat memory.
+
+Accepted scenarios:
+
+- PM-001 Cold reinstantiation — PASS;
+- PM-002 Authority separation — PASS;
+- PM-003 Evidence revision/freshness — PASS.
+
+The runtime correctly classified a newer successful CI run as `confirm`, did not mark state/handoff stale merely because the run ID was newer, and identified the genuinely completed acceptance plan as the semantic `supersede`.
+
+The behavioral acceptance suite is now specified in `spec/v2-acceptance.md`. Its Core commit `13ef0996789ded21d33fe30af9906898816240e2` passed GitHub-hosted CI run `35777082840`.
+

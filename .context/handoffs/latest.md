@@ -1,30 +1,32 @@
 # Latest handoff
 
-## v2 Project Manager split-authority model verified
+## v2 Project Manager behavioral continuity verified through PM-003
 
 Context Capsule v1.3.1 remains the stable production line on `main`. No consumer repository has been migrated to v2.
 
-The v2 Project Manager development line lives on `v2-manager-runtime`. The first cold-reinstantiation acceptance test proved identity/mandate/commitment recovery and live reconciliation, and also exposed two design flaws:
+The v2 Project Manager development line lives on `v2-manager-runtime`.
 
-1. stale `current/*` views could contradict newer BDI/live evidence;
-2. one historical `authoritative_branch` field ambiguously represented both product authority and manager-state authority.
-
-Both are now hardened.
-
-Current authority coordinates:
+Authority coordinates:
 
 - manager-state authority: `v2-manager-runtime`;
 - product authority: `main`;
 - `authoritative_branch` is only a compatibility alias of manager-state authority;
 - discovery is a separate bootstrap coordinate.
 
-Current development Core source: `6b8477d382bbf5cd8d13bd914b2374473560a43d`.
+Evidence semantics are explicit: `confirm`, `supersede`, `conflict`; freshness alone never implies supersession.
 
-Verification evidence includes GitHub Actions run `35774586971`: permanent tests PASS, compile PASS, self VALID, Project Manager READY, reinstantiation smoke PASS. This is a supporting evidence pointer, not a requirement to track the latest confirming run ID.
+Behavioral acceptance now has a durable suite in `spec/v2-acceptance.md`:
 
-Next acceptance test: reinstate the manager in a completely new runtime and confirm it reports the two authority branches distinctly and reconciles production facts against `main` while preserving manager state on `v2-manager-runtime`.
+- PM-001 Cold reinstantiation — PASS;
+- PM-002 Authority separation — PASS;
+- PM-003 Evidence revision/freshness — PASS;
+- PM-004 Origin-bound memory authority — next.
+
+The latest fresh-runtime acceptance correctly treated the newest successful CI as confirming evidence and treated only the already-completed acceptance task as semantic supersession. This validates the fix for the CI/write-back loop.
+
+Current development Core source: `13ef0996789ded21d33fe30af9906898816240e2`.
+Verification evidence: GitHub Actions run `35777082840` — success.
+
+Research for PM-004 indicates that persistent-memory attacks can launder low-trust origin through agent summarization, trusted-tool echoes, or manufactured corroboration. PM-004 therefore tests authority non-amplification, not merely the presence of textual `source:` / `authority:` labels.
 
 Do not publish stable v2 or migrate consumers without explicit owner approval.
-
-
-Evidence revision is now explicit: classify new evidence as confirm, supersede, or conflict. Freshness alone never implies supersession. The stale mutable SHA was removed from active commitments; Core provenance is read from `.context/capsule.json.core_commit`.

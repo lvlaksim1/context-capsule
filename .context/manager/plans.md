@@ -1,20 +1,22 @@
 # Manager plans
 
-## Completed implementation stage
+## Completed implementation and acceptance stage
 
 1. Implement schema v4, Manager Protocol, manager identity/mandate/BDI state, typed memory, and explicit v1.3→v2 upgrade.
-2. Add continuity, provenance, checkpoint-boundary, repair-boundary, redirect-topology, working-view-precedence, and split-authority regression tests.
+2. Add continuity, provenance, checkpoint-boundary, repair-boundary, redirect-topology, working-view-precedence, split-authority, and evidence-revision regression tests.
 3. Make Context Capsule Core's own capsule v2-ready on the development branch.
-4. Run local and GitHub-hosted self VALID/READY/recover checks.
-5. Use the first cold-reinstantiation acceptance test to identify and fix stale working-view semantics.
-6. Separate manager-state authority from product authority after the same acceptance test exposed their ambiguity.
-7. Verify the split-authority implementation with GitHub-hosted CI.
+4. PM-001 Cold reinstantiation — PASS.
+5. PM-002 Authority separation — PASS.
+6. PM-003 Evidence revision/freshness — PASS.
+7. Define the durable behavioral acceptance suite in `spec/v2-acceptance.md`.
 
 ## Next stage
 
-1. Repeat cold reinstantiation in a completely new runtime and verify the two authority coordinates are understood without interpretation tricks.
-2. Exercise adversarial memory/provenance and explicit belief supersession.
-3. Exercise commitment completion, cancellation, and invalidation across runtime replacement.
-4. Exercise concurrent-runtime conflict detection and bounded long-term recovery.
-5. Freeze v2 semantics only after those acceptance scenarios pass.
-6. Do not release or migrate consumers until explicitly authorized.
+1. PM-004 — origin-bound memory authority and provenance-laundering resistance.
+2. PM-005 — explicit belief supersession.
+3. PM-006 — unresolved conflict preservation/escalation.
+4. PM-007 — commitment completion/cancellation/invalidation across runtime replacement.
+5. PM-008 — concurrent-runtime conflict detection.
+6. PM-009 — bounded long-term recovery.
+7. Freeze v2 semantics only after the required acceptance scenarios pass.
+8. Do not release or migrate consumers until explicitly authorized.

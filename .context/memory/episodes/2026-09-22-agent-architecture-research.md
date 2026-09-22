@@ -30,3 +30,18 @@ External practice reviewed for this correction:
 
 Manager synthesis: Context Capsule should not infer persistent-manager authority from whichever code branch happens to be executing. Durable manager state needs an explicit authority locus; product truth needs a separate baseline. This led to DEC-0012.
 
+## Follow-up — origin-bound memory authority
+
+After PM-003 passed, research for the adversarial-memory stage showed that provenance can be laundered across persistent-memory pipelines.
+
+Important attack patterns:
+
+- low-trust external text is summarized by the agent and loses its original authority label;
+- a trusted tool echoes attacker-controlled content, making the derived memory appear tool-authoritative;
+- repeated or manufactured corroboration creates the appearance of independent support while preserving one low-trust origin;
+- poisoned memory can persist across sessions and trigger later actions even after the original conversation is gone.
+
+Manager synthesis: provenance metadata is necessary but insufficient if authority can increase during derivation. v2 acceptance therefore requires origin-bound, non-amplifying authority: derived memory inherits the lowest relevant originating authority unless an explicit authorized elevation event is recorded.
+
+This is captured as PM-004 in `spec/v2-acceptance.md`.
+
