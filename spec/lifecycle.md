@@ -16,9 +16,15 @@ Major-version migration is explicit. v2 `upgrade` currently accepts installed v1
 
 `ready` means the same Project Manager can be reinstantiated in a fresh runtime. It requires substantive project semantics, mandate, BDI active state, current project state, next work, and provenance-bearing beliefs. Handoff is not required for v2 readiness.
 
+## Commitment continuity
+
+Active intentions survive runtime replacement. A proposed item is not durable responsibility until accepted/active. Completion requires verification; cancellation, invalidation, and supersession are explicit terminal transitions.
+
 ## Recover
 
-`recover` emits a deterministic bounded Project Manager reinstantiation pack. Manager protocol, identity, mandate, project authority context, active BDI state, and active rules are mandatory recovery state and must never be silently omitted to satisfy a character budget. If the configured budget cannot hold mandatory state, recovery fails explicitly. Working views and deeper memory may be omitted under budget pressure and are listed for later retrieval.
+The Project Manager Contract is restored before operational protocol/state so the new runtime receives the behavioral boundary together with identity and responsibility.
+
+`recover` emits a deterministic bounded Project Manager reinstantiation pack. Manager contract, protocol, identity, mandate, project authority context, active BDI state, and active rules are mandatory recovery state and must never be silently omitted to satisfy a character budget. If the configured budget cannot hold mandatory state, recovery fails explicitly. Working views and deeper memory may be omitted under budget pressure and are listed for later retrieval.
 
 ## Repair
 
