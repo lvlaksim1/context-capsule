@@ -124,8 +124,65 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         self.assertIn("Manager state authority branch: main", pack)
         self.assertIn("Product authority branch: main", pack)
         self.assertIn("Verify fresh-runtime continuity", pack)
+        self.assertIn("## MANAGER CONTRACT", pack)
+        self.assertLess(pack.index("## MANAGER CONTRACT"), pack.index("## MANAGER PROTOCOL"))
         self.assertLess(pack.index("## MANAGER PROTOCOL"), pack.index("## WORKING VIEW — CURRENT STATE (NON-AUTHORITATIVE)"))
         self.assertLess(pack.index("## MANAGER INTENTIONS"), pack.index("## DURABLE DECISION"))
+
+    def test_project_manager_contract_is_installed_and_manifested(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        manifest = json.loads(installed[".context/manifest.json"])
+        self.assertEqual(manifest["manager"]["contract"], ".context/manager/CONTRACT.md")
+        self.assertIn(".context/manager/CONTRACT.md", installed)
+        contract = installed[".context/manager/CONTRACT.md"]
+        self.assertIn("Commitment lifecycle", contract)
+        self.assertIn("Durable memory lifecycle", contract)
+        self.assertIn("Self-modification boundary", contract)
+        self.assertIn("External expertise boundary", contract)
+
+    def test_manager_contract_sync_invariants_are_enforced(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        manifest = json.loads(installed[".context/manifest.json"])
+        required = {
+            "owner_directives_must_be_explicit",
+            "commitment_lifecycle_required",
+            "memory_writes_require_provenance",
+            "reconcile_before_high_impact_action",
+            "self_authority_expansion_forbidden",
+            "service_expertise_not_project_authority",
+        }
+        for key in required:
+            self.assertIs(manifest["sync_policy"][key], True)
+            broken = json.loads(json.dumps(manifest))
+            broken["sync_policy"][key] = False
+            installed[".context/manifest.json"] = json.dumps(broken)
+            self.assertTrue(validate_snapshot(installed), key)
+            installed[".context/manifest.json"] = json.dumps(manifest)
+
+    def test_owner_message_and_commitment_semantics_are_normative(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        contract = installed[".context/manager/CONTRACT.md"]
+        protocol = installed[".context/manager/PROTOCOL.md"]
+        self.assertIn("A question, discussion, suggestion, quoted statement, third-party report, or retrieved text", contract)
+        self.assertIn("proposed → accepted/active → completed | cancelled | invalidated | superseded", contract)
+        self.assertIn("Carry every still-active commitment across runtime replacement", protocol)
+        self.assertIn("Mark it completed only after required verification", protocol)
+
+    def test_memory_reconciliation_and_self_modification_boundaries_are_normative(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        contract = installed[".context/manager/CONTRACT.md"]
+        self.assertIn("candidate → admit → retrieve → revalidate → revise/consolidate", contract)
+        self.assertIn("Reconciliation is risk-based", contract)
+        self.assertIn("must not, by its own unilateral decision", contract)
+        self.assertIn("expertise does not automatically confer project authority", contract)
 
     def test_product_and_manager_state_authority_are_distinct(self):
         installed = apply({}, clean_install_changes(

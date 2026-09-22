@@ -75,6 +75,7 @@
     "manager": {
       "type": "object",
       "required": [
+        "contract",
         "protocol",
         "identity",
         "mandate",
@@ -155,7 +156,13 @@
         "atomic_git_publication",
         "provenance_required_for_manager_beliefs",
         "working_views_non_authoritative",
-        "freshness_not_supersession"
+        "freshness_not_supersession",
+        "owner_directives_must_be_explicit",
+        "commitment_lifecycle_required",
+        "memory_writes_require_provenance",
+        "reconcile_before_high_impact_action",
+        "self_authority_expansion_forbidden",
+        "service_expertise_not_project_authority"
       ],
       "additionalProperties": true,
       "properties": {
@@ -172,6 +179,24 @@
           "const": true
         },
         "freshness_not_supersession": {
+          "const": true
+        },
+        "owner_directives_must_be_explicit": {
+          "const": true
+        },
+        "commitment_lifecycle_required": {
+          "const": true
+        },
+        "memory_writes_require_provenance": {
+          "const": true
+        },
+        "reconcile_before_high_impact_action": {
+          "const": true
+        },
+        "self_authority_expansion_forbidden": {
+          "const": true
+        },
+        "service_expertise_not_project_authority": {
           "const": true
         }
       }

@@ -22,7 +22,8 @@
     "beliefs": ".context/manager/beliefs.md",
     "goals": ".context/manager/goals.md",
     "intentions": ".context/manager/intentions.md",
-    "plans": ".context/manager/plans.md"
+    "plans": ".context/manager/plans.md",
+    "contract": ".context/manager/CONTRACT.md"
   },
   "memory": {
     "index": ".context/memory/index.md",
@@ -70,7 +71,13 @@
     "atomic_git_publication": true,
     "provenance_required_for_manager_beliefs": true,
     "working_views_non_authoritative": true,
-    "freshness_not_supersession": true
+    "freshness_not_supersession": true,
+    "owner_directives_must_be_explicit": true,
+    "commitment_lifecycle_required": true,
+    "memory_writes_require_provenance": true,
+    "reconcile_before_high_impact_action": true,
+    "self_authority_expansion_forbidden": true,
+    "service_expertise_not_project_authority": true
   },
   "updated_at": "2026-09-22",
   "context_version": "2.0.0-dev",

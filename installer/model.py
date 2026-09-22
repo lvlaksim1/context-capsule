@@ -18,6 +18,7 @@ MANAGER_IDENTITY_PATH = ".context/manager/identity.json"
 SYSTEM_TEXT_PATHS = (
     ".context/ENTRYPOINT.md",
     ".context/protocol.md",
+    ".context/manager/CONTRACT.md",
     ".context/manager/PROTOCOL.md",
 )
 PROJECT_SEED_PATHS = (
@@ -280,6 +281,7 @@ def build_manifest(
     manager_old = _copy_nested(old, "manager")
     manager_old.update(
         {
+            "contract": manager_old.get("contract") or ".context/manager/CONTRACT.md",
             "protocol": manager_old.get("protocol") or ".context/manager/PROTOCOL.md",
             "identity": manager_old.get("identity") or MANAGER_IDENTITY_PATH,
             "mandate": manager_old.get("mandate") or ".context/manager/mandate.md",
@@ -326,6 +328,12 @@ def build_manifest(
             "provenance_required_for_manager_beliefs": True,
             "working_views_non_authoritative": True,
             "freshness_not_supersession": True,
+            "owner_directives_must_be_explicit": True,
+            "commitment_lifecycle_required": True,
+            "memory_writes_require_provenance": True,
+            "reconcile_before_high_impact_action": True,
+            "self_authority_expansion_forbidden": True,
+            "service_expertise_not_project_authority": True,
         }
     )
 
@@ -378,7 +386,7 @@ def referenced_paths(manifest: dict) -> list[tuple[str, str]]:
                 refs.append((f"project.{key}", value))
     manager = manifest.get("manager")
     if isinstance(manager, dict):
-        for key in ("protocol", "identity", "mandate", "beliefs", "goals", "intentions", "plans"):
+        for key in ("contract", "protocol", "identity", "mandate", "beliefs", "goals", "intentions", "plans"):
             value = manager.get(key)
             if isinstance(value, str):
                 refs.append((f"manager.{key}", value))
@@ -518,6 +526,18 @@ def validate_snapshot(files: dict[str, str]) -> list[str]:
             errors.append("manifest.json: current/handoff working views must be non-authoritative")
         if not isinstance(sync, dict) or sync.get("freshness_not_supersession") is not True:
             errors.append("manifest.json: evidence freshness must not imply semantic supersession")
+        if not isinstance(sync, dict) or sync.get("owner_directives_must_be_explicit") is not True:
+            errors.append("manifest.json: owner directives must remain explicit")
+        if not isinstance(sync, dict) or sync.get("commitment_lifecycle_required") is not True:
+            errors.append("manifest.json: manager commitment lifecycle must be explicit")
+        if not isinstance(sync, dict) or sync.get("memory_writes_require_provenance") is not True:
+            errors.append("manifest.json: durable memory writes must preserve provenance")
+        if not isinstance(sync, dict) or sync.get("reconcile_before_high_impact_action") is not True:
+            errors.append("manifest.json: high-impact action requires prior reconciliation")
+        if not isinstance(sync, dict) or sync.get("self_authority_expansion_forbidden") is not True:
+            errors.append("manifest.json: manager must not self-expand authority")
+        if not isinstance(sync, dict) or sync.get("service_expertise_not_project_authority") is not True:
+            errors.append("manifest.json: service expertise must not imply project authority")
         runtime = manifest.get("runtime")
         if not isinstance(runtime, dict) or runtime.get("checkpoint_is_capsule_state") is not False:
             errors.append("manifest.json: runtime checkpoint must remain separate from capsule state")
@@ -599,6 +619,7 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str
     manager_id = identity.get("manager_id", "project-manager")
 
     mandatory: list[tuple[str, str]] = [
+        ("MANAGER CONTRACT", manifest["manager"]["contract"]),
         ("MANAGER PROTOCOL", manifest["manager"]["protocol"]),
         ("MANAGER IDENTITY", manifest["manager"]["identity"]),
         ("MANAGER MANDATE", manifest["manager"]["mandate"]),
