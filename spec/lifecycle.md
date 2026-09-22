@@ -18,7 +18,7 @@ Major-version migration is explicit. v2 `upgrade` currently accepts installed v1
 
 ## Recover
 
-`recover` emits a deterministic bounded Project Manager reinstantiation pack. Manager protocol/identity/mandate and active BDI state precede deeper memory and historical decisions.
+`recover` emits a deterministic bounded Project Manager reinstantiation pack. Manager protocol, identity, mandate, project authority context, active BDI state, and active rules are mandatory recovery state and must never be silently omitted to satisfy a character budget. If the configured budget cannot hold mandatory state, recovery fails explicitly. Working views and deeper memory may be omitted under budget pressure and are listed for later retrieval.
 
 ## Repair
 
