@@ -173,6 +173,23 @@ def build_service_manifest(repository: str, branch: str, *, existing: dict | Non
             "episodes": memory.get("episodes") if isinstance(memory.get("episodes"), list) else [],
         }
     )
+    profile_state = copy.deepcopy(
+        manifest.get("profile_state") if isinstance(manifest.get("profile_state"), dict) else {}
+    )
+    profile_state.update(
+        {
+            "mandatory": (
+                profile_state.get("mandatory")
+                if isinstance(profile_state.get("mandatory"), list)
+                else []
+            ),
+            "optional": (
+                profile_state.get("optional")
+                if isinstance(profile_state.get("optional"), list)
+                else []
+            ),
+        }
+    )
     manifest.update(
         {
             "schema": "context-capsule-service-agent-manifest",
@@ -187,6 +204,7 @@ def build_service_manifest(repository: str, branch: str, *, existing: dict | Non
             "agent": agent,
             "current": current,
             "memory": memory,
+            "profile_state": profile_state,
             "runtime": {
                 "checkpoint_is_capsule_state": False,
             },
@@ -358,6 +376,14 @@ def _service_references(manifest: dict) -> list[tuple[str, str]]:
             for index, path in enumerate(episodes):
                 if isinstance(path, str):
                     refs.append((f"memory.episodes[{index}]", path))
+    profile_state = manifest.get("profile_state")
+    if isinstance(profile_state, dict):
+        for bucket in ("mandatory", "optional"):
+            paths = profile_state.get(bucket)
+            if isinstance(paths, list):
+                for index, path in enumerate(paths):
+                    if isinstance(path, str):
+                        refs.append((f"profile_state.{bucket}[{index}]", path))
     return refs
 
 
@@ -441,6 +467,15 @@ def validate_service_snapshot(files: dict[str, str]) -> list[str]:
         for key, message in required_flags.items():
             if not isinstance(sync, dict) or sync.get(key) is not True:
                 errors.append(f"manifest.json: {message}")
+
+        profile_state = manifest.get("profile_state")
+        if not isinstance(profile_state, dict):
+            errors.append("manifest.json: profile_state object is required")
+        else:
+            for bucket in ("mandatory", "optional"):
+                paths = profile_state.get(bucket)
+                if not isinstance(paths, list) or any(not isinstance(path, str) for path in paths):
+                    errors.append(f"manifest.json: profile_state.{bucket} must be a list of paths")
 
         runtime = manifest.get("runtime")
         if not isinstance(runtime, dict) or runtime.get("checkpoint_is_capsule_state") is not False:
@@ -557,12 +592,17 @@ def build_service_recovery_pack(files: dict[str, str], *, max_chars: int = 50000
         ("CURRENT STATE", manifest["current"]["state"]),
         ("NEXT ACTIONS", manifest["current"]["next"]),
     ]
+    for path in manifest.get("profile_state", {}).get("mandatory", []):
+        mandatory.append(("PROFILE STATE", path))
+
     optional = [
         ("CURRENT BLOCKERS", manifest["current"]["blockers"]),
         ("PROFESSIONAL SEMANTIC MEMORY", manifest["memory"]["semantic"]),
         ("PROFESSIONAL PROCEDURAL MEMORY", manifest["memory"]["procedural"]),
         ("LATEST HANDOFF", manifest["latest_handoff"]),
     ]
+    for path in manifest.get("profile_state", {}).get("optional", []):
+        optional.append(("OPTIONAL PROFILE STATE", path))
     for path in manifest["memory"].get("episodes", []):
         optional.append(("PROFESSIONAL EPISODE", path))
 

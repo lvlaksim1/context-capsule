@@ -56,6 +56,17 @@ The agent may generalize safe reusable lessons, but must not silently copy targe
 
 Active engagements survive runtime replacement.
 
+## Profile-specific durable state
+
+Profiles may register additional durable files through `manifest.profile_state`:
+
+- `mandatory` — role-specific state required in every reinstantiation pack;
+- `optional` — deeper role-specific state that may be omitted under recovery budget pressure and retrieved later.
+
+This lets Supervisor keep portfolio registries, Auditor keep audit control state, and future profiles add their own durable surfaces without changing the universal Service Agent identity model.
+
+Profile-state files remain subject to the Service Agent authority and target-isolation guarantees.
+
 ## Profiles
 
 Future profiles extend the base:

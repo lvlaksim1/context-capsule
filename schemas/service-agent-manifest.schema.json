@@ -15,7 +15,8 @@
     "current",
     "memory",
     "runtime",
-    "sync_policy"
+    "sync_policy",
+    "profile_state"
   ],
   "properties": {
     "schema": {
@@ -119,6 +120,28 @@
           "const": true
         }
       }
+    },
+    "profile_state": {
+      "type": "object",
+      "required": [
+        "mandatory",
+        "optional"
+      ],
+      "properties": {
+        "mandatory": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optional": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": true

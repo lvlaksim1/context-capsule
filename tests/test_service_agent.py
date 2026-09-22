@@ -146,6 +146,40 @@ class ServiceAgentBaseTests(unittest.TestCase):
         ):
             build_service_recovery_pack(installed, max_chars=512)
 
+    def test_profile_specific_state_can_be_mandatory_for_recovery(self):
+        installed = self.install(ready_overrides())
+        manifest = json.loads(installed[".context/manifest.json"])
+        manifest["profile_state"]["mandatory"] = [
+            ".context/profile/portfolio.md",
+            ".context/profile/policies.md",
+        ]
+        manifest["profile_state"]["optional"] = [
+            ".context/profile/history.md",
+        ]
+        installed[".context/profile/portfolio.md"] = "# Portfolio\n\nPROJECT_ALPHA_ACTIVE\n"
+        installed[".context/profile/policies.md"] = "# Policies\n\nPROFILE_POLICY_MARKER\n"
+        installed[".context/profile/history.md"] = "# History\n\nOPTIONAL_HISTORY_MARKER\n"
+        installed[".context/manifest.json"] = json.dumps(manifest)
+
+        self.assertEqual(validate_service_snapshot(installed), [])
+        pack = build_service_recovery_pack(installed)
+        self.assertIn("PROJECT_ALPHA_ACTIVE", pack)
+        self.assertIn("PROFILE_POLICY_MARKER", pack)
+        self.assertIn("OPTIONAL_HISTORY_MARKER", pack)
+
+        repaired = apply(installed, service_repair_changes(
+            installed,
+            SERVICE_TEMPLATES,
+            repository="owner/service-agent",
+            branch="main",
+            core_commit="f" * 40,
+        ))
+        repaired_manifest = json.loads(repaired[".context/manifest.json"])
+        self.assertEqual(
+            repaired_manifest["profile_state"],
+            manifest["profile_state"],
+        )
+
     def test_profile_version_is_explicit(self):
         installed = self.install(ready_overrides())
         meta = json.loads(installed[".context/capsule.json"])
