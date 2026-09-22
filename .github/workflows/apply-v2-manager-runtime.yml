@@ -24,8 +24,8 @@ jobs:
           cat .v2-upload/part-* | base64 -d > /tmp/v2-overlay.tar.gz
           echo "0fe4190e060794390e156c398ad1aedb3be07531534e0562a175dc4fb01c6d03  /tmp/v2-overlay.tar.gz" | sha256sum -c -
           tar -xzf /tmp/v2-overlay.tar.gz -C .
+          git restore --source=HEAD -- .github/workflows/ci.yml
           rm -rf .v2-upload
-          rm .github/workflows/apply-v2-manager-runtime.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
