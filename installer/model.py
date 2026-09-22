@@ -598,7 +598,7 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str
     identity = parse_json_text(files, manifest["manager"]["identity"]) or {}
     manager_id = identity.get("manager_id", "project-manager")
 
-    ordered: list[tuple[str, str]] = [
+    mandatory: list[tuple[str, str]] = [
         ("MANAGER PROTOCOL", manifest["manager"]["protocol"]),
         ("MANAGER IDENTITY", manifest["manager"]["identity"]),
         ("MANAGER MANDATE", manifest["manager"]["mandate"]),
@@ -612,21 +612,20 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str
         ("MANAGER PLANS", manifest["manager"]["plans"]),
     ]
     for path in manifest.get("rules", []):
-        ordered.append(("ACTIVE RULE", path))
-    ordered.extend(
-        [
-            ("WORKING VIEW — CURRENT STATE (NON-AUTHORITATIVE)", manifest["current"]["state"]),
-            ("WORKING VIEW — CURRENT BLOCKERS (NON-AUTHORITATIVE)", manifest["current"]["blockers"]),
-            ("WORKING VIEW — NEXT ACTIONS (NON-AUTHORITATIVE)", manifest["current"]["next"]),
-            ("SEMANTIC MEMORY", manifest["memory"]["semantic"]),
-            ("PROCEDURAL MEMORY", manifest["memory"]["procedural"]),
-            ("EMERGENCY HANDOFF (NON-AUTHORITATIVE)", manifest["latest_handoff"]),
-        ]
-    )
+        mandatory.append(("ACTIVE RULE", path))
+
+    optional: list[tuple[str, str]] = [
+        ("WORKING VIEW — CURRENT STATE (NON-AUTHORITATIVE)", manifest["current"]["state"]),
+        ("WORKING VIEW — CURRENT BLOCKERS (NON-AUTHORITATIVE)", manifest["current"]["blockers"]),
+        ("WORKING VIEW — NEXT ACTIONS (NON-AUTHORITATIVE)", manifest["current"]["next"]),
+        ("SEMANTIC MEMORY", manifest["memory"]["semantic"]),
+        ("PROCEDURAL MEMORY", manifest["memory"]["procedural"]),
+        ("EMERGENCY HANDOFF (NON-AUTHORITATIVE)", manifest["latest_handoff"]),
+    ]
     for path in manifest["memory"].get("episodes", []):
-        ordered.append(("EPISODIC MEMORY", path))
+        optional.append(("EPISODIC MEMORY", path))
     for path in manifest.get("decisions", []):
-        ordered.append(("DURABLE DECISION", path))
+        optional.append(("DURABLE DECISION", path))
 
     chunks = [
         "# CONTEXT CAPSULE PROJECT MANAGER REINSTANTIATION PACK",
@@ -643,8 +642,20 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str
         "",
     ]
     used = sum(len(x) + 1 for x in chunks)
+    for label, path in mandatory:
+        text = files.get(path)
+        if text is None:
+            continue
+        chunk = f"## {label}: {path}\n\n{text.strip()}\n"
+        if used + len(chunk) > max_chars:
+            raise CapsuleModelError(
+                f"recovery budget too small for mandatory manager state: {path}"
+            )
+        chunks.append(chunk)
+        used += len(chunk)
+
     omitted: list[str] = []
-    for label, path in ordered:
+    for label, path in optional:
         text = files.get(path)
         if text is None:
             continue

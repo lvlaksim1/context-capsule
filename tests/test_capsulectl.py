@@ -358,6 +358,35 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         self.assertIn(episode_path, pack)
         self.assertNotIn(episode_marker, pack)
 
+    def test_recovery_refuses_budget_that_cannot_hold_active_manager_state(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        with self.assertRaisesRegex(
+            CapsuleModelError,
+            "recovery budget too small for mandatory manager state",
+        ):
+            build_recovery_pack(installed, max_chars=512)
+
+    def test_protocol_locks_belief_revision_conflict_and_commitment_lifecycle(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        protocol = installed[".context/manager/PROTOCOL.md"]
+
+        self.assertIn(
+            "remains responsible for until completed, cancelled, or invalidated",
+            protocol,
+        )
+        self.assertIn(
+            "Preserve the old record as superseded and update affected active state/views",
+            protocol,
+        )
+        self.assertIn(
+            "Preserve both sides explicitly and do not flatten uncertainty into a confident fact",
+            protocol,
+        )
+
     def test_untrusted_transport_does_not_become_authority_by_protocol(self):
         installed = apply({}, clean_install_changes(
             {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
