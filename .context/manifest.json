@@ -2,8 +2,8 @@
   "schema": "context-capsule-manifest",
   "schema_version": 4,
   "repository": "lvlaksim1/context-capsule",
-  "authoritative_branch": "main",
-  "discovery_branch": "main",
+  "authoritative_branch": "v2-manager-runtime",
+  "discovery_branch": "v2-manager-runtime",
   "branch_mode": "single",
   "entrypoint": ".context/ENTRYPOINT.md",
   "capsule_metadata": ".context/capsule.json",
@@ -52,7 +52,8 @@
     ".context/decisions/DEC-0008-default-semantic-writeback.md",
     ".context/decisions/DEC-0009-permanent-authoritative-context-branch.md",
     ".context/decisions/DEC-0010-canonical-v1.3.1.md",
-    ".context/decisions/DEC-0011-portable-project-manager-v2.md"
+    ".context/decisions/DEC-0011-portable-project-manager-v2.md",
+    ".context/decisions/DEC-0012-split-manager-product-authority.md"
   ],
   "dialogues": [],
   "history": [],
@@ -70,5 +71,9 @@
     "working_views_non_authoritative": true
   },
   "updated_at": "2026-09-22",
-  "context_version": "2.0.0-dev"
+  "context_version": "2.0.0-dev",
+  "authority": {
+    "manager_state_branch": "v2-manager-runtime",
+    "product_branch": "main"
+  }
 }
