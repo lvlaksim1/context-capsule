@@ -314,12 +314,19 @@ class ContextCapsuleV2Tests(unittest.TestCase):
             ".context/handoffs/latest.md",
         ]
         before = {path: installed[path] for path in preserved_paths}
+        before_identity = json.loads(before[".context/manager/identity.json"])
 
         repaired = apply(installed, repair_changes(
             installed, TEMPLATES, repository="owner/repo", branch="main", core_commit="c" * 40
         ))
 
+        self.assertEqual(
+            json.loads(repaired[".context/manager/identity.json"]),
+            before_identity,
+        )
         for path in preserved_paths:
+            if path == ".context/manager/identity.json":
+                continue
             self.assertEqual(repaired[path], before[path], path)
         self.assertEqual(
             json.loads(repaired[".context/capsule.json"])["core_commit"],
