@@ -13,6 +13,7 @@ v2 adds:
 - a universal Core-managed Project Manager Protocol;
 - stable `manager_id` independent of chat/model/process identity;
 - repository-local project-specific mandate and authority boundaries;
+- separate authority coordinates for durable manager state and the product baseline;
 - BDI-inspired active state: beliefs, goals, intentions/commitments, plans;
 - provenance-bearing manager beliefs;
 - typed semantic, episodic, and procedural memory;
@@ -34,18 +35,21 @@ v2 keeps the strongest v1.3 properties:
 - repository-confined paths and managed bootstrap blocks;
 - project-owned manifest extensions are preserved;
 - canonical GitHub mutation remains expected-parent atomic publication;
-- permanent authoritative context branches remain supported;
+- permanent manager-state authority branches and discovery redirects remain supported;
 - versions are explicit and there is no silent auto-upgrade.
 
 ## CLI development surface
 
 ```bash
-python installer/capsulectl.py install --target /repo --repository owner/name --branch main --core-commit <sha>
-python installer/capsulectl.py upgrade --target /repo --repository owner/name --branch main --core-commit <sha>
+python installer/capsulectl.py install --target /repo --repository owner/name --branch main --product-branch main --core-commit <sha>
+python installer/capsulectl.py install --target /repo-context --repository owner/name --branch context --discovery-branch main --product-branch main --core-commit <sha>
+python installer/capsulectl.py upgrade --target /repo --repository owner/name --branch main --product-branch main --core-commit <sha>
 python installer/capsulectl.py repair --target /repo --repository owner/name --branch main --core-commit <sha>
 python installer/capsulectl.py validate --target .
 python installer/capsulectl.py ready --target .
 python installer/capsulectl.py recover --target .
 ```
+
+In v2, `authoritative_branch` is a compatibility alias for `authority.manager_state_branch`; it does not mean product authority. `authority.product_branch` identifies the default product baseline independently.
 
 Stable consumer repositories must remain on v1.3.1 until v2 is explicitly promoted and migration is explicitly requested.
