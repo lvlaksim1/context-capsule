@@ -15,7 +15,7 @@ v2 adds:
 - repository-local project-specific mandate and authority boundaries;
 - separate authority coordinates for durable manager state and the product baseline;
 - BDI-inspired active state: beliefs, goals, intentions/commitments, plans;
-- provenance-bearing manager beliefs;
+- provenance-bearing manager beliefs with explicit confirm / supersede / conflict evidence semantics;
 - typed semantic, episodic, and procedural memory;
 - explicit separation of runtime checkpoints from durable manager state;
 - manager-aware `READY` and deterministic reinstantiation `recover`;
@@ -24,6 +24,8 @@ v2 adds:
 The universal manager loop is:
 
 `Reinstate → Reconcile → Plan → Execute → Verify → Reflect → Persist`
+
+During Reconcile, newer evidence is not automatically treated as a state change. Freshness alone does not imply supersession: evidence may confirm the existing state, supersede it, or remain in unresolved conflict.
 
 ## Preserved invariants
 
