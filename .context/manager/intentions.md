@@ -2,6 +2,8 @@
 
 ## Completed
 
+- Resolve the ambiguity between product authority and Project Manager state authority discovered by the first cold-reinstantiation acceptance test.
+
 - Implement the first complete v2 Manager Runtime model on branch `v2-manager-runtime`.
 - Verify the model with local permanent tests and GitHub-hosted CI before claiming the implementation works.
 - Persist the research-derived architecture and its rationale into the project's own Context Capsule.
