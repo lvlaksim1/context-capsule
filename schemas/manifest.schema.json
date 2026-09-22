@@ -3,59 +3,173 @@
   "title": "Context Capsule manifest v4",
   "type": "object",
   "required": [
-    "schema", "schema_version", "repository", "authoritative_branch", "discovery_branch",
-    "branch_mode", "entrypoint", "capsule_metadata", "protocol", "latest_handoff",
-    "project", "manager", "memory", "current", "rules", "decisions", "dialogues", "history",
-    "runtime", "sync_policy"
+    "schema",
+    "schema_version",
+    "repository",
+    "authoritative_branch",
+    "discovery_branch",
+    "branch_mode",
+    "entrypoint",
+    "capsule_metadata",
+    "protocol",
+    "latest_handoff",
+    "project",
+    "manager",
+    "memory",
+    "current",
+    "rules",
+    "decisions",
+    "dialogues",
+    "history",
+    "runtime",
+    "sync_policy"
   ],
   "properties": {
-    "schema": {"const": "context-capsule-manifest"},
-    "schema_version": {"const": 4},
-    "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
-    "authoritative_branch": {"type": "string", "minLength": 1},
-    "discovery_branch": {"type": "string", "minLength": 1},
-    "branch_mode": {"enum": ["single", "redirect"]},
-    "entrypoint": {"type": "string"},
-    "capsule_metadata": {"type": "string"},
-    "protocol": {"type": "string"},
-    "latest_handoff": {"type": "string"},
+    "schema": {
+      "const": "context-capsule-manifest"
+    },
+    "schema_version": {
+      "const": 4
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[^/]+/[^/]+$"
+    },
+    "authoritative_branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "discovery_branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "branch_mode": {
+      "enum": [
+        "single",
+        "redirect"
+      ]
+    },
+    "entrypoint": {
+      "type": "string"
+    },
+    "capsule_metadata": {
+      "type": "string"
+    },
+    "protocol": {
+      "type": "string"
+    },
+    "latest_handoff": {
+      "type": "string"
+    },
     "project": {
       "type": "object",
-      "required": ["identity", "goals", "architecture", "constraints"],
+      "required": [
+        "identity",
+        "goals",
+        "architecture",
+        "constraints"
+      ],
       "additionalProperties": true
     },
     "manager": {
       "type": "object",
-      "required": ["protocol", "identity", "mandate", "beliefs", "goals", "intentions", "plans"],
+      "required": [
+        "protocol",
+        "identity",
+        "mandate",
+        "beliefs",
+        "goals",
+        "intentions",
+        "plans"
+      ],
       "additionalProperties": true
     },
     "memory": {
       "type": "object",
-      "required": ["index", "semantic", "procedural", "episodes"],
+      "required": [
+        "index",
+        "semantic",
+        "procedural",
+        "episodes"
+      ],
       "properties": {
-        "episodes": {"type": "array", "items": {"type": "string"}}
+        "episodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       },
       "additionalProperties": true
     },
     "current": {
       "type": "object",
-      "required": ["state", "blockers", "next"],
+      "required": [
+        "state",
+        "blockers",
+        "next"
+      ],
       "additionalProperties": true
     },
-    "rules": {"type": "array", "items": {"type": "string"}},
-    "decisions": {"type": "array", "items": {"type": "string"}},
-    "dialogues": {"type": "array", "items": {"type": "string"}},
-    "history": {"type": "array", "items": {"type": "string"}},
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dialogues": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "runtime": {
       "type": "object",
-      "required": ["checkpoint_is_capsule_state"],
-      "properties": {"checkpoint_is_capsule_state": {"const": false}},
+      "required": [
+        "checkpoint_is_capsule_state"
+      ],
+      "properties": {
+        "checkpoint_is_capsule_state": {
+          "const": false
+        }
+      },
       "additionalProperties": true
     },
     "sync_policy": {
       "type": "object",
-      "required": ["semantic_only", "atomic_git_publication", "provenance_required_for_manager_beliefs"],
-      "additionalProperties": true
+      "required": [
+        "semantic_only",
+        "atomic_git_publication",
+        "provenance_required_for_manager_beliefs",
+        "working_views_non_authoritative"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "semantic_only": {
+          "const": true
+        },
+        "atomic_git_publication": {
+          "const": true
+        },
+        "provenance_required_for_manager_beliefs": {
+          "const": true
+        },
+        "working_views_non_authoritative": {
+          "const": true
+        }
+      }
     }
   },
   "additionalProperties": true
