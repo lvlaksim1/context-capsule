@@ -36,3 +36,16 @@ Verification completed on 2026-09-22:
 Final clean-head GitHub Actions run: `35751992546`, conclusion `success`.
 
 The stable `main` branch and all installed v1.3.1 consumers remain untouched.
+
+## FACT — authority roles separated
+
+The first cold-reinstantiation acceptance test exposed an ambiguity: the v2 capsule was physically on `v2-manager-runtime` while its inherited `authoritative_branch` still said `main`. The runtime correctly noticed that production and manager-state concepts were being conflated.
+
+v2 now separates the roles explicitly:
+
+- `authority.manager_state_branch = v2-manager-runtime`;
+- `authority.product_branch = main`;
+- `authoritative_branch` is retained only as an alias of manager-state authority.
+
+The same hardening line marks `current/*` and handoff as non-authoritative working views so stale summaries cannot override BDI state or newer verified evidence.
+
