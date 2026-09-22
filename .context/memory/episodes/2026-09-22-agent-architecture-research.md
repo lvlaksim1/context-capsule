@@ -29,3 +29,13 @@ External practice reviewed for this correction:
 - Microsoft Agent Framework rehydration requires stable logical agent/executor identities across reconstructed workflow instances and explicitly separates checkpoint/run state from the logical agent identity.
 
 Manager synthesis: Context Capsule should not infer persistent-manager authority from whichever code branch happens to be executing. Durable manager state needs an explicit authority locus; product truth needs a separate baseline. This led to DEC-0012.
+
+## 2026-09-23 Service Agent Base research
+
+Fresh implementation guidance was checked before freezing the minimal Service Agent contract.
+
+- OpenAI's current orchestration guidance distinguishes manager-controlled specialists ("agents as tools") from handoffs where ownership of the next interaction transfers. It recommends adding specialists when instructions/tools/policy genuinely differ rather than splitting agents prematurely.
+- Microsoft's current Agent Framework documentation separates persistent agent/session context from workflow checkpoints and supports durable multi-agent orchestration with rehydration.
+- These patterns support the Context Capsule distinction adopted here: a persistent Service Agent has its own identity and professional state, while each client/target interaction remains a bounded engagement with explicit authority and result boundaries.
+
+The external guidance informed the design but does not itself define project authority.

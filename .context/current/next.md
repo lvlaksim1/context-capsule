@@ -1,6 +1,8 @@
 # Next actions
 
-1. Await owner direction to start Master Plan item 2: Minimal Service Agent Base.
-2. When item 2 begins, derive only the genuinely shared persistent-agent primitives needed by Supervisor, Auditor, Specialist Agents, and Agent Factory; do not prematurely replace the Project Manager model with a generic framework.
-3. Preserve the Project Manager v2 Contract and 26-test regression baseline while developing the next layer.
-4. Keep stable v1.3.1 and known consumers unchanged unless the owner explicitly authorizes promotion or migration.
+1. Execute Master Plan item 3: create a dedicated Supervisor repository.
+2. Install Service Agent Base into that repository using the pinned current Core.
+3. Convert the temporary Supervisor seed context into structured Supervisor identity, mandate, portfolio state, goals, intentions, plans, professional memory, and engagement/principal rules.
+4. Verify Supervisor VALID, READY, and deterministic reinstantiation before treating it as the persistent Supervisor.
+5. Preserve Project Manager v2 and Service Agent Base regression baselines while creating the profile.
+6. Do not publish stable v2 or migrate existing consumers without explicit owner approval.

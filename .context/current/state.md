@@ -1,49 +1,58 @@
 # Current state
 
-## FACT — v1.3.1 remains stable production
+## FACT — stable production remains v1.3.1
 
-Stable Context Capsule v1.3.1 remains released on `main` and existing v1.3.1 consumers remain unchanged.
+Stable Context Capsule v1.3.1 remains on `main`. Existing v1.3.1 consumers are unchanged.
 
-## FACT — Master Plan item 1 is complete
+## FACT — Project Manager v2 baseline remains verified
 
-The v2 development line on `v2-manager-runtime` now has a normative Core-managed Project Manager Contract.
+Project Manager v2 retains its normative Contract, runtime-independent identity, BDI model, typed memory, evidence revision, bounded recovery, self-modification boundary, and isolated consumer compatibility smoke.
 
-The Contract explicitly covers:
+## FACT — Minimal Service Agent Base is implemented
 
-- stable runtime-independent identity and one-project responsibility;
-- owner-message semantics and explicit authorization;
-- bounded authority;
-- beliefs/goals/intentions/plans;
-- commitment lifecycle;
-- evidence provenance and confirm/supersede/conflict;
-- risk-scoped reconciliation;
-- durable-memory admission, retrieval, revalidation, revision, and consolidation;
-- Reinstate → Reconcile → Plan → Execute → Verify → Reflect → Persist;
-- self-modification boundary;
-- external-expertise boundary;
-- persistence/privacy boundary.
+Service Agent Base profile version: `1.0.0-dev`.
 
-The Contract is installed at `.context/manager/CONTRACT.md`, referenced by the manifest, and is mandatory recovery state.
+The base defines a persistent service role whose own repository is its home while external projects/repositories are bounded engagement targets rather than owned project state.
 
-## FACT — deterministic verification is green
+Implemented Service Agent surface:
 
-Current development Core provenance: `8b91e41737615f3c54ff87b193d8df6a6a886644`.
+- stable runtime-independent `agent_id`;
+- explicit role and specialization;
+- mandate, capabilities, limitations;
+- principal/requester model;
+- invocation and result contracts;
+- professional beliefs/goals/intentions/plans;
+- active engagement ledger;
+- professional semantic/procedural/episodic memory;
+- explicit target-context isolation;
+- advisory-by-default output;
+- explicit grant required for target-side action;
+- transport does not upgrade authority;
+- self-authority expansion forbidden;
+- runtime checkpoint separated from persistent identity;
+- Service Agent reinstantiation recovery.
 
-GitHub Actions run `35797459058` completed successfully:
+Development CLI now supports:
+`service-install`, `service-repair`, `service-validate`, `service-ready`, and `service-recover`.
 
-- 26 permanent tests: PASS;
-- lifecycle modules compile: PASS;
-- self validation: VALID;
-- self Project Manager readiness: READY;
-- self reinstantiation smoke: PASS;
-- isolated consumer compatibility smoke against `lvlaksim1/evrasia-hd-testbed`: PASS.
+Machine-readable schemas exist for Service Agent identity, manifest, invocation, and result.
 
-The consumer smoke cloned the testbed read-only into the CI runner, applied the current Core only to that temporary copy, then passed `repair → validate → ready → recover` while preserving `evrasia-hd-project-manager`. The GitHub testbed repository was not modified.
+## FACT — verification is green
 
-Two intermediate staged-integration commits produced failing CI while the Contract and validation changes were not yet coherent; the final coherent state fixed those compatibility failures and passed.
+Current development Core provenance: `67772ccd376a54e44236035ae6593fe2658e99fc`.
 
-## FACT — next architectural stage is separate
+GitHub Actions run `35798348813` succeeded with:
 
-The remaining major architecture questions are no longer foundational Project Manager gaps. They belong to Master Plan item 2: the Minimal Service Agent Base for future Supervisor, Auditor, Specialist Agents, and Agent Factory.
+- 36 permanent tests: PASS;
+- compile: PASS;
+- Context Capsule self VALID/READY/recovery smoke: PASS;
+- isolated Project Manager consumer smoke: PASS;
+- full Service Agent CLI lifecycle smoke: PASS.
+
+One immediately preceding run failed only because the new `SERVICE_AGENT_BASE_VERSION` file contained a literal backslash-n version-surface typo; the lockstep test caught it and the corrected coherent state passed.
+
+## FACT — next stage
+
+Master Plan item 2 is complete enough to proceed to item 3: create the Supervisor in its own repository using the Service Agent Base.
 
 No stable v2 release or consumer migration has been authorized.
