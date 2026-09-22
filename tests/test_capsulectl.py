@@ -182,6 +182,25 @@ class ContextCapsuleV2Tests(unittest.TestCase):
             for error in validate_snapshot(installed)
         ))
 
+    def test_freshness_does_not_imply_supersession(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        manifest = json.loads(installed[".context/manifest.json"])
+        self.assertTrue(manifest["sync_policy"]["freshness_not_supersession"])
+        protocol = installed[".context/manager/PROTOCOL.md"]
+        self.assertIn("Freshness alone never implies supersession", protocol)
+        self.assertIn("**confirm**", protocol)
+        self.assertIn("**supersede**", protocol)
+        self.assertIn("**conflict**", protocol)
+
+        manifest["sync_policy"]["freshness_not_supersession"] = False
+        installed[".context/manifest.json"] = json.dumps(manifest)
+        self.assertTrue(any(
+            "evidence freshness must not imply semantic supersession" in error
+            for error in validate_snapshot(installed)
+        ))
+
     def test_runtime_checkpoint_is_explicitly_not_capsule_state(self):
         installed = apply({}, clean_install_changes(
             {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()

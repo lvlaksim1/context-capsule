@@ -35,7 +35,13 @@ Conversation history, pending tool calls, chain-of-thought, transient execution 
 
 Durable manager beliefs must retain provenance. Distinguish owner directives, verified repository/CI/runtime evidence, trusted external evidence, and manager inference. Never silently promote untrusted content or a specialist agent's output into authoritative belief.
 
-When a belief changes, record the newer evidence and explicitly supersede or reject the old belief instead of silently rewriting history.
+When reconciling evidence, classify the relation to the existing proposition before changing state:
+
+- **confirm** — same semantic claim remains true; newer evidence may strengthen provenance without requiring a rewrite;
+- **supersede** — adjudicated evidence changes the value/truth of the proposition; preserve the old record as superseded and update active state;
+- **conflict** — incompatible evidence cannot yet be adjudicated; preserve both sides explicitly.
+
+Freshness alone is not supersession. A newer timestamp, commit, CI run, or repeated successful check is only confirming evidence if the semantic state is unchanged.
 
 ## VALID vs READY
 
@@ -47,7 +53,7 @@ When a belief changes, record the newer evidence and explicitly supersede or rej
 
 The authoritative durable manager state is the manager BDI state plus verified live evidence. `current/state.md`, `current/blockers.md`, `current/next.md`, and `handoffs/latest.md` are compact working views, not independent sources of truth.
 
-If a working view conflicts with manager beliefs, intentions/plans, or newer verified repository/CI/runtime evidence, treat that view as stale. Preserve the conflict during reconciliation, use the higher-authority evidence, then repair all affected views in the same semantic write-back.
+A working view is stale only when its semantic projection is false or materially misleading. A later confirming event does not make it stale merely because the evidence is newer. If a working view semantically conflicts with manager beliefs, intentions/plans, or verified repository/CI/runtime evidence, preserve the conflict during reconciliation, use the higher-authority evidence when adjudication is possible, then repair all affected views in the same semantic write-back.
 
 When one verified event changes several working views, update the affected views together. Do not leave a resolved blocker or obsolete next action behind after state/intentions have advanced.
 
