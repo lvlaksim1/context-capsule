@@ -1,7 +1,6 @@
 # Next actions
 
-1. Continue v2 hardening with automation-first verification; every machine-checkable invariant should become a permanent regression test.
-2. Use an isolated consumer testbed only for occasional black-box behavioral smoke checks that cannot be established deterministically.
-3. Resolve real semantic inconsistencies when observed; do not create write-back churn for confirming evidence alone.
-4. Keep v1.3.1 production and all existing consumers unchanged until the owner explicitly authorizes a v2 release and migration plan.
-5. Do not freeze v2 semantics until the remaining non-deterministic behavior has sufficient evidence.
+1. Await owner direction to start Master Plan item 2: Minimal Service Agent Base.
+2. When item 2 begins, derive only the genuinely shared persistent-agent primitives needed by Supervisor, Auditor, Specialist Agents, and Agent Factory; do not prematurely replace the Project Manager model with a generic framework.
+3. Preserve the Project Manager v2 Contract and 26-test regression baseline while developing the next layer.
+4. Keep stable v1.3.1 and known consumers unchanged unless the owner explicitly authorizes promotion or migration.

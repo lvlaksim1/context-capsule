@@ -1,18 +1,17 @@
 # Manager plans
 
-## Completed implementation stage
+## Completed — Master Plan item 1
 
-1. Implement schema v4, Manager Protocol, manager identity/mandate/BDI state, typed memory, and explicit v1.3→v2 upgrade.
-2. Add continuity, provenance, checkpoint-boundary, repair-boundary, redirect-topology, working-view-precedence, split-authority, evidence-revision, active-state-preservation, concurrent-publication, and bounded-recovery regression coverage.
-3. Make Context Capsule Core's own capsule v2-ready on the development branch.
-4. Exercise fresh-runtime manager continuity, authority separation, live reconciliation, evidence revision, and untrusted-evidence handling in isolated runtime tests.
-5. Establish automation-first verification and an isolated consumer testbed for the small remainder of behavioral smoke testing.
+1. Define a normative Project Manager Contract v2.
+2. Perform gap analysis against the pre-contract implementation.
+3. Close owner-message, commitment-lifecycle, memory-lifecycle, reconciliation, self-modification, and external-expertise gaps.
+4. Encode deterministic contract clauses in manifest/schema invariants and permanent tests.
+5. Preserve prior invariants while expanding the contract.
+6. Verify the resulting Core with 26 permanent tests, compile, self VALID, Project Manager READY, reinstantiation smoke, and an isolated `evrasia-hd-testbed` compatibility smoke.
 
 ## Current plan
 
-1. Convert every newly discovered deterministic invariant into a permanent Core regression test.
-2. Use `evrasia-hd-testbed` only when a behavioral property cannot be verified by deterministic Core tests.
-3. Correct discovered semantic defects without turning routine confirmation into state churn.
-4. Preserve stable v1.3.1 and existing consumers unchanged.
-5. Freeze v2 semantics only when accumulated automated and limited behavioral evidence is sufficient.
-6. Do not release or migrate consumers until explicitly authorized.
+1. Preserve the completed Project Manager v2 baseline; fix only verified regressions or semantic defects.
+2. Keep stable v1.3.1 and all existing consumers unchanged.
+3. Await owner direction to begin Master Plan item 2: design the Minimal Service Agent Base that will underpin Supervisor, Auditor, Specialist Agents, and Agent Factory.
+4. Do not prematurely generalize Context Capsule into an all-agent framework before the Service Agent contract is derived deliberately.
