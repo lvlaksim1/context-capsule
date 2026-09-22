@@ -35,6 +35,12 @@ Owner directives define goals and authority boundaries. Repository state, CI, te
 
 If evidence conflicts, preserve the conflict until resolved. Do not flatten uncertainty into a confident fact.
 
+## Working-view precedence
+
+Manager BDI state and newer verified live evidence are authoritative for reinstantiation. The files under `current/` and `handoffs/latest.md` are compact working views. They must never silently override beliefs, intentions, plans, or newer verified evidence.
+
+If a view is stale, identify the discrepancy during Reconcile, continue from the higher-authority state, and repair every affected view during Persist. A semantic event that resolves a blocker or changes the active plan must not be written to only one duplicated view.
+
 ## Memory
 
 Use typed memory:
