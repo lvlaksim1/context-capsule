@@ -23,9 +23,18 @@ from installer.model import (
     validate_snapshot,
 )
 from installer.safety import CapsuleSafetyError, confined_local_path, validate_core_commit
+from installer.service_agent import (
+    ServiceAgentModelError,
+    build_service_recovery_pack,
+    service_clean_install_changes,
+    service_readiness_snapshot,
+    service_repair_changes,
+    validate_service_snapshot,
+)
 
 CORE_ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES = CORE_ROOT / "templates"
+SERVICE_TEMPLATES = CORE_ROOT / "service-agent-templates"
 
 
 def target_root(value: str) -> Path:
@@ -284,6 +293,97 @@ def cmd_recover(args: argparse.Namespace) -> int:
     return 0
 
 
+def _apply_service_planned(target: Path, label: str, planner) -> int:
+    try:
+        changes = planner()
+    except (ServiceAgentModelError, CapsuleSafetyError) as exc:
+        print(f"Context Capsule service-agent {label}: FAIL\n  - {exc}")
+        return 2
+    apply_local_changes(target, changes)
+    print(f"Context Capsule service-agent {label} applied locally ({len(changes)} changed files).")
+    return cmd_service_validate(argparse.Namespace(target=str(target)))
+
+
+def cmd_service_install(args: argparse.Namespace) -> int:
+    target = target_root(args.target)
+    ensure_branch(target, args.branch)
+    files = load_snapshot(target)
+    return _apply_service_planned(
+        target,
+        "install",
+        lambda: service_clean_install_changes(
+            files,
+            SERVICE_TEMPLATES,
+            repository=args.repository,
+            branch=args.branch,
+            core_commit=infer_core_commit(args.core_commit),
+            agent_id=args.agent_id,
+            role=args.role,
+            specialization=args.specialization,
+        ),
+    )
+
+
+def cmd_service_repair(args: argparse.Namespace) -> int:
+    target = target_root(args.target)
+    ensure_branch(target, args.branch)
+    files = load_snapshot(target)
+    return _apply_service_planned(
+        target,
+        "repair",
+        lambda: service_repair_changes(
+            files,
+            SERVICE_TEMPLATES,
+            repository=args.repository,
+            branch=args.branch,
+            core_commit=infer_core_commit(args.core_commit),
+        ),
+    )
+
+
+def cmd_service_validate(args: argparse.Namespace) -> int:
+    target = target_root(args.target)
+    try:
+        errors = validate_service_snapshot(load_snapshot(target))
+    except (ServiceAgentModelError, CapsuleSafetyError, SystemExit) as exc:
+        print(f"Context Capsule service-agent validation: FAIL\n  - {exc}")
+        return 1
+    if errors:
+        print("Context Capsule service-agent validation: FAIL")
+        for error in errors:
+            print(f"  - {error}")
+        return 1
+    print("Context Capsule service-agent validation: VALID")
+    return 0
+
+
+def cmd_service_ready(args: argparse.Namespace) -> int:
+    target = target_root(args.target)
+    try:
+        ready, reasons = service_readiness_snapshot(load_snapshot(target))
+    except (ServiceAgentModelError, CapsuleSafetyError, SystemExit) as exc:
+        print(f"Context Capsule service-agent readiness: NOT READY\n  - {exc}")
+        return 1
+    if not ready:
+        print("Context Capsule service-agent readiness: NOT READY")
+        for reason in reasons:
+            print(f"  - {reason}")
+        return 1
+    print("Context Capsule service-agent readiness: READY (SERVICE AGENT REINSTANTIABLE)")
+    return 0
+
+
+def cmd_service_recover(args: argparse.Namespace) -> int:
+    target = target_root(args.target)
+    try:
+        pack = build_service_recovery_pack(load_snapshot(target), max_chars=args.max_chars)
+    except (ServiceAgentModelError, CapsuleSafetyError, SystemExit) as exc:
+        print(f"Context Capsule service-agent recovery: FAIL\n  - {exc}")
+        return 1
+    sys.stdout.write(pack)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="capsulectl", description="Context Capsule Project Manager lifecycle helper")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -330,6 +430,36 @@ def build_parser() -> argparse.ArgumentParser:
     recover.add_argument("--target", required=True)
     recover.add_argument("--max-chars", type=int, default=50000)
     recover.set_defaults(func=cmd_recover)
+
+    service_install = sub.add_parser("service-install", help="clean-install a persistent Service Agent profile")
+    service_install.add_argument("--target", required=True)
+    service_install.add_argument("--repository", required=True)
+    service_install.add_argument("--branch", default="main")
+    service_install.add_argument("--core-commit")
+    service_install.add_argument("--agent-id", required=True)
+    service_install.add_argument("--role", required=True)
+    service_install.add_argument("--specialization", required=True)
+    service_install.set_defaults(func=cmd_service_install)
+
+    service_repair = sub.add_parser("service-repair", help="repair an installed Service Agent profile")
+    service_repair.add_argument("--target", required=True)
+    service_repair.add_argument("--repository", required=True)
+    service_repair.add_argument("--branch", required=True)
+    service_repair.add_argument("--core-commit")
+    service_repair.set_defaults(func=cmd_service_repair)
+
+    service_validate = sub.add_parser("service-validate", help="check Service Agent structural validity")
+    service_validate.add_argument("--target", required=True)
+    service_validate.set_defaults(func=cmd_service_validate)
+
+    service_ready = sub.add_parser("service-ready", help="check Service Agent reinstantiation readiness")
+    service_ready.add_argument("--target", required=True)
+    service_ready.set_defaults(func=cmd_service_ready)
+
+    service_recover = sub.add_parser("service-recover", help="emit a deterministic Service Agent reinstantiation pack")
+    service_recover.add_argument("--target", required=True)
+    service_recover.add_argument("--max-chars", type=int, default=50000)
+    service_recover.set_defaults(func=cmd_service_recover)
     return parser
 
 
