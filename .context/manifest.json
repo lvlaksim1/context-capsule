@@ -53,7 +53,8 @@
     ".context/decisions/DEC-0009-permanent-authoritative-context-branch.md",
     ".context/decisions/DEC-0010-canonical-v1.3.1.md",
     ".context/decisions/DEC-0011-portable-project-manager-v2.md",
-    ".context/decisions/DEC-0012-split-manager-product-authority.md"
+    ".context/decisions/DEC-0012-split-manager-product-authority.md",
+    ".context/decisions/DEC-0013-evidence-revision-semantics.md"
   ],
   "dialogues": [],
   "history": [],
@@ -68,7 +69,8 @@
     "volatile_runtime_excluded": true,
     "atomic_git_publication": true,
     "provenance_required_for_manager_beliefs": true,
-    "working_views_non_authoritative": true
+    "working_views_non_authoritative": true,
+    "freshness_not_supersession": true
   },
   "updated_at": "2026-09-22",
   "context_version": "2.0.0-dev",
