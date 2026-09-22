@@ -66,7 +66,8 @@
     "semantic_only": true,
     "volatile_runtime_excluded": true,
     "atomic_git_publication": true,
-    "provenance_required_for_manager_beliefs": true
+    "provenance_required_for_manager_beliefs": true,
+    "working_views_non_authoritative": true
   },
   "updated_at": "2026-09-22",
   "context_version": "2.0.0-dev"
