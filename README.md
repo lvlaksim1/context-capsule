@@ -55,3 +55,36 @@ python installer/capsulectl.py recover --target .
 In v2, `authoritative_branch` is a compatibility alias for `authority.manager_state_branch`; it does not mean product authority. `authority.product_branch` identifies the default product baseline independently.
 
 Stable consumer repositories must remain on v1.3.1 until v2 is explicitly promoted and migration is explicitly requested.
+
+## Minimal Service Agent Base
+
+The v2 development line also contains a separate **Service Agent Base 1.0.0-dev**. It is not a replacement for Project Manager.
+
+A Project Manager owns continuing responsibility for one project. A Service Agent owns a persistent professional role in its own home repository and serves external targets through bounded engagements.
+
+The base is intended for future profiles such as Supervisor, Auditor, Specialist Agent, and Agent Factory.
+
+Core Service Agent boundaries:
+
+- stable runtime-independent `agent_id`;
+- explicit role and specialization;
+- home repository owns identity and professional memory;
+- target/client repositories remain external;
+- every engagement carries requester, target, scope, authority grant, constraints, and deliverable;
+- output is advisory by default;
+- target-side action requires explicit grant;
+- target context is isolated from professional memory;
+- runtime checkpoints are not persistent identity;
+- Service Agent cannot expand its own authority.
+
+Development CLI:
+
+```bash
+python installer/capsulectl.py service-install --target /agent-repo --repository owner/agent --branch main --agent-id my-agent --role "Service Agent" --specialization "..." --core-commit <sha>
+python installer/capsulectl.py service-repair --target /agent-repo --repository owner/agent --branch main --core-commit <sha>
+python installer/capsulectl.py service-validate --target /agent-repo
+python installer/capsulectl.py service-ready --target /agent-repo
+python installer/capsulectl.py service-recover --target /agent-repo
+```
+
+The universal Service Agent contract is documented in `spec/service-agent-base-v1.md`.

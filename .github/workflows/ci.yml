@@ -45,3 +45,43 @@ jobs:
           test -s /tmp/consumer-recovery.txt
           grep -q "Manager ID: evrasia-hd-project-manager" /tmp/consumer-recovery.txt
           grep -q "## MANAGER CONTRACT" /tmp/consumer-recovery.txt
+      - name: Service Agent CLI smoke
+        if: github.ref == 'refs/heads/v2-manager-runtime'
+        run: |
+          rm -rf /tmp/service-agent-smoke
+          git init -b main /tmp/service-agent-smoke
+          python installer/capsulectl.py service-install             --target /tmp/service-agent-smoke             --repository lvlaksim1/service-agent-smoke             --branch main             --agent-id service-agent-smoke             --role "Service Agent"             --specialization "CI compatibility smoke"             --core-commit "$GITHUB_SHA"
+          python - <<'PY'
+          from pathlib import Path
+          root = Path("/tmp/service-agent-smoke")
+          values = {
+              ".context/service-agent/mandate.md": "# Mandate\n\nProvide bounded CI analysis only; target action requires an explicit engagement grant.\n",
+              ".context/service-agent/capabilities.md": "# Capabilities\n\nInspect supplied repository state and produce verified structured service results.\n",
+              ".context/service-agent/limitations.md": "# Limitations\n\nDoes not own target repositories and does not infer target authority from tool access.\n",
+              ".context/service-agent/principal-model.md": "# Principal model\n\nThe owner or an explicitly authorized coordinating agent may invoke the service.\n",
+              ".context/service-agent/invocation-contract.md": "# Invocation contract\n\nRequire request ID, requester, objective, target, scope, authority grant, constraints, data boundary, and deliverable.\n",
+              ".context/service-agent/result-contract.md": "# Result contract\n\nReturn evidence, findings, uncertainties, actions actually performed, recommendations, and escalation status.\n",
+              ".context/service-agent/beliefs.md": "# Beliefs\n\n- Targets remain external engagements. source: Service Agent Contract; authority: core-contract.\n",
+              ".context/service-agent/goals.md": "# Goals\n\nPreserve durable service identity while providing bounded professional assistance.\n",
+              ".context/service-agent/intentions.md": "# Intentions\n\n- Preserve target isolation and complete accepted engagements within explicit authority.\n",
+              ".context/service-agent/plans.md": "# Plans\n\nValidate invocation, acquire scoped context, verify result, and persist only professional lessons.\n",
+              ".context/service-agent/engagements.md": "# Active engagements\n\nThere are no active engagements; this empty state is explicitly verified.\n",
+              ".context/current/state.md": "# State\n\nThe CI Service Agent profile is installed and ready for deterministic recovery.\n",
+              ".context/current/blockers.md": "# Blockers\n\nNo current blockers are verified.\n",
+              ".context/current/next.md": "# Next\n\nWait for a valid service invocation.\n",
+              ".context/memory/semantic.md": "# Semantic memory\n\nService capability does not imply target authority. source: Service Agent Contract; authority: core-contract.\n",
+              ".context/memory/procedural.md": "# Procedural memory\n\nValidate requester, target, scope, authority, constraints, and deliverable before action.\n",
+              ".context/handoffs/latest.md": "# Handoff\n\nNo active handoff; continuity is held by service identity and state.\n",
+          }
+          for rel, text in values.items():
+              path = root / rel
+              path.parent.mkdir(parents=True, exist_ok=True)
+              path.write_text(text, encoding="utf-8")
+          PY
+          python installer/capsulectl.py service-validate --target /tmp/service-agent-smoke
+          python installer/capsulectl.py service-ready --target /tmp/service-agent-smoke
+          python installer/capsulectl.py service-recover --target /tmp/service-agent-smoke --max-chars 50000 > /tmp/service-agent-recovery.txt
+          grep -q "Agent ID: service-agent-smoke" /tmp/service-agent-recovery.txt
+          grep -q "SERVICE AGENT CONTRACT" /tmp/service-agent-recovery.txt
+          python installer/capsulectl.py service-repair             --target /tmp/service-agent-smoke             --repository lvlaksim1/service-agent-smoke             --branch main             --core-commit "$GITHUB_SHA"
+          python installer/capsulectl.py service-ready --target /tmp/service-agent-smoke

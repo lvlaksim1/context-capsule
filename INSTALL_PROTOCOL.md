@@ -67,3 +67,24 @@ Publish and validate manager-state authority first, then publish any discovery r
 ## Legacy policy
 
 The v1 legacy adoption bridge remains retired. v1.3.x is the only currently defined input for the explicit v2 major upgrade path.
+
+## Service Agent clean installation
+
+Service Agent is a separate v2 profile with its own identity/manifest schema.
+
+1. Start from the agent's **home repository**, not from a target/client project repository.
+2. Confirm the home repository does not already contain an unrelated `.context/` installation.
+3. Choose a stable `agent_id`, role, specialization, and permanent agent-state branch.
+4. Run `service-install` with the exact Core commit SHA.
+5. Capture the profile-specific mandate, capabilities, limitations, principal model, durable professional BDI state, and explicit empty-or-active engagement state.
+6. Run `service-validate`, then `service-ready`.
+7. Run `service-recover` and verify that identity, authority boundaries, active engagements, and professional state survive reinstantiation.
+8. Publish the complete installation atomically when operating through GitHub mutation tooling.
+
+A Service Agent home repository is not a client project. Do not install the Service Agent profile into a project merely because the agent will service that project.
+
+### Service Agent repair
+
+`service-repair` refreshes Core-managed Service Agent files while preserving stable identity, professional state, active engagements, and profile-specific semantics. It refuses non-Service-Agent profiles.
+
+Target repository access is never inferred from the Service Agent home repository or its installed tools.

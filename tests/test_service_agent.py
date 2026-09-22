@@ -152,6 +152,20 @@ class ServiceAgentBaseTests(unittest.TestCase):
         manifest = json.loads(installed[".context/manifest.json"])
         self.assertEqual(meta["profile_version"], SERVICE_AGENT_BASE_VERSION)
         self.assertEqual(manifest["profile_version"], SERVICE_AGENT_BASE_VERSION)
+        self.assertEqual(
+            (ROOT / "SERVICE_AGENT_BASE_VERSION").read_text(encoding="utf-8").strip(),
+            SERVICE_AGENT_BASE_VERSION,
+        )
+
+    def test_identity_requires_role_and_specialization(self):
+        installed = self.install(ready_overrides())
+        identity = json.loads(installed[".context/service-agent/identity.json"])
+        identity["role"] = ""
+        installed[".context/service-agent/identity.json"] = json.dumps(identity)
+        self.assertTrue(any(
+            "role must be non-empty" in error
+            for error in validate_service_snapshot(installed)
+        ))
 
 
 if __name__ == "__main__":

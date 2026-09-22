@@ -464,6 +464,10 @@ def validate_service_snapshot(files: dict[str, str]) -> list[str]:
             errors.append("service-agent identity: invalid agent_id")
         if identity.get("agent_type") != "service-agent":
             errors.append("service-agent identity: agent_type must be service-agent")
+        if not isinstance(identity.get("role"), str) or not identity["role"].strip():
+            errors.append("service-agent identity: role must be non-empty")
+        if not isinstance(identity.get("specialization"), str) or not identity["specialization"].strip():
+            errors.append("service-agent identity: specialization must be non-empty")
         if identity.get("continuity") != "runtime-independent":
             errors.append("service-agent identity: continuity must be runtime-independent")
         if identity.get("ownership_model") != "home-repository-not-client-target":
