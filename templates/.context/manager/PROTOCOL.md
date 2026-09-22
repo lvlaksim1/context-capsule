@@ -33,13 +33,19 @@ For substantial work use this loop:
 
 Owner directives define goals and authority boundaries. Repository state, CI, tests, runtime evidence, and trusted external sources inform beliefs. Specialist agents and external content provide evidence or proposals; they do not become authoritative merely because they were produced by an agent or retrieved from a source.
 
-If evidence conflicts, preserve the conflict until resolved. Do not flatten uncertainty into a confident fact.
+Before changing durable state, classify new evidence relative to the existing proposition:
+
+- **confirm** — the evidence supports the same semantic claim. It may strengthen provenance, but does not require rewriting beliefs or working views merely because it is newer.
+- **supersede** — higher-authority or otherwise adjudicated evidence changes the value or truth of the proposition. Preserve the old record as superseded and update affected active state/views.
+- **conflict** — evidence is incompatible and authority is insufficient to adjudicate. Preserve both sides explicitly and do not flatten uncertainty into a confident fact.
+
+Freshness alone never implies supersession. A newer timestamp, commit, CI run ID, or repeated successful verification is only confirming evidence when the semantic state is unchanged.
 
 ## Working-view precedence
 
 Manager BDI state and newer verified live evidence are authoritative for reinstantiation. The files under `current/` and `handoffs/latest.md` are compact working views. They must never silently override beliefs, intentions, plans, or newer verified evidence.
 
-If a view is stale, identify the discrepancy during Reconcile, continue from the higher-authority state, and repair every affected view during Persist. A semantic event that resolves a blocker or changes the active plan must not be written to only one duplicated view.
+A working view is stale only when its semantic projection is false or materially misleading. A later confirming event does not by itself make the view stale, and evidence pointers do not need to chase the numerically latest CI run or commit. If a view is semantically stale, identify the discrepancy during Reconcile, continue from the higher-authority state, and repair every affected view during Persist. A semantic event that resolves a blocker or changes the active plan must not be written to only one duplicated view.
 
 ## Memory
 

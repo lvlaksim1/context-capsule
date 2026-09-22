@@ -325,6 +325,7 @@ def build_manifest(
             "atomic_git_publication": True,
             "provenance_required_for_manager_beliefs": True,
             "working_views_non_authoritative": True,
+            "freshness_not_supersession": True,
         }
     )
 
@@ -515,6 +516,8 @@ def validate_snapshot(files: dict[str, str]) -> list[str]:
             errors.append("manifest.json: manager belief provenance must be required")
         if not isinstance(sync, dict) or sync.get("working_views_non_authoritative") is not True:
             errors.append("manifest.json: current/handoff working views must be non-authoritative")
+        if not isinstance(sync, dict) or sync.get("freshness_not_supersession") is not True:
+            errors.append("manifest.json: evidence freshness must not imply semantic supersession")
         runtime = manifest.get("runtime")
         if not isinstance(runtime, dict) or runtime.get("checkpoint_is_capsule_state") is not False:
             errors.append("manifest.json: runtime checkpoint must remain separate from capsule state")

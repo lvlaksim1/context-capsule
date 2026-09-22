@@ -154,7 +154,8 @@
         "semantic_only",
         "atomic_git_publication",
         "provenance_required_for_manager_beliefs",
-        "working_views_non_authoritative"
+        "working_views_non_authoritative",
+        "freshness_not_supersession"
       ],
       "additionalProperties": true,
       "properties": {
@@ -168,6 +169,9 @@
           "const": true
         },
         "working_views_non_authoritative": {
+          "const": true
+        },
+        "freshness_not_supersession": {
           "const": true
         }
       }
