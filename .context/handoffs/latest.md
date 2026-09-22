@@ -42,3 +42,5 @@ FGIS FSA IL is the first migrated permanent-context consumer: `main` is discover
 ## Canonical v1.3.1 patch
 
 v1.3.1 is the provenance-hardening patch. It gives the stable v1.3 product line one canonical immutable Core source and requires installed consumers to record that exact Core SHA. The three known consumers are to be refreshed to this same canonical commit without changing project-owned semantic context.
+
+Canonical Core SHA: `2ef41a5ed57ae514cc5980065560d7e55d5e4b9a`. CI run 35710461141: success.

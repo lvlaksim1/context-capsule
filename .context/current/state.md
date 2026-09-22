@@ -34,3 +34,5 @@ The fresh-chat feature-branch failure mode is now closed: Core supports a perman
 ## FACT — Canonical v1.3.1 provenance
 
 v1.3.1 resolves the v1.3.0 provenance ambiguity. One immutable release commit is the canonical Core source for all installed v1.3.1 capsules. Installed consumers must record that exact commit in `.context/capsule.json`; a version label alone is not sufficient provenance.
+
+Canonical Core SHA: `2ef41a5ed57ae514cc5980065560d7e55d5e4b9a`. GitHub-hosted CI run 35710461141 completed successfully on this exact commit.

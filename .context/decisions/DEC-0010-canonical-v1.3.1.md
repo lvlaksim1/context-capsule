@@ -11,3 +11,5 @@ All known installed consumers must be refreshed to the same v1.3.1 canonical Cor
 ## Release discipline
 
 Behavior-changing Core work must not continue under an already-published version number. Create a new patch or minor version before treating the new implementation as a stable installation source.
+
+Canonical Core commit: `2ef41a5ed57ae514cc5980065560d7e55d5e4b9a`.
