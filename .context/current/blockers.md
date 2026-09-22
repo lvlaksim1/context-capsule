@@ -1,5 +1,5 @@
 # Current blockers and open risks
 
-No architecture blocker is currently known.
+No architecture or hosted-CI blocker is currently known.
 
-Open verification risk: the local v2 implementation has not yet passed GitHub-hosted CI on the feature branch. Stable release readiness has not been assessed and is not implied by development success.
+Open development risks remain around adversarial memory/provenance, belief supersession, commitment lifecycle, concurrent runtime reconciliation, and bounded recovery as project history grows. Stable v2 release readiness has not yet been assessed and is not implied by the successful development implementation.
