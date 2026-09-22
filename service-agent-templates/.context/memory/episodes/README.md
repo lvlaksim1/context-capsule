@@ -1,1 +1,3 @@
-# Professional episodes\n\nStore only significant episodes whose lessons improve future service work. Avoid unnecessary target-specific detail.\n
+# Professional episodes
+
+Store only significant episodes whose lessons improve future service work. Avoid unnecessary target-specific detail.

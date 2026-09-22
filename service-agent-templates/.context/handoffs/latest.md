@@ -1,1 +1,3 @@
-# Latest handoff\n\nNo handoff recorded yet.\n
+# Latest handoff
+
+No handoff recorded yet.

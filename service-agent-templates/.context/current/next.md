@@ -1,1 +1,3 @@
-# Next actions\n\nCapture next actions for the Service Agent itself.\n
+# Next actions
+
+Capture next actions for the Service Agent itself.

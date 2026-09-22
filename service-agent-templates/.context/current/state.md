@@ -1,1 +1,3 @@
-# Current state\n\nCapture current verified Service Agent state.\n
+# Current state
+
+Capture current verified Service Agent state.

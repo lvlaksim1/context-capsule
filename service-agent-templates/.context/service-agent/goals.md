@@ -1,1 +1,3 @@
-# Service goals\n\nRecord durable goals of this Service Agent role.\n
+# Service goals
+
+Record durable goals of this Service Agent role.

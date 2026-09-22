@@ -65,6 +65,11 @@ class ServiceAgentBaseTests(unittest.TestCase):
             semantic_overrides=overrides,
         ))
 
+    def test_service_agent_markdown_templates_use_real_newlines(self):
+        for path in SERVICE_TEMPLATES.rglob("*.md"):
+            text = path.read_text(encoding="utf-8")
+            self.assertNotIn("\\n", text, str(path))
+
     def test_clean_install_is_valid_but_requires_professional_capture_for_ready(self):
         installed = self.install()
         self.assertEqual(validate_service_snapshot(installed), [])

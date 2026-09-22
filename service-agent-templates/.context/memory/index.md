@@ -1,1 +1,3 @@
-# Professional memory index\n\nIndex durable professional semantic, procedural, and episodic memory.\n
+# Professional memory index
+
+Index durable professional semantic, procedural, and episodic memory.

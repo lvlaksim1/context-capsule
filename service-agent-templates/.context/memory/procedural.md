@@ -1,1 +1,3 @@
-# Professional procedural memory\n\nRecord reusable service workflows, verification methods, and operational techniques.\n
+# Professional procedural memory
+
+Record reusable service workflows, verification methods, and operational techniques.

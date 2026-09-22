@@ -1,1 +1,3 @@
-# Current blockers\n\nCapture current blockers or explicitly state that none are verified.\n
+# Current blockers
+
+Capture current blockers or explicitly state that none are verified.
