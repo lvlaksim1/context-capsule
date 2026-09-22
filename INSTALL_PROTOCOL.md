@@ -1,27 +1,43 @@
 # Canonical GitHub lifecycle protocol
 
-## Clean installation
+## Clean v2 installation
 
-1. Read the target branch HEAD and tree.
+1. Read the target authoritative branch HEAD and tree.
 2. Read existing `AI_CONTEXT.md` / `AGENTS.md` if present and confirm there is no existing `.context/`.
-3. Capture the target project's durable semantic context.
+3. Capture project semantics plus the repository-specific Project Manager mandate and initial BDI state.
 4. Build the complete desired snapshot in memory using the pinned Core commit SHA.
-5. Run structural validation and recovery-readiness checks against that planned snapshot.
+5. Run `VALID`; run `READY` only after the manager/project semantics are substantive.
 6. Create one Git tree based on the original tree.
 7. Create one commit whose parent is the original expected HEAD.
 8. Re-read the branch HEAD. If it changed, stop without moving the branch.
 9. Update the branch ref non-forced.
 
-The only branch-visible mutation is the final ref update. A failed publication may leave unreachable Git objects, but it does not partially install the capsule on the target branch.
+The only branch-visible mutation is the final ref update.
+
+## Explicit v1.3.x → v2 upgrade
+
+Major upgrade is never performed by `repair`.
+
+1. Read the authoritative v1.3.x capsule and exact branch HEAD.
+2. Preserve project-owned semantic files, project-specific manifest extensions, branch topology, and existing historical context.
+3. Refresh Core-managed bootstrap/protocol files and add the v2 Manager Protocol, stable manager identity, manager-state surfaces, and typed-memory surfaces.
+4. Upgrade manifest schema to v4 and record the exact v2 Core commit.
+5. Validate the complete planned v2 snapshot before publication.
+6. Publish through the same expected-parent, one-commit, non-forced branch update.
+7. Expect the upgraded capsule to remain NOT READY until manager mandate/beliefs/goals/intentions/plans have been captured substantively with required provenance.
+
+No known consumer repository is upgraded merely because v2 exists.
 
 ## Repair / Core refresh
 
-For an installed v1.3 capsule, repair/refresh must:
+For an installed v2 capsule, repair/refresh must:
 
-- preserve project-owned semantic files and unknown safe manifest extensions;
-- update only Core-managed bootstrap/metadata/index structure;
-- use the same expected-parent, one-commit publication model;
-- never reinterpret an unknown historical capsule format as a supported legacy migration.
+- preserve project-owned project/manager/memory semantics and unknown safe manifest extensions;
+- update only Core-managed bootstrap/protocol/metadata/index structure;
+- preserve stable `manager_id`;
+- preserve existing branch topology;
+- use expected-parent atomic publication;
+- refuse an installed different major version and direct the caller to explicit upgrade.
 
 ## Shared bootstrap files
 
@@ -35,19 +51,16 @@ and
 
 Existing project instructions outside that block are preserved.
 
-## Legacy policy
+## Project Manager continuity boundary
 
-The one-time migration bridge for `fgis-fsa-il`, `telegram-receiver`, and `ai-agent-lab` completed on 2026-09-20 and has been removed from the permanent Core.
+The durable Project Manager includes repository-scoped identity, mandate, BDI-style active state, typed memory, rules, decisions, and verified project state.
 
-Future unknown legacy layouts are not automatically adopted. A deliberate one-off migration must first be designed from the repository's actual evidence rather than expanding the permanent compatibility surface.
+Conversation history, pending tool calls, hidden reasoning, leases, heartbeats, and runtime checkpoints are not Project Manager identity. Runtime systems may persist checkpoints separately.
 
 ## Permanent authoritative context branch
 
-For repositories that routinely use temporary feature branches, prefer a permanent authoritative context branch.
+For repositories using disposable feature/runtime branches, keep one permanent authoritative context branch and a discovery-only default branch. Publish and validate authority first, then publish discovery redirect. Feature branches never become durable Project Manager authority merely because execution occurs there.
 
-1. Create or update the permanent context branch first and make its manifest authoritative_branch=<context branch>, discovery_branch=<default branch>, branch_mode=redirect.
-2. Validate and READY-check the authoritative snapshot before exposing the redirect.
-3. Convert the default branch to discovery-only bootstrap: managed AI_CONTEXT.md, managed AGENTS.md, and .context/ENTRYPOINT.md redirect only. A discovery branch must not retain .context/capsule.json, .context/manifest.json, or semantic working-set files that can be mistaken for current authority.
-4. Publish the authoritative branch first, then the discovery branch. Each branch update uses its own expected-parent atomic commit and non-forced ref update.
-5. Feature branches never become Context Capsule authority. Their names, PRs, tests, and work state are recorded as semantic facts in the permanent context branch.
-6. After merge or release, update the same permanent context branch; no authority handoff back to main is required.
+## Legacy policy
+
+The v1 legacy adoption bridge remains retired. v1.3.x is the only currently defined input for the explicit v2 major upgrade path.

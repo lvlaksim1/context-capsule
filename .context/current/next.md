@@ -1,6 +1,6 @@
 # Next actions
 
-1. Operate Context Capsule Core v1.3.1 from the canonical release commit lineage.
-2. Keep every installed capsule's `.context/capsule.json.core_commit` aligned to the exact Core commit whose managed files were applied.
-3. Do not reuse an existing version number for behavior-changing Core commits; create a new patch/minor version first.
-4. Do not reintroduce repository-specific legacy migration support into the permanent product.
+1. Publish the tested v2 implementation to `v2-manager-runtime` using expected-parent atomic Git publication.
+2. Run GitHub-hosted CI including self VALID, READY, and manager reinstantiation recovery smoke.
+3. Diagnose and fix any hosted-only failures.
+4. Review the resulting v2 architecture with the owner before any stable release or consumer migration.

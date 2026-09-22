@@ -19,6 +19,7 @@ from installer.model import (
     discovery_redirect_changes,
     readiness_snapshot,
     repair_changes,
+    upgrade_changes,
     validate_snapshot,
 )
 from installer.safety import CapsuleSafetyError, confined_local_path, validate_core_commit
@@ -73,14 +74,23 @@ def load_snapshot(target: Path) -> dict[str, str]:
             manifest = None
         if isinstance(manifest, dict):
             candidates: list[str] = []
-            for key in ("entrypoint", "protocol", "latest_handoff", "current_state"):
+            for key in ("entrypoint", "protocol", "latest_handoff", "current_state", "capsule_metadata"):
                 value = manifest.get(key)
                 if isinstance(value, str):
                     candidates.append(value)
-            for section in ("project", "current"):
+            for section in ("project", "current", "manager"):
                 value = manifest.get(section)
                 if isinstance(value, dict):
                     candidates.extend(v for v in value.values() if isinstance(v, str))
+            memory = manifest.get("memory")
+            if isinstance(memory, dict):
+                for key in ("index", "semantic", "procedural"):
+                    value = memory.get(key)
+                    if isinstance(value, str):
+                        candidates.append(value)
+                episodes = memory.get("episodes")
+                if isinstance(episodes, list):
+                    candidates.extend(v for v in episodes if isinstance(v, str))
             for section in ("rules", "decisions", "dialogues", "history"):
                 value = manifest.get(section)
                 if isinstance(value, list):
@@ -98,7 +108,6 @@ def load_snapshot(target: Path) -> dict[str, str]:
 
 
 def apply_local_changes(target: Path, changes: dict[str, str | None]) -> None:
-    """Development/local helper. Canonical GitHub publication is branch-local atomic Git."""
     for rel, content in changes.items():
         path = confined_local_path(target, rel)
         if path.exists() and path.is_symlink():
@@ -146,46 +155,67 @@ def ensure_branch(target: Path, requested: str) -> None:
         raise SystemExit(f"target checkout branch mismatch: requested {requested!r}, actual {actual!r}")
 
 
+def _apply_planned(target: Path, label: str, planner) -> int:
+    try:
+        changes = planner()
+    except (CapsuleModelError, CapsuleSafetyError) as exc:
+        print(f"Context Capsule {label}: FAIL\n  - {exc}")
+        return 2
+    apply_local_changes(target, changes)
+    print(f"Context Capsule {label} applied locally ({len(changes)} changed files).")
+    return cmd_validate(argparse.Namespace(target=str(target)))
+
+
 def cmd_install(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     ensure_branch(target, args.branch)
     files = load_snapshot(target)
-    try:
-        changes = clean_install_changes(
+    return _apply_planned(
+        target,
+        "install",
+        lambda: clean_install_changes(
             files,
             TEMPLATES,
             args.repository,
             args.branch,
             infer_core_commit(args.core_commit),
             discovery_branch=args.discovery_branch,
-        )
-    except (CapsuleModelError, CapsuleSafetyError) as exc:
-        print(f"Context Capsule install: FAIL\n  - {exc}")
-        return 2
-    apply_local_changes(target, changes)
-    print(f"Context Capsule {VERSION} installed locally ({len(changes)} changed files).")
-    print("Canonical GitHub installations must publish the same prepared snapshot as one commit.")
-    return cmd_validate(argparse.Namespace(target=str(target)))
+        ),
+    )
+
+
+def cmd_upgrade(args: argparse.Namespace) -> int:
+    target = target_root(args.target)
+    ensure_branch(target, args.branch)
+    files = load_snapshot(target)
+    return _apply_planned(
+        target,
+        "upgrade",
+        lambda: upgrade_changes(
+            files,
+            TEMPLATES,
+            repository=args.repository,
+            branch=args.branch,
+            core_commit=infer_core_commit(args.core_commit),
+        ),
+    )
 
 
 def cmd_repair(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     ensure_branch(target, args.branch)
     files = load_snapshot(target)
-    try:
-        changes = repair_changes(
+    return _apply_planned(
+        target,
+        "repair",
+        lambda: repair_changes(
             files,
             TEMPLATES,
             repository=args.repository,
             branch=args.branch,
             core_commit=infer_core_commit(args.core_commit),
-        )
-    except (CapsuleModelError, CapsuleSafetyError) as exc:
-        print(f"Context Capsule repair: FAIL\n  - {exc}")
-        return 2
-    apply_local_changes(target, changes)
-    print(f"Context Capsule repair applied locally ({len(changes)} changed files).")
-    return cmd_validate(argparse.Namespace(target=str(target)))
+        ),
+    )
 
 
 def cmd_discovery(args: argparse.Namespace) -> int:
@@ -203,11 +233,9 @@ def cmd_discovery(args: argparse.Namespace) -> int:
         print(f"Context Capsule discovery: FAIL\n  - {exc}")
         return 2
     apply_local_changes(target, changes)
-    print(
-        f"Context Capsule discovery redirect prepared: "
-        f"{args.discovery_branch} -> {args.authoritative_branch}"
-    )
+    print(f"Context Capsule discovery redirect prepared: {args.discovery_branch} -> {args.authoritative_branch}")
     return 0
+
 
 def cmd_validate(args: argparse.Namespace) -> int:
     target = target_root(args.target)
@@ -239,7 +267,7 @@ def cmd_ready(args: argparse.Namespace) -> int:
         for reason in reasons:
             print(f"  - {reason}")
         return 1
-    print("Context Capsule readiness: READY")
+    print("Context Capsule readiness: READY (PROJECT MANAGER REINSTANTIABLE)")
     return 0
 
 
@@ -255,10 +283,10 @@ def cmd_recover(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="capsulectl", description="Context Capsule lifecycle helper")
+    parser = argparse.ArgumentParser(prog="capsulectl", description="Context Capsule Project Manager lifecycle helper")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    install = sub.add_parser("install", help="local clean-install helper; GitHub publication is canonical")
+    install = sub.add_parser("install", help="clean-install a v2 Project Manager capsule")
     install.add_argument("--target", required=True)
     install.add_argument("--repository", required=True)
     install.add_argument("--branch", default="main")
@@ -266,13 +294,20 @@ def build_parser() -> argparse.ArgumentParser:
     install.add_argument("--discovery-branch")
     install.set_defaults(func=cmd_install)
 
+    upgrade = sub.add_parser("upgrade", help="explicitly upgrade an installed v1.3.x capsule to v2")
+    upgrade.add_argument("--target", required=True)
+    upgrade.add_argument("--repository", required=True)
+    upgrade.add_argument("--branch", required=True)
+    upgrade.add_argument("--core-commit")
+    upgrade.set_defaults(func=cmd_upgrade)
+
     discovery = sub.add_parser("discovery", help="prepare a discovery-only branch redirect")
     discovery.add_argument("--target", required=True)
     discovery.add_argument("--authoritative-branch", required=True)
     discovery.add_argument("--discovery-branch", default="main")
     discovery.set_defaults(func=cmd_discovery)
 
-    repair = sub.add_parser("repair", help="repair a v1.3 capsule without discarding manifest extensions")
+    repair = sub.add_parser("repair", help="repair the installed v2 capsule without major-version upgrade")
     repair.add_argument("--target", required=True)
     repair.add_argument("--repository", required=True)
     repair.add_argument("--branch", required=True)
@@ -283,11 +318,11 @@ def build_parser() -> argparse.ArgumentParser:
     validate.add_argument("--target", required=True)
     validate.set_defaults(func=cmd_validate)
 
-    ready = sub.add_parser("ready", help="check fresh-chat recovery readiness")
+    ready = sub.add_parser("ready", help="check Project Manager reinstantiation readiness")
     ready.add_argument("--target", required=True)
     ready.set_defaults(func=cmd_ready)
 
-    recover = sub.add_parser("recover", help="emit a deterministic fresh-chat recovery pack")
+    recover = sub.add_parser("recover", help="emit a deterministic Project Manager reinstantiation pack")
     recover.add_argument("--target", required=True)
     recover.add_argument("--max-chars", type=int, default=50000)
     recover.set_defaults(func=cmd_recover)

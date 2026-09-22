@@ -2,35 +2,48 @@
 
 ## Purpose
 
-A fresh chat or agent with no conversation history must be able to recover the project's durable meaning and continue from the repository alone.
+Context Capsule v2 stores the durable state required to reinstate the same Project Manager across independent chats, models, or agent runtimes.
+
+The runtime is replaceable. The manager identity, mandate, durable beliefs, goals, intentions, plans, and typed memory are repository-local and persistent.
 
 ## Durable layers
 
-- `project/` — identity, goals, architecture, constraints.
-- `rules/` and `decisions/` — binding rules and accepted/rejected durable choices.
-- `current/` — compact current state, unresolved blockers, and next actions.
-- `handoffs/latest.md` — concise transfer to the next chat/agent.
-- `dialogues/` — evidence-rich investigations when chronology matters.
-- `history/` — older useful context.
+- `project/` — objective project identity, goals, architecture, and constraints.
+- `manager/` — stable manager identity, mandate, beliefs, goals, intentions, plans, and the Core-managed Manager Protocol.
+- `memory/` — typed semantic, episodic, and procedural memory.
+- `rules/` and `decisions/` — binding rules and durable accepted/rejected choices.
+- `current/` — compact verified project state, blockers, and next work.
+- `handoffs/latest.md` — emergency/convenience summary only; it is not the identity or primary continuity mechanism.
+- `dialogues/` and `history/` — deeper evidence and historical context.
+
+## Runtime boundary
+
+Conversation history, pending tool calls, chain-of-thought, transient execution state, leases, heartbeats, and runtime checkpoints are not Project Manager identity. A runtime may persist its own checkpoint separately, but Context Capsule does not require or impersonate that checkpoint.
+
+## Belief provenance
+
+Durable manager beliefs must retain provenance. Distinguish owner directives, verified repository/CI/runtime evidence, trusted external evidence, and manager inference. Never silently promote untrusted content or a specialist agent's output into authoritative belief.
+
+When a belief changes, record the newer evidence and explicitly supersede or reject the old belief instead of silently rewriting history.
 
 ## VALID vs READY
 
-`VALID` means the capsule is structurally coherent and all indexed paths are safe and resolvable inside the repository.
+`VALID` means the v2 capsule is structurally coherent, repository-confined, internally resolvable, and includes the manager model.
 
-`READY` additionally means the semantic recovery set is populated enough for a fresh chat to understand the project and continue: identity, goals, architecture, constraints, current state, next action, handoff, and at least one substantive active rule or durable decision.
+`READY` additionally means the Project Manager can be reinstantiated: mandate, beliefs with provenance, manager goals, intentions, plans, core project semantics, current state, and next work are substantive.
 
-## Semantic sync
+## Semantic self-maintenance
 
-Persist durable decisions, requirements, rules, architecture changes, root causes, rejected approaches, milestones, and priority changes.
+Persist durable decisions, requirements, rules, architecture changes, root causes, rejected approaches, milestones, beliefs, commitments, lessons, learned procedures, and priority changes.
 
-Do not copy routine runtime churn such as heartbeats, leases, polling ticks, queue transitions, or transient CI state into `.context/`.
+Periodically consolidate memory after major milestones or when the working set becomes noisy. Consolidation must preserve provenance and important superseded history.
+
+Do not copy routine runtime churn into `.context/`.
 
 ## Repository mutation
 
-The canonical GitHub lifecycle prepares and validates the complete target snapshot before publication, creates one Git tree and one commit from the expected parent, rechecks the branch head, and performs a non-forced ref update.
-
-If the branch moved, the ref is not updated. Unpublished Git objects may exist, but the target branch remains unchanged.
+Canonical GitHub lifecycle changes are planned and validated as a complete snapshot and published from an expected parent with a non-forced ref update.
 
 ## Privacy
 
-Never persist credentials, secret values, cookies, private keys, or unnecessary sensitive personal information.
+Never persist credentials, secret values, cookies, private keys, hidden chain-of-thought, or unnecessary sensitive personal information.

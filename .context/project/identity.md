@@ -2,8 +2,8 @@
 
 ## FACT — Identity
 
-`lvlaksim1/context-capsule` is the canonical central repository for the Context Capsule standard and lifecycle tooling.
+`lvlaksim1/context-capsule` is the canonical Core for a repository-local portable Project Manager standard.
 
-It defines clean installation, structural validation, recovery-readiness checks, deterministic fresh-chat recovery, safe repair, and atomic GitHub publication for repository-local project context.
+Stable v1.3.1 remains the released durable-memory product. The v2 development line adds a runtime-independent Project Manager identity, active BDI-style state, typed memory, explicit provenance, and manager reinstantiation across chats/models/agent runtimes.
 
-It is not a central store for the context of target repositories.
+Core is never a central store for consumer-project context.

@@ -1,15 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Context Capsule manifest v3",
+  "title": "Context Capsule manifest v4",
   "type": "object",
   "required": [
     "schema", "schema_version", "repository", "authoritative_branch", "discovery_branch",
     "branch_mode", "entrypoint", "capsule_metadata", "protocol", "latest_handoff",
-    "project", "current", "rules", "decisions", "dialogues", "history", "runtime", "sync_policy"
+    "project", "manager", "memory", "current", "rules", "decisions", "dialogues", "history",
+    "runtime", "sync_policy"
   ],
   "properties": {
     "schema": {"const": "context-capsule-manifest"},
-    "schema_version": {"const": 3},
+    "schema_version": {"const": 4},
     "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
     "authoritative_branch": {"type": "string", "minLength": 1},
     "discovery_branch": {"type": "string", "minLength": 1},
@@ -23,6 +24,19 @@
       "required": ["identity", "goals", "architecture", "constraints"],
       "additionalProperties": true
     },
+    "manager": {
+      "type": "object",
+      "required": ["protocol", "identity", "mandate", "beliefs", "goals", "intentions", "plans"],
+      "additionalProperties": true
+    },
+    "memory": {
+      "type": "object",
+      "required": ["index", "semantic", "procedural", "episodes"],
+      "properties": {
+        "episodes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
     "current": {
       "type": "object",
       "required": ["state", "blockers", "next"],
@@ -32,8 +46,17 @@
     "decisions": {"type": "array", "items": {"type": "string"}},
     "dialogues": {"type": "array", "items": {"type": "string"}},
     "history": {"type": "array", "items": {"type": "string"}},
-    "runtime": {"type": "object", "additionalProperties": true},
-    "sync_policy": {"type": "object", "additionalProperties": true}
+    "runtime": {
+      "type": "object",
+      "required": ["checkpoint_is_capsule_state"],
+      "properties": {"checkpoint_is_capsule_state": {"const": false}},
+      "additionalProperties": true
+    },
+    "sync_policy": {
+      "type": "object",
+      "required": ["semantic_only", "atomic_git_publication", "provenance_required_for_manager_beliefs"],
+      "additionalProperties": true
+    }
   },
   "additionalProperties": true
 }

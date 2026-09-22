@@ -1,41 +1,51 @@
 # Context Capsule Core
 
-**Current stable patch: v1.3.1.** v1.3.0 remains historical; v1.3.1 establishes one immutable canonical Core commit for installation provenance.
+**Stable release: v1.3.1. Development line: v2 Project Manager on `v2-manager-runtime`.**
 
-Context Capsule is repository-local durable project memory for fresh-chat continuation.
+Context Capsule v1.3.1 is the stable repository-local durable project-memory product. v2 evolves the same foundation into a portable Project Manager that can be reinstantiated across replaceable chats, models, processes, or agent runtimes.
 
-## v1.3 permanent product
+## v2 Project Manager model
 
-The normal product surface is intentionally small:
+The Project Manager is not the runtime. A runtime is a temporary carrier of one stable repository-scoped manager identity.
 
-- clean installation into a repository without an existing capsule;
-- repository-local semantic context;
-- structural `VALID` and separate recovery `READY`;
-- deterministic bounded `recover` output for a fresh chat;
-- safe repository-relative paths;
-- managed Context Capsule blocks inside shared `AI_CONTEXT.md` and `AGENTS.md`;
-- preservation of project-owned manifest extensions;
+v2 adds:
+
+- a universal Core-managed Project Manager Protocol;
+- stable `manager_id` independent of chat/model/process identity;
+- repository-local project-specific mandate and authority boundaries;
+- BDI-inspired active state: beliefs, goals, intentions/commitments, plans;
+- provenance-bearing manager beliefs;
+- typed semantic, episodic, and procedural memory;
+- explicit separation of runtime checkpoints from durable manager state;
+- manager-aware `READY` and deterministic reinstantiation `recover`;
+- explicit v1.3.x → v2 major upgrade; `repair` never silently performs that upgrade.
+
+The universal manager loop is:
+
+`Reinstate → Reconcile → Plan → Execute → Verify → Reflect → Persist`
+
+## Preserved invariants
+
+v2 keeps the strongest v1.3 properties:
+
+- all consumer project context remains inside that consumer repository;
+- no central registry, telemetry, or context collection;
 - exact Core provenance through `core_commit`;
-- one-commit GitHub publication from an expected parent;
-- non-destructive repair of installed v1.3 capsules;
-- permanent authoritative context branches with discovery-only default branches for feature-branch projects.
+- repository-confined paths and managed bootstrap blocks;
+- project-owned manifest extensions are preserved;
+- canonical GitHub mutation remains expected-parent atomic publication;
+- permanent authoritative context branches remain supported;
+- versions are explicit and there is no silent auto-upgrade.
 
-The temporary legacy adoption bridge has been retired after migrating the only three known legacy repositories. Legacy support is not part of the permanent CLI.
-
-## CLI
+## CLI development surface
 
 ```bash
 python installer/capsulectl.py install --target /repo --repository owner/name --branch main --core-commit <sha>
-python installer/capsulectl.py install --target /repo-context --repository owner/name --branch context --discovery-branch main --core-commit <sha>
-python installer/capsulectl.py discovery --target /repo-main --authoritative-branch context --discovery-branch main
+python installer/capsulectl.py upgrade --target /repo --repository owner/name --branch main --core-commit <sha>
 python installer/capsulectl.py repair --target /repo --repository owner/name --branch main --core-commit <sha>
 python installer/capsulectl.py validate --target .
 python installer/capsulectl.py ready --target .
 python installer/capsulectl.py recover --target .
 ```
 
-Local `install/repair` commands are development helpers. Canonical repository mutation follows `INSTALL_PROTOCOL.md` and is published to GitHub as one commit.
-
-## Permanent context branch
-
-Repositories that develop through disposable feature branches should keep durable Context Capsule authority on one permanent branch, for example context. The default branch remains a discovery-only gateway. Feature branches record their live-work identity inside semantic state; they do not become Context Capsule authority.
+Stable consumer repositories must remain on v1.3.1 until v2 is explicitly promoted and migration is explicitly requested.

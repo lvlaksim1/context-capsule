@@ -1,33 +1,34 @@
 # Semantic sync
 
-Context Capsule is not an append-only event log.
+Context Capsule v2 is not an append-only runtime event log.
 
-## Promote into `.context/`
+## Promote into durable manager/project state
 
-Promote:
-- decisions;
-- requirements;
+Promote verified consequences such as:
+- decisions and requirements;
 - durable rules/preferences;
 - architecture changes;
+- manager beliefs that can affect future decisions, including provenance;
+- goals and accepted intentions/commitments;
 - blocker/root-cause findings;
 - accepted/rejected approaches;
 - milestone/release meaning;
-- active priority changes;
-- important verified findings.
+- durable semantic/episodic/procedural lessons.
 
-## Keep out of `.context/`
+## Keep out
 
-Do not routinely copy:
-- heartbeats;
-- leases;
-- queue transitions;
-- polling ticks;
-- transient CI states;
-- repetitive worker status commits;
-- raw chat turns.
+Do not routinely persist:
+- heartbeats, leases, polling ticks, queue transitions;
+- transient CI status;
+- pending tool calls;
+- raw chat turns;
+- hidden chain-of-thought;
+- runtime checkpoint internals.
 
-If those events change the durable meaning of the project, record the consequence once as a semantic update.
+## Supersession
 
-## Compactness
+When durable understanding changes, preserve enough provenance to explain what superseded what. Do not rewrite uncertain/external claims into owner-authoritative facts merely through summarization.
 
-`current/` and `handoffs/latest.md` are working-set views, not history stores. Resolved material moves to decisions/dialogues/history.
+## Consolidation
+
+Periodically compact the active working set while retaining deeper typed memory. Consolidation should remove duplication, not provenance or meaningful historical reversals.

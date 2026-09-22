@@ -1,6 +1,6 @@
 {
   "schema": "context-capsule-manifest",
-  "schema_version": 3,
+  "schema_version": 4,
   "repository": "lvlaksim1/context-capsule",
   "authoritative_branch": "main",
   "discovery_branch": "main",
@@ -14,6 +14,23 @@
     "goals": ".context/project/goals.md",
     "architecture": ".context/project/architecture.md",
     "constraints": ".context/project/constraints.md"
+  },
+  "manager": {
+    "protocol": ".context/manager/PROTOCOL.md",
+    "identity": ".context/manager/identity.json",
+    "mandate": ".context/manager/mandate.md",
+    "beliefs": ".context/manager/beliefs.md",
+    "goals": ".context/manager/goals.md",
+    "intentions": ".context/manager/intentions.md",
+    "plans": ".context/manager/plans.md"
+  },
+  "memory": {
+    "index": ".context/memory/index.md",
+    "semantic": ".context/memory/semantic.md",
+    "procedural": ".context/memory/procedural.md",
+    "episodes": [
+      ".context/memory/episodes/2026-09-22-agent-architecture-research.md"
+    ]
   },
   "current": {
     "state": ".context/current/state.md",
@@ -34,20 +51,23 @@
     ".context/decisions/DEC-0007-retire-legacy-adoption.md",
     ".context/decisions/DEC-0008-default-semantic-writeback.md",
     ".context/decisions/DEC-0009-permanent-authoritative-context-branch.md",
-    ".context/decisions/DEC-0010-canonical-v1.3.1.md"
+    ".context/decisions/DEC-0010-canonical-v1.3.1.md",
+    ".context/decisions/DEC-0011-portable-project-manager-v2.md"
   ],
   "dialogues": [],
   "history": [],
   "runtime": {
     "authoritative_paths": [],
     "volatile": false,
-    "promote_semantic_changes_only": false
+    "promote_semantic_changes_only": false,
+    "checkpoint_is_capsule_state": false
   },
   "sync_policy": {
     "semantic_only": true,
     "volatile_runtime_excluded": true,
-    "atomic_git_publication": true
+    "atomic_git_publication": true,
+    "provenance_required_for_manager_beliefs": true
   },
   "updated_at": "2026-09-22",
-  "context_version": "1.3.1"
+  "context_version": "2.0.0-dev"
 }

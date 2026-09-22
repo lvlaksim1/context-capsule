@@ -2,30 +2,28 @@
 
 ## Clean install
 
-A clean install refuses an existing `.context/`. Existing root bootstrap files are preserved outside the Context Capsule managed block.
+A clean install refuses an existing `.context/`, records exact Core provenance, installs the universal Project Manager Protocol, creates a stable manager identity, and seeds manager/memory surfaces. A fresh structural install is normally VALID but not READY until project-specific manager state is captured.
 
-The installer records the exact Core commit SHA and prepares a complete snapshot before publication.
+## Upgrade
+
+Major-version migration is explicit. v2 `upgrade` currently accepts installed v1.3.x capsules, preserves project-owned semantic context and manifest extensions, adds manager/memory surfaces, and updates Core-managed bootstrap/protocol files. Upgrade may intentionally leave the capsule NOT READY until the new manager mandate/state is completed.
 
 ## Validate
 
-`validate` answers only whether the capsule is structurally coherent, repository-confined, and internally resolvable.
+`validate` checks structural coherence, repository confinement, manager identity, manager/memory indexes, and the runtime-checkpoint separation invariant.
 
 ## Ready
 
-`ready` is stricter. It requires substantive identity, goals, architecture, constraints, current state, next action, handoff, and at least one active rule or durable decision.
+`ready` means the same Project Manager can be reinstantiated in a fresh runtime. It requires substantive project semantics, mandate, BDI active state, current project state, next work, and provenance-bearing beliefs. Handoff is not required for v2 readiness.
 
 ## Recover
 
-`recover` emits a deterministic bounded fresh-chat recovery pack from a READY capsule. Active state/handoff is prioritized ahead of deeper decision history.
+`recover` emits a deterministic bounded Project Manager reinstantiation pack. Manager protocol/identity/mandate and active BDI state precede deeper memory and historical decisions.
 
 ## Repair
 
-Repair preserves unknown manifest extensions and nonstandard indexed paths. It updates Core-managed structure without flattening project-owned semantic context.
-
-## Legacy layouts
-
-Legacy adoption is not a permanent lifecycle operation. The known v1-era repositories were migrated during v1.3 hardening; the temporary `adopt` command and repository-specific adapter code were then retired.
+Repair is major-version preserving. It never silently upgrades a v1.3.x capsule into v2. It preserves project-owned manager state and safe manifest extensions while refreshing Core-managed surfaces.
 
 ## Permanent redirect topology
 
-For feature-branch projects, Context Capsule supports a permanent authoritative branch plus a discovery-only default branch. The discovery branch contains only redirect bootstrap, while the full READY capsule remains on the permanent authoritative branch. Feature branches are never promoted to context authority.
+Authoritative context may live on a permanent branch with a discovery-only default branch. Runtime/feature branches are execution locations only.

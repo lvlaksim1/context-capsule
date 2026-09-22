@@ -1,9 +1,15 @@
 # Project architecture
 
-## DECISION — Architecture
+## DECISION — v2 architecture
 
-Core contains templates, schemas, lifecycle tooling, migrations, tests, and specifications.
+Core provides schemas, lifecycle tooling, templates, tests, and the universal Manager Protocol.
 
-Each target repository contains its own installed `AI_CONTEXT.md`, `AGENTS.md`, `.context/`, and technical metadata. `capsule.json` identifies the Core installation/version. `manifest.json` maps the real context paths and branch topology.
+Each installed repository owns five durable layers:
 
-Projects may have a separate volatile runtime authority such as `.agent/`; Context Capsule stores durable semantics and promotes only meaningful consequences from that runtime.
+1. project semantics (`project/`);
+2. Project Manager identity/mandate and active beliefs-goals-intentions-plans (`manager/`);
+3. typed semantic/episodic/procedural memory (`memory/`);
+4. durable rules/decisions/history;
+5. compact current objective project state (`current/`).
+
+A chat/model/agent process is only a temporary runtime carrier. Runtime checkpoint state is explicitly outside the manager-identity boundary.

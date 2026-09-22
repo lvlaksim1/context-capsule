@@ -1,24 +1,27 @@
 # Architecture
 
-Context Capsule stores the durable meaning of a project in the project repository itself.
+Context Capsule v2 represents a persistent Project Manager in the project repository itself.
 
 ## Permanent layers
 
-- `project/`: identity, goals, architecture, constraints.
+- `project/`: objective identity, goals, architecture, constraints.
+- `manager/`: stable manager identity, project-specific mandate, BDI-style active state, and Core-managed Manager Protocol.
+- `memory/`: semantic, episodic, and procedural memory.
 - `rules/` and `decisions/`: binding durable choices.
-- `current/`: compact state, blockers, next work.
-- `handoffs/latest.md`: transfer to the next chat/agent.
-- `dialogues/` and `history/`: evidence and deeper history.
+- `current/`: compact verified project state, blockers, next work.
+- `handoffs/latest.md`: optional emergency/convenience summary rather than the continuity root.
+- `dialogues/` and `history/`: deeper evidence/history.
 
-`capsule.json` identifies the installed Core version and exact immutable `core_commit`.
-`manifest.json` maps project-owned context without discarding unknown safe extensions.
+`capsule.json` identifies the installed Core version and exact immutable `core_commit`. `manifest.json` maps project-owned context while preserving safe extensions.
+
+## Runtime boundary
+
+Chat/session history and workflow checkpoints are not Manager identity. The same manager may be instantiated by different runtimes over time.
 
 ## Mutation boundary
 
-The canonical target is a GitHub branch. Lifecycle changes are planned and validated as a complete snapshot and become visible through one non-forced branch ref update to a commit based on the expected parent.
+Canonical lifecycle mutations are planned and validated as a complete snapshot and published with an expected-parent non-forced Git ref update.
 
 ## Branch model
 
-New clean installations use a single primary branch for discovery and authority.
-
-An already installed capsule may legitimately use `branch_mode: redirect` when discovery and authoritative context live on different branches. Repair must preserve that existing topology and must run against the authoritative branch; it must not silently collapse redirect into single-branch mode.
+A permanent authoritative context branch may differ from a discovery branch. Disposable feature/runtime branches never become manager identity or durable context authority merely because execution occurs there.

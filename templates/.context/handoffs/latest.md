@@ -1,5 +1,7 @@
 # Latest handoff
 
+This is a convenience/emergency summary, not the primary manager continuity mechanism.
+
 ## Last completed work
 
 No handoff recorded yet.
@@ -10,4 +12,4 @@ Not yet captured.
 
 ## Next operation
 
-Perform initial context capture from the target repository.
+Perform initial manager/project capture from the target repository.

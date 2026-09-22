@@ -2,10 +2,10 @@
 
 ## REQUIREMENT — Primary goals
 
-- Make project context durable across independent chats/agents.
-- Keep the complete context of every target project inside that target repository.
-- Provide deterministic clean installation, validation, READY assessment, fresh-chat recovery, and non-destructive repair.
-- Preserve richer project-specific context instead of flattening it into generic templates.
-- Make recovery accurate by reconciling stored semantics with live repository/CI/runtime evidence.
-- Keep the current working set compact enough for fast bootstrap.
-- Keep Core free of permanent repository-specific legacy compatibility.
+- Reinstantiate the same Project Manager across independent chats, models, or agent runtimes.
+- Keep universal manager behavior in Core and project-specific mandate/state in each target repository.
+- Preserve stable identity, goals, intentions/commitments, plans, and durable typed memory across runtime replacement.
+- Require provenance for manager beliefs that can influence future decisions.
+- Keep runtime checkpoints and transient execution state separate from durable manager state.
+- Preserve the v1.3 guarantees: repository-local ownership, explicit versions, VALID/READY, non-destructive repair, exact Core provenance, safe paths, and atomic publication.
+- Keep consumer repositories independent of Core during normal operation.
