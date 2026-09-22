@@ -22,18 +22,17 @@ Implemented product surface:
 - runtime checkpoints explicitly separated from durable manager state;
 - `handoff` retained as an optional operational snapshot rather than the root of manager continuity.
 
-The implementation commit is `4de7da1d835aa74b80313b4089994037e5e2a808` and is the Core provenance recorded by this development capsule.
+The current split-authority development Core source is `d591ac34d19c290630ef5382c4ecac603659a89c`, and this exact SHA is recorded by the development capsule.
 
-Verification completed on 2026-09-22:
+Verification of the split-authority Core completed on 2026-09-22:
 
-- local permanent tests: 14/14 PASS;
 - GitHub-hosted permanent tests: PASS;
 - Python compile: PASS;
 - self validation: VALID;
 - self Project Manager readiness: READY;
 - Project Manager reinstantiation smoke: PASS.
 
-Final clean-head GitHub Actions run: `35751992546`, conclusion `success`.
+Clean-head GitHub Actions run: `35766480844`, conclusion `success`.
 
 The stable `main` branch and all installed v1.3.1 consumers remain untouched.
 

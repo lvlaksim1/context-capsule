@@ -1,7 +1,7 @@
 # Current blockers and open risks
 
-No architecture blocker is currently known.
+No architecture or hosted-CI blocker is currently known.
 
-Hosted CI verification of the new split-authority model is pending on the current development HEAD.
+The split manager-state/product-authority model passed GitHub-hosted permanent tests, compile, self VALID, Project Manager READY, and reinstantiation smoke on run `35766480844`.
 
-Open development risks after that verification remain adversarial memory/provenance, belief supersession, commitment lifecycle, concurrent runtime reconciliation, and bounded recovery as project history grows. Stable v2 release readiness has not yet been assessed.
+Open development risks remain adversarial memory/provenance, belief supersession, commitment lifecycle, concurrent runtime reconciliation, and bounded recovery as project history grows. Stable v2 release readiness has not yet been assessed.
