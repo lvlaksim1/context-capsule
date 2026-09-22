@@ -312,6 +312,7 @@ def build_manifest(
             "volatile_runtime_excluded": True,
             "atomic_git_publication": True,
             "provenance_required_for_manager_beliefs": True,
+            "working_views_non_authoritative": True,
         }
     )
 
@@ -487,6 +488,8 @@ def validate_snapshot(files: dict[str, str]) -> list[str]:
             errors.append("manifest.json: sync_policy.atomic_git_publication must be true")
         if not isinstance(sync, dict) or sync.get("provenance_required_for_manager_beliefs") is not True:
             errors.append("manifest.json: manager belief provenance must be required")
+        if not isinstance(sync, dict) or sync.get("working_views_non_authoritative") is not True:
+            errors.append("manifest.json: current/handoff working views must be non-authoritative")
         runtime = manifest.get("runtime")
         if not isinstance(runtime, dict) or runtime.get("checkpoint_is_capsule_state") is not False:
             errors.append("manifest.json: runtime checkpoint must remain separate from capsule state")
@@ -584,9 +587,9 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str
         ordered.append(("ACTIVE RULE", path))
     ordered.extend(
         [
-            ("CURRENT STATE", manifest["current"]["state"]),
-            ("CURRENT BLOCKERS", manifest["current"]["blockers"]),
-            ("NEXT ACTIONS", manifest["current"]["next"]),
+            ("WORKING VIEW — CURRENT STATE (NON-AUTHORITATIVE)", manifest["current"]["state"]),
+            ("WORKING VIEW — CURRENT BLOCKERS (NON-AUTHORITATIVE)", manifest["current"]["blockers"]),
+            ("WORKING VIEW — NEXT ACTIONS (NON-AUTHORITATIVE)", manifest["current"]["next"]),
             ("SEMANTIC MEMORY", manifest["memory"]["semantic"]),
             ("PROCEDURAL MEMORY", manifest["memory"]["procedural"]),
             ("EMERGENCY HANDOFF (NON-AUTHORITATIVE)", manifest["latest_handoff"]),
@@ -607,6 +610,7 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str
         "You are a new runtime instance of the existing Project Manager, not a new manager.",
         "Preserve manager identity, open intentions, and durable memory unless newer authoritative evidence invalidates them.",
         "Runtime conversation/checkpoint state is not manager identity and must not override durable capsule state.",
+        "current/* and handoff are non-authoritative working views. If they conflict with manager BDI state or newer live evidence, treat the view as stale, reconcile against authoritative evidence, and repair the view.",
         "",
     ]
     used = sum(len(x) + 1 for x in chunks)
