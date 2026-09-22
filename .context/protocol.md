@@ -32,6 +32,14 @@ When a belief changes, record the newer evidence and explicitly supersede or rej
 
 `READY` additionally means the Project Manager can be reinstantiated: mandate, beliefs with provenance, manager goals, intentions, plans, core project semantics, current state, and next work are substantive.
 
+## Working views and consistency
+
+The authoritative durable manager state is the manager BDI state plus verified live evidence. `current/state.md`, `current/blockers.md`, `current/next.md`, and `handoffs/latest.md` are compact working views, not independent sources of truth.
+
+If a working view conflicts with manager beliefs, intentions/plans, or newer verified repository/CI/runtime evidence, treat that view as stale. Preserve the conflict during reconciliation, use the higher-authority evidence, then repair all affected views in the same semantic write-back.
+
+When one verified event changes several working views, update the affected views together. Do not leave a resolved blocker or obsolete next action behind after state/intentions have advanced.
+
 ## Semantic self-maintenance
 
 Persist durable decisions, requirements, rules, architecture changes, root causes, rejected approaches, milestones, beliefs, commitments, lessons, learned procedures, and priority changes.
