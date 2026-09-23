@@ -1,7 +1,7 @@
 # Next actions
 
-1. Continue ordinary Context Capsule maintenance only when requested or when ecosystem work requires a bounded compatibility change.
-2. Preserve the item-19 interoperability contract and external-gate reconciliation invariant in future v2 changes.
-3. Re-open ACP-CC-001 only if objective later evidence materially changes the affected mechanism.
-4. Keep stable v1.3.1, `main`, stable-v2 promotion, and consumer migration unchanged until explicit Owner authorization.
-5. Ecosystem-level continuation after completed item 19 belongs to Supervisor/master-plan coordination rather than this Project Manager.
+1. Verify hosted CI for the provenance-bound interactive-first Core amendment.
+2. Provide the exact Context Capsule snapshot and invariant set to the independent Auditor through GitHub durable handoff.
+3. Keep the audit execution interactive-first while the Owner remains in the live runtime; do not use Scheduled Tasks for this chain.
+4. Reconcile any Auditor findings without reopening previously closed findings absent new evidence.
+5. Keep stable v1.3.1, `main`, stable-v2 promotion, and consumer migration unchanged until explicit Owner authorization.
