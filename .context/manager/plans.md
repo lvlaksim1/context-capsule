@@ -11,6 +11,10 @@
 
 ## Current focused milestone
 
+Agent Control Plane interoperability has been integrated into v2 development as an optional transport-neutral contract. The implementation is self-verified by GitHub Actions run `35863606445`; the next gate is independent Auditor verification of this bounded self-referential Core change. Stable release and consumer migration remain unchanged.
+
+## Prior audit continuity
+
 The first real independent audit and its remediation retest have completed. CCPM-001 through CCPM-004
 are closed with High confidence. CCPM-R001 remediation is implemented and passed the full current
 verification suite. Provide the current authoritative snapshot to Supervisor/Owner and support a

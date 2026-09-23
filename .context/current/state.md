@@ -41,3 +41,13 @@ Verified CCPM-R001 remediation:
 
 Current stage: Project Manager remediation and self-verification are complete. CCPM-R001 remains open
 until a separate focused Auditor retest; this Project Manager does not self-close the finding.
+
+## Optional orchestration interoperability
+
+By explicit Owner direction, the proven generic Agent Control Plane safety model has been folded into v2 development without importing infrastructure-specific scheduler/gateway implementation.
+
+The Project Manager and Service Agent Base now share these generic invariants: direct Owner/requester invocation remains first-class; external task transport cannot increase authority; the reinstantiated target validates issuer/authority provenance and mandate before acceptance; a supplied fence is revalidated before consequential writes and terminal completion; recovery checkpoints contain stable resume facts rather than hidden reasoning; successful completion is evidence-backed; terminal execution clears active ownership; agent-to-agent routing does not require Supervisor mediation by default.
+
+GitHub Actions run `35863606445` on the provenance-bound implementation passed permanent tests, compile, self VALID, authoritative Project Manager READY, reinstantiation smoke, isolated-consumer compatibility smoke, and Service Agent CLI smoke.
+
+Current stage: implementation/self-verification complete; independent Auditor verification of this self-referential Core change is the next gate. Stable `main`, v1.3.1 consumers, stable-v2 promotion, and migration remain unchanged.

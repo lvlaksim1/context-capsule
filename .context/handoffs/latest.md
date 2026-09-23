@@ -1,6 +1,6 @@
 # Latest handoff
 
-## CCPM-R001 remediated and verified; focused Auditor retest pending
+## Optional Agent Control Plane interoperability integrated; independent audit pending
 
 Persistent manager:
 - `manager_id = context-capsule-project-manager`
@@ -8,29 +8,21 @@ Persistent manager:
 - manager-state branch: `v2-manager-runtime`
 - product authority branch: `main`
 
-Independent remediation retest `AUD-2026-09-23-CCPM-001-RETEST-001` completed with:
-- CCPM-001: CLOSED / High confidence;
-- CCPM-002: CLOSED / High confidence;
-- CCPM-003: CLOSED / High confidence;
-- CCPM-004: CLOSED / High confidence;
-- new CCPM-R001: Low severity / High confidence.
+Owner authorized Master Plan item 19: fold only proven generic control-plane safety semantics into Context Capsule v2 / Service Agent Base while preserving direct human invocation and avoiding infrastructure-specific coupling.
 
-The Project Manager independently confirmed CCPM-R001. Root cause: the previous Persist step appended
-new audit/remediation state to `current/state.md` without removing the obsolete phase statement that
-the first real Auditor engagement was still pending.
+Implemented in v2 development:
+- transport-neutral external task envelope, execution context, safe checkpoint, and terminal result schemas;
+- direct Owner/requester invocation remains first-class;
+- Supervisor is not a mandatory routing hop;
+- task/registry/tool/execution transport cannot expand authority;
+- target agent independently validates issuer provenance, target identity, scope, constraints, requested effects, and completion contract;
+- supplied execution fences are revalidated before consequential writes and terminal completion;
+- checkpoints store stable resume facts only, not hidden reasoning;
+- success requires declared verified evidence;
+- terminal execution clears/deactivates active claim/fence projection;
+- Project Manager and Service Agent manifests enforce the new invariants deterministically;
+- DEC-0018 records the architecture boundary.
 
-Focused remediation:
-- reconciled all primary working views to the same lifecycle stage;
-- preserved their non-authoritative status;
-- added deterministic negative regression coverage for literal mutable installed-Core SHA projection in working views;
-- recorded the automation boundary in DEC-0017: free-form lifecycle semantics remain a
-  Reconcile/Persist responsibility until an explicit structured lifecycle model exists.
+Core implementation snapshot is bound through canonical capsule provenance. GitHub Actions run `35863606445` passed permanent tests, compile, self VALID, authoritative READY, Project Manager recovery smoke, isolated-consumer compatibility smoke, and Service Agent CLI smoke.
 
-Remediation implementation commit `ede7968f0dbb5a022775d4c8c195ef691e96c0ef` passed GitHub Actions
-run `35811115748`: 43 tests OK, compile PASS, Core-bound VALID PASS, authoritative READY PASS,
-recovery smoke PASS, isolated-consumer compatibility/safety smoke PASS, Service Agent smoke PASS.
-
-Current next step: Supervisor/Owner commissions a focused Auditor retest of CCPM-R001 only. The
-Project Manager does not self-close the finding.
-
-Do not modify `main`, stable v1.3.1, publish stable v2, or migrate consumers without explicit Owner approval.
+Next gate: independent Auditor verification of this exact self-referential Core change. Do not modify `main`, publish stable v2, or migrate consumers without explicit Owner approval.

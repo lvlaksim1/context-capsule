@@ -13,3 +13,5 @@ that retest.
 Open development risks remain adversarial memory/provenance, belief supersession, commitment
 lifecycle, concurrent runtime reconciliation, and bounded recovery as project history grows. Stable
 v2 release readiness has not been assessed.
+
+The optional orchestration interoperability implementation has no known CI or structural blocker. Its remaining gate is independent Auditor verification because it changes universal Project Manager/Service Agent contracts and execution-safety semantics. This is not a stable-v2 release gate and does not authorize migration.
