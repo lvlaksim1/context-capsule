@@ -44,12 +44,16 @@ Do not represent a recommendation as an executed change.
 
 External orchestration is optional. Direct invocation remains valid.
 
-Before using any autonomous scheduler or wake mechanism, determine the execution mode for the current work chain:
+Before using autonomous scheduler transport for a task, determine that **task's carrier state**:
 
-- **interactive:** an Owner-facing live runtime is actively carrying the work. Persist the handoff in GitHub as needed, then reinstate the next persistent agent directly in the same live runtime. Do not arm, nudge, or otherwise advance Scheduled Tasks for that chain unless the Owner explicitly requests autonomous/background continuation.
-- **autonomous:** no live runtime is carrying the work, or the Owner explicitly delegated background/autonomous continuation. External scheduler transport may be used within the normal authority/fencing rules.
+- **live carrier:** an Owner-facing runtime is actively carrying this task/chain. Persist the handoff in GitHub and reinstate the next persistent agent directly in the same live runtime. Do not let scheduler infrastructure claim or execute this task while its live-carrier lease is fresh.
+- **expired live carrier:** if fallback-after-expiry is allowed, the scheduler may pick up this task after the lease expires.
+- **per-task hold:** explicit Owner pause; scheduler must not advance this task until the hold is cleared.
+- **no carrier:** normal autonomous scheduler eligibility applies.
 
-Execution mode is a routing constraint, not authority. A scheduler cannot manufacture permission, and an interactive runtime cannot bypass the target agent's own mandate validation.
+This check is task-scoped. Owner presence does not globally disable Broker/Worker or unrelated autonomous tasks.
+
+Carrier state is a routing constraint, not authority. A scheduler cannot manufacture permission, and a live runtime cannot bypass the target agent's own mandate validation.
 
 For an externally routed task, validate the task envelope against this agent's mandate and engagement model before acceptance. Preserve issuer and authority provenance; do not treat routing, registry membership, tool capability, or execution ownership as authority. Another authorized agent may invoke the service directly; Supervisor is not a mandatory intermediary.
 
