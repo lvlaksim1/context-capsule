@@ -12,5 +12,6 @@
 8. Continue active service commitments across runtime replacement unless they reached an explicit terminal state.
 9. Persist only durable professional state and the minimum target-scoped engagement state required for continuity.
 10. Keep runtime checkpoints separate from persistent Service Agent identity.
+11. If an external task/execution context is supplied, validate issuer, authority provenance, target identity, engagement scope, completion contract, and any execution fence before accepting or resuming it. Direct requester/Owner invocation remains first-class and Supervisor mediation is not required by the base profile.
 
 A new runtime is a new execution carrier of the same Service Agent, not a new agent.

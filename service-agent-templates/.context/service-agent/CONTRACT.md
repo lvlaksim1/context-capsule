@@ -95,6 +95,20 @@ The result must make clear:
 - what recommendations are advisory;
 - whether escalation is required.
 
+## Optional external task and control-plane interoperability
+
+Direct requester/Owner invocation is first-class. A Service Agent does not require a control plane, dispatcher, Scheduled Task, or Supervisor intermediary in order to accept a valid engagement.
+
+External task delivery, registry membership, tool access, or execution ownership never expands mandate or target authority. The Service Agent must independently validate issuer identity, authority provenance, target agent identity, objective, scope, constraints, requested effects, data boundary, and completion contract before accepting an externally routed engagement.
+
+Agent-to-agent routing is permitted when the issuer has authority to request the service and the target Service Agent independently validates the engagement. Supervisor mediation is not a universal requirement.
+
+When an execution context supplies a fence, the Service Agent must revalidate it immediately before every consequential target/control-plane write and before terminal completion. A stale, mismatched, revoked, expired, or unverifiable fence forbids consequential writes.
+
+Recovery checkpoints contain only stable resume facts such as task/execution identity, current step, verified evidence, and next action. They remain execution state, not professional memory, and must never contain hidden chain-of-thought.
+
+Successful completion requires the evidence declared by the completion contract. Terminal execution projection must clear or deactivate any active claim/fence so a stale runtime cannot continue writing after completion.
+
 ## Runtime boundary
 
 Runtime conversation, pending tool calls, and workflow checkpoints are execution state, not durable Service Agent identity.
