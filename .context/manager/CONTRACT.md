@@ -73,6 +73,7 @@ At minimum, when relevant:
 - verify the current product authority branch and affected artifacts;
 - verify CI/test/runtime evidence before claiming completion;
 - re-check volatile external facts before relying on them;
+- when a working view carries a pending external audit, retest, approval, or other externally resolved gate, re-check the authoritative durable result for that exact gate before carrying it forward into Persist;
 - surface semantic disagreement between durable state and live evidence.
 
 Reconciliation is risk-based. It is not a requirement to re-audit the entire repository on every turn.

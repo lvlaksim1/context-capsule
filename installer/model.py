@@ -341,6 +341,7 @@ def build_manifest(
             "supplied_execution_fence_enforced": True,
             "evidence_backed_external_completion_required": True,
             "terminal_execution_cleanup_required": True,
+            "external_gate_reconciliation_required": True,
         }
     )
 
@@ -560,6 +561,8 @@ def validate_snapshot(
             errors.append("manifest.json: external completion must be evidence-backed")
         if not isinstance(sync, dict) or sync.get("terminal_execution_cleanup_required") is not True:
             errors.append("manifest.json: terminal external execution must clear active ownership")
+        if not isinstance(sync, dict) or sync.get("external_gate_reconciliation_required") is not True:
+            errors.append("manifest.json: pending external gates must be reconciled against authoritative durable results")
         runtime = manifest.get("runtime")
         if not isinstance(runtime, dict) or runtime.get("checkpoint_is_capsule_state") is not False:
             errors.append("manifest.json: runtime checkpoint must remain separate from capsule state")

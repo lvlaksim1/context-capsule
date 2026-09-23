@@ -11,6 +11,7 @@
 3. Historical commit SHAs remain allowed as audit/remediation evidence when they are not presented as the mutable installed-Core provenance coordinate.
 4. Free-form lifecycle-stage prose is not generically validated by keyword/regex heuristics. Context Capsule currently has no universal machine-readable lifecycle ontology across arbitrary projects. Introducing a textual detector would be brittle and could both miss semantic drift and reject valid project language.
 5. Until an explicit lifecycle-state schema is designed, lifecycle-stage consistency remains a Reconcile/Persist responsibility: when a verified phase transition occurs, all affected working views must be reviewed and updated together.
+6. A working view that carries a pending externally resolved gate (for example an audit, retest, or approval) may not be copied forward during a later substantial Persist without re-checking the authoritative durable result for that exact gate. A terminal external result must be reflected across all affected working views in the same Persist step; any new follow-on gate is recorded separately. This remains a provenance/reconciliation invariant rather than a prose keyword detector.
 
 ## Consequences
 

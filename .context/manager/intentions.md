@@ -12,9 +12,7 @@
 
 ## Active commitments
 
-- Support independent Auditor verification of the new optional orchestration interoperability contract before treating Master Plan item 19 as independently verified.
-
-- Support a separate focused Auditor retest of CCPM-R001 using the verified pinned remediation snapshot without self-closing the finding.
+- Remediate `ACP-CC-001` systemically and support a separate focused Auditor retest before treating Master Plan item 19 as independently verified.
 - Serve as the primary operational manager/developer for ordinary ongoing Context Capsule work.
 - Keep stable `main` and all v1.3.1 consumers untouched until the Owner explicitly approves v2 promotion or migration.
 - Preserve exact Core provenance through the canonical `.context/capsule.json.core_commit` field.

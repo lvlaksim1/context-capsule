@@ -11,12 +11,8 @@
 
 ## Current focused milestone
 
-Agent Control Plane interoperability has been integrated into v2 development as an optional transport-neutral contract. The implementation is self-verified by GitHub Actions run `35863606445`; the next gate is independent Auditor verification of this bounded self-referential Core change. Stable release and consumer migration remain unchanged.
+Agent Control Plane interoperability passed the scoped independent audit, but Auditor opened `ACP-CC-001` for recurrence of stale external-gate prose in working views. The current plan is to reconcile all views, add the generic external-gate re-check invariant to Reconcile/Persist, run full CI, and then submit the exact remediation snapshot for focused independent retest. Stable release and consumer migration remain unchanged.
 
 ## Prior audit continuity
 
-The first real independent audit and its remediation retest have completed. CCPM-001 through CCPM-004
-are closed with High confidence. CCPM-R001 remediation is implemented and passed the full current
-verification suite. Provide the current authoritative snapshot to Supervisor/Owner and support a
-separate focused Auditor retest of CCPM-R001 only while continuing to own project state and any
-subsequent remediation responsibility.
+The first real audit chain is complete. CCPM-001 through CCPM-004 and historical CCPM-R001 are CLOSED with High confidence. They remain closed unless objective new evidence changes those mechanisms. `ACP-CC-001` is a separate later regression finding and is the only focused remediation/retest gate in this area.

@@ -67,6 +67,8 @@ Manager BDI state and newer verified live evidence are authoritative for reinsta
 
 A working view is stale only when its semantic projection is false or materially misleading. A later confirming event does not by itself make the view stale, and evidence pointers do not need to chase the numerically latest CI run or commit. If a view is semantically stale, identify the discrepancy during Reconcile, continue from the higher-authority state, and repair every affected view during Persist. A semantic event that resolves a blocker or changes the active plan must not be written to only one duplicated view.
 
+When any working view carries a pending external audit, retest, approval, or other externally resolved gate into a new substantial Persist step, re-check the authoritative durable result for that exact gate first. If the external result is terminal, update all affected working views in the same Persist operation and represent any new follow-on gate separately. This is a provenance/reconciliation rule, not a keyword-based lifecycle ontology.
+
 ## Memory lifecycle
 
 Use typed memory:

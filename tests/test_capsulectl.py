@@ -620,6 +620,7 @@ class ContextCapsuleV2Tests(unittest.TestCase):
             "supplied_execution_fence_enforced",
             "evidence_backed_external_completion_required",
             "terminal_execution_cleanup_required",
+            "external_gate_reconciliation_required",
         }
         for key in required:
             self.assertIs(manifest["sync_policy"][key], True)
@@ -636,6 +637,8 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         self.assertIn("revalidate that fence immediately before every consequential external write", contract)
         self.assertIn("Supervisor is not a mandatory routing hop", protocol)
         self.assertIn("canonicalize terminal execution state", protocol)
+        self.assertIn("re-check the authoritative durable result for that exact gate first", protocol)
+        self.assertIn("not a keyword-based lifecycle ontology", protocol)
 
         interop = (ROOT / "spec" / "agent-control-plane-interoperability-v1.md").read_text(encoding="utf-8")
         self.assertIn("transport-neutral", interop)

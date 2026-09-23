@@ -1,6 +1,6 @@
 # Latest handoff
 
-## Optional Agent Control Plane interoperability integrated; independent audit pending
+## ACP-CC-001 remediation in progress
 
 Persistent manager:
 - `manager_id = context-capsule-project-manager`
@@ -8,21 +8,20 @@ Persistent manager:
 - manager-state branch: `v2-manager-runtime`
 - product authority branch: `main`
 
-Owner authorized Master Plan item 19: fold only proven generic control-plane safety semantics into Context Capsule v2 / Service Agent Base while preserving direct human invocation and avoiding infrastructure-specific coupling.
+Audit continuity:
+- CCPM-001 through CCPM-004 remain CLOSED / High confidence.
+- Historical CCPM-R001 is CLOSED / High confidence by `AUD-2026-09-23-CCPM-R001-RETEST-001`; no further focused CCPM-R001 retest is required.
+- `ACP-TASK-CC-ACP-AUDIT-001` independently verified the scoped item-19 interoperability design and opened separate finding `ACP-CC-001` Low / High confidence.
 
-Implemented in v2 development:
-- transport-neutral external task envelope, execution context, safe checkpoint, and terminal result schemas;
-- direct Owner/requester invocation remains first-class;
-- Supervisor is not a mandatory routing hop;
-- task/registry/tool/execution transport cannot expand authority;
-- target agent independently validates issuer provenance, target identity, scope, constraints, requested effects, and completion contract;
-- supplied execution fences are revalidated before consequential writes and terminal completion;
-- checkpoints store stable resume facts only, not hidden reasoning;
-- success requires declared verified evidence;
-- terminal execution clears/deactivates active claim/fence projection;
-- Project Manager and Service Agent manifests enforce the new invariants deterministically;
-- DEC-0018 records the architecture boundary.
+Root cause of ACP-CC-001:
+later substantial Persist work copied an old pending external retest gate forward without re-checking the authoritative Auditor result that had already made that gate terminal.
 
-Core implementation snapshot is bound through canonical capsule provenance. GitHub Actions run `35863606445` passed permanent tests, compile, self VALID, authoritative READY, Project Manager recovery smoke, isolated-consumer compatibility smoke, and Service Agent CLI smoke.
+Systemic remediation:
+- add a Project Manager invariant requiring exact external audit/retest/approval result re-check before a pending gate is carried forward;
+- update all affected working views atomically when the external gate is terminal;
+- represent a new follow-on gate separately;
+- keep working views non-authoritative and avoid a brittle universal lifecycle keyword ontology.
 
-Next gate: independent Auditor verification of this exact self-referential Core change. Do not modify `main`, publish stable v2, or migrate consumers without explicit Owner approval.
+Next gate: full CI on the provenance-bound remediation snapshot, followed by dependent focused Auditor task `TASK-CC-ACP-RETEST-001`.
+
+Do not modify `main`, publish stable v2, or migrate consumers without explicit Owner approval.
