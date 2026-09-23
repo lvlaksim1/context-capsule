@@ -57,6 +57,16 @@ This check is task-scoped. Owner presence does not globally disable Broker/Worke
 
 Carrier state is a routing constraint, not authority. A scheduler cannot manufacture permission, and a live runtime cannot bypass the target agent's own mandate validation.
 
+## Delegation responsibility
+
+Before one persistent agent invokes another agent for live inter-agent work, classify the relationship:
+
+- **bounded delegation:** the issuer retains the active commitment, responsibility, and authority. The immutable task must name the issuer as commitment owner and return target. After verified terminal live completion, immediately reinstate that caller in the same live runtime, execute its ENTRYPOINT, re-read the durable child result, restore the caller commitment, and continue. Do not require a new Owner message.
+- **explicit handoff:** responsibility transfers only through an explicit authorized handoff contract. The target becomes the commitment owner for the transferred scope, and no automatic return to the issuer is implied.
+
+A live agent-to-agent task with ambiguous responsibility semantics must not proceed. Nested bounded delegations return one level at a time using durable parent/workflow provenance. Delegation never expands authority.
+
+
 For an externally routed task, validate the task envelope against this agent's mandate and engagement model before acceptance. Preserve issuer and authority provenance; do not treat routing, registry membership, tool capability, or execution ownership as authority. Another authorized agent may invoke the service directly; Supervisor is not a mandatory intermediary.
 
 If a supplied execution context includes a fence, revalidate the current fence immediately before each consequential external write and before terminal completion. Fence mismatch, expiry, revocation, or verification failure stops consequential writes.
