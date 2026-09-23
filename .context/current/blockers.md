@@ -1,16 +1,11 @@
 # Current blockers and open risks
 
-No stable-production or migration action is authorized.
+No Context Capsule blocker remains from PTC-003.
 
-PTC-003 implementation remediation is complete and hosted CI is green.
+PTC-003 is CLOSED / High confidence by focused independent retest.
 
-Remaining development gate:
-- focused independent Auditor retest of PTC-001, PTC-002, and PTC-003 on exact ACP/Core remediation snapshots.
+Stable-production / migration boundaries remain:
+- no stable v2 publication without explicit Owner authorization;
+- no consumer migration without explicit Owner authorization.
 
-Historical findings remain CLOSED unless objective new evidence changes their mechanisms:
-- CCPM-001..CCPM-004;
-- CCPM-R001;
-- ACP-CC-001;
-- EW-001..EW-003.
-
-Agent Catalog / Agent Factory remain outside current work.
+The remaining ecosystem finding PTC-002 is ACP-local partial-completion recovery work and is not a current Context Capsule Core blocker unless new evidence changes that boundary.
