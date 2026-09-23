@@ -44,6 +44,13 @@ Do not represent a recommendation as an executed change.
 
 External orchestration is optional. Direct invocation remains valid.
 
+Before using any autonomous scheduler or wake mechanism, determine the execution mode for the current work chain:
+
+- **interactive:** an Owner-facing live runtime is actively carrying the work. Persist the handoff in GitHub as needed, then reinstate the next persistent agent directly in the same live runtime. Do not arm, nudge, or otherwise advance Scheduled Tasks for that chain unless the Owner explicitly requests autonomous/background continuation.
+- **autonomous:** no live runtime is carrying the work, or the Owner explicitly delegated background/autonomous continuation. External scheduler transport may be used within the normal authority/fencing rules.
+
+Execution mode is a routing constraint, not authority. A scheduler cannot manufacture permission, and an interactive runtime cannot bypass the target agent's own mandate validation.
+
 For an externally routed task, validate the task envelope against this agent's mandate and engagement model before acceptance. Preserve issuer and authority provenance; do not treat routing, registry membership, tool capability, or execution ownership as authority. Another authorized agent may invoke the service directly; Supervisor is not a mandatory intermediary.
 
 If a supplied execution context includes a fence, revalidate the current fence immediately before each consequential external write and before terminal completion. Fence mismatch, expiry, revocation, or verification failure stops consequential writes.
