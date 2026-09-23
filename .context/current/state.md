@@ -9,21 +9,20 @@
 
 ## Task-scoped interactive-first amendment
 
-The Core now requires:
+The Core requires:
 
 - live Owner-carried inter-agent work uses GitHub durable handoff plus immediate same-runtime reinstantiation;
-- if that task/chain is scheduler-visible, a fresh task-scoped live-carrier ownership fence MUST be established or verified before interactive execution;
+- scheduler-visible interactive work MUST establish or verify a fresh task-scoped live-carrier ownership fence before execution;
 - direct Owner work with no scheduler-visible projection does not require control-plane state;
 - Owner presence never globally disables, parks, or delays scheduler infrastructure;
 - unrelated autonomous tasks remain schedulable;
-- successful live scheduler-visible work must terminalize its projection before carrier expiry;
-- only the affected nonterminal task may fall back after expiry when allowed.
+- successful live scheduler-visible work must terminalize its projection before carrier expiry.
 
-## Verification
+## Verification and audit
 
-- Core implementation snapshot: `8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`;
-- binding commit: `b1e5ef97235400f8f3f98aae109a687b2643be30`;
-- CI: run `35928337273` SUCCESS on `7d3c21770e439e7957185fda263d1636ec77e653`;
-- all CI stages passed.
+- Core implementation: `8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`;
+- binding: `b1e5ef97235400f8f3f98aae109a687b2643be30`;
+- CI `35928337273`: SUCCESS;
+- focused Auditor retest `AUD-2026-09-24-PER-TASK-CARRIER-001-RETEST-001`: PTC-003 CLOSED / High confidence.
 
-PTC-003 implementation remediation is complete but the finding remains formally OPEN until independent focused retest.
+No active Context Capsule finding remains from the task-carrier amendment.
