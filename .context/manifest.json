@@ -58,7 +58,8 @@
     ".context/decisions/DEC-0013-evidence-revision-semantics.md",
     ".context/decisions/DEC-0014-project-manager-v2-contract.md",
     ".context/decisions/DEC-0015-minimal-service-agent-base.md",
-    ".context/decisions/DEC-0016-authoritative-recovery-integrity.md"
+    ".context/decisions/DEC-0016-authoritative-recovery-integrity.md",
+    ".context/decisions/DEC-0017-working-view-consistency-boundary.md"
   ],
   "dialogues": [],
   "history": [],

@@ -2,10 +2,13 @@
 
 No architecture or hosted-CI blocker is currently known.
 
-The four confirmed findings from independent audit `AUD-2026-09-23-CCPM-001` have been remediated in
-`v2-manager-runtime` and the remediation implementation passed GitHub Actions run `35807681729`.
-Independent Auditor retest is still required; remediation verification by this Project Manager is not
-a substitute for the separate audit gate.
+Independent retest `AUD-2026-09-23-CCPM-001-RETEST-001` closed CCPM-001 through CCPM-004 with High
+confidence. Those findings are no longer active blockers.
+
+The only open audit item is Low-severity `CCPM-R001`. Its semantic drift has been corrected in the
+current development snapshot and permanent regression coverage has been added for the mechanically
+enforceable mutable-Core projection rule. Hosted verification is pending in this snapshot; after it
+passes, a separate focused Auditor retest of CCPM-R001 remains required.
 
 Open development risks remain adversarial memory/provenance, belief supersession, commitment
 lifecycle, concurrent runtime reconciliation, and bounded recovery as project history grows. Stable

@@ -9,34 +9,34 @@
 
 ## Project Manager responsibility
 
-By explicit Owner direction, `context-capsule-project-manager` is now the primary operational manager/developer for ordinary ongoing Context Capsule work.
+By explicit Owner direction, `context-capsule-project-manager` is the primary operational manager/developer for ordinary ongoing Context Capsule work.
 
 A replacement chat/model/runtime must reinstate this same manager rather than starting as an external ad-hoc developer.
 
 ## External ecosystem roles
 
 - Supervisor: `ecosystem-supervisor`, repository `lvlaksim1/supervisor`; coordinates ecosystem-level concerns and does not own Context Capsule.
-- Auditor: `project-manager-auditor`, repository `lvlaksim1/project-manager-auditor`; independently validated and READY; audits are read-only toward the target by default and findings are evidence, not automatic authority.
+- Auditor: `project-manager-auditor`, repository `lvlaksim1/project-manager-auditor`; independently audits within separate read-only engagements by default, and findings remain evidence rather than project authority.
 
-## Master plan status
+## Audit / remediation stage
 
-Items 1–4 are complete.
+The first real independent audit `AUD-2026-09-23-CCPM-001` and remediation retest
+`AUD-2026-09-23-CCPM-001-RETEST-001` have completed.
 
-Item 5 — transfer ordinary Context Capsule development to its own Project Manager — is now recorded in durable project state.
+Auditor closed CCPM-001 through CCPM-004 with High confidence. Those findings are not reopened by the
+current work.
 
-The next operational stage requires three independent runtimes: Supervisor, Context Capsule Project Manager, and Auditor. The first real Auditor engagement will then inspect this PM without transferring project ownership away from it.
+The retest identified one new Low-severity finding, `CCPM-R001`: stale lifecycle-stage prose remained
+in this working view after the previous remediation write-back.
 
-## Independent audit remediation
+CCPM-R001 has been independently confirmed by the Project Manager. Its remediation in the current
+development snapshot:
 
-Independent audit `AUD-2026-09-23-CCPM-001` findings CCPM-001 through CCPM-004 were independently
-reproduced and remediated in the development line.
+- removes the obsolete statement that the first real Auditor engagement is still in the future;
+- reconciles state/blockers/next/handoff to one current phase;
+- adds deterministic regression coverage that forbids a literal Git SHA from being used as an installed/current/canonical Core-provenance projection in working views;
+- keeps working views explicitly non-authoritative;
+- records that free-form lifecycle-stage consistency is not generically machine-checkable without an explicit structured lifecycle model.
 
-Verified remediation behavior:
-
-- authority-bearing VALID binds Core-managed governing files to the exact declared Core Git commit;
-- normal READY/recover require the manager-state authority checkout; explicit non-authoritative mode is inspection-only;
-- mutable Core SHA is no longer duplicated in working views;
-- beliefs and semantic/procedural memory require provenance per substantive durable entry before READY;
-- remediation implementation commit `eb45a8de7879962fda3eb2df756e43a4ad1aa0b2` passed GitHub Actions run `35807681729` with 42 permanent tests, compile, self VALID, authoritative READY, recovery smoke, isolated-consumer compatibility/safety smoke, and Service Agent smoke.
-
-A separate Auditor retest remains required before treating the independent audit engagement as closed.
+Hosted verification of this remediation is the current immediate step. After successful verification,
+the only audit action required is a focused Auditor retest of CCPM-R001.

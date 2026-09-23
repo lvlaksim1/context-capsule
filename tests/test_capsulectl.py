@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import tempfile
 import unittest
@@ -25,6 +26,19 @@ from installer.runtime_guard import LifecycleGuardError, manager_checkout_status
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES = ROOT / "templates"
 CORE_SHA = "a" * 40
+_SHA40 = re.compile(r"\b[0-9a-f]{40}\b", re.IGNORECASE)
+_CORE_PROVENANCE_PROJECTION = re.compile(
+    r"\b(?:installed|current|canonical(?:\s+current)?)\s+core\s+provenance\b",
+    re.IGNORECASE,
+)
+
+
+def mutable_core_provenance_projection_lines(text: str) -> list[str]:
+    return [
+        line
+        for line in text.splitlines()
+        if _SHA40.search(line) and _CORE_PROVENANCE_PROJECTION.search(line)
+    ]
 
 
 def apply(base, changes):
@@ -330,6 +344,31 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         self.assertIn("NON-AUTHORITATIVE MAINTENANCE/AUDIT PACK", pack)
         self.assertIn("Do not instantiate, resume, or continue the Project Manager", pack)
         self.assertNotIn("new runtime instance of the existing Project Manager", pack)
+
+    def test_working_views_do_not_duplicate_mutable_installed_core_sha(self):
+        manifest = json.loads((ROOT / ".context" / "manifest.json").read_text(encoding="utf-8"))
+        working_views = [
+            manifest["current"]["state"],
+            manifest["current"]["blockers"],
+            manifest["current"]["next"],
+            manifest["latest_handoff"],
+        ]
+        for rel in working_views:
+            text = (ROOT / rel).read_text(encoding="utf-8")
+            self.assertEqual(
+                mutable_core_provenance_projection_lines(text),
+                [],
+                rel,
+            )
+
+        core_commit = json.loads(
+            (ROOT / ".context" / "capsule.json").read_text(encoding="utf-8")
+        )["core_commit"]
+        fixture = f"- installed Core provenance is `{core_commit}`; this is a duplicate mutable projection."
+        self.assertEqual(
+            mutable_core_provenance_projection_lines(fixture),
+            [fixture],
+        )
 
     def test_working_views_are_non_authoritative_and_recovery_marks_them(self):
         installed = apply({}, clean_install_changes(

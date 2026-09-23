@@ -1,6 +1,6 @@
 # Latest handoff
 
-## Independent audit remediation completed; Auditor retest required
+## CCPM-R001 remediation in progress; original four findings closed
 
 Persistent manager:
 - `manager_id = context-capsule-project-manager`
@@ -8,23 +8,27 @@ Persistent manager:
 - manager-state branch: `v2-manager-runtime`
 - product authority branch: `main`
 
-Independent audit `AUD-2026-09-23-CCPM-001` reported four findings: CCPM-001/002 High and
-CCPM-003/004 Medium. The Project Manager independently reproduced all four before remediation.
+Independent remediation retest `AUD-2026-09-23-CCPM-001-RETEST-001` has completed.
 
-Remediation implementation:
-- exact Git-object binding of Core-managed governing files during authority-bearing VALID/READY/recover;
-- manager-state checkout enforcement for normal READY/recover, plus explicit inspection-only non-authoritative mode and optional expected-ref pin;
-- canonical-only mutable Core SHA in `.context/capsule.json.core_commit`;
-- per-entry provenance gating for manager beliefs and substantive semantic/procedural memory;
-- negative regression fixtures for every finding;
-- full-history CI checkout so pinned Core commits can be verified exactly.
+Retest result:
+- CCPM-001: CLOSED / High confidence;
+- CCPM-002: CLOSED / High confidence;
+- CCPM-003: CLOSED / High confidence;
+- CCPM-004: CLOSED / High confidence;
+- new CCPM-R001: OPEN / Low severity / High confidence.
 
-Implementation commit `eb45a8de7879962fda3eb2df756e43a4ad1aa0b2` passed GitHub Actions run
-`35807681729`: 42 tests OK, compile PASS, Core-bound VALID PASS, authoritative READY PASS,
-recovery smoke PASS, isolated-consumer compatibility/safety smoke PASS, Service Agent smoke PASS.
+The Project Manager independently confirmed CCPM-R001. Root cause: the previous Persist step appended
+new audit/remediation state to `current/state.md` but failed to remove the obsolete phase statement
+that the first real Auditor engagement was still pending.
 
-The final durable snapshot updates canonical Core provenance to that verified remediation commit.
-A separate Auditor retest must be commissioned by Supervisor/Owner; the Project Manager does not
-self-certify the independent audit as closed.
+Current remediation:
+- reconcile all primary working views to the same lifecycle stage;
+- preserve their non-authoritative status;
+- add a deterministic negative regression for mutable installed-Core SHA projection in working views;
+- explicitly avoid a brittle free-form lifecycle keyword checker; lifecycle-stage semantics remain a
+  Reconcile/Persist responsibility until a structured lifecycle model exists.
+
+Immediate next step: complete hosted verification, then provide the final pinned snapshot to
+Supervisor/Owner for a focused Auditor retest of CCPM-R001 only.
 
 Do not modify `main`, stable v1.3.1, publish stable v2, or migrate consumers without explicit Owner approval.
