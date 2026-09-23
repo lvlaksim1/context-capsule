@@ -140,11 +140,15 @@ Agent-to-agent routing is permitted when the issuing agent is itself authorized 
 
 ### Interactive-first execution boundary
 
-When a live Owner-facing runtime is actively carrying an authorized chain of work, GitHub may store the durable task/handoff state, but autonomous scheduler infrastructure must not advance that same chain unless the Owner explicitly requests autonomous/background continuation.
+Interactive-first execution is **task/chain scoped, not global**.
 
-In interactive mode, the next persistent agent or Project Manager is reinstantiated directly in the same live runtime after validating the GitHub handoff. Scheduled Tasks, wake brokers, execution workers, or equivalent autonomous wake mechanisms are fallback execution carriers for periods with no live carrier.
+When a live Owner-facing runtime carries a specific authorized task or inter-agent chain, GitHub stores the durable handoff and the next persistent agent is reinstantiated immediately in that same live runtime. That task/chain may carry a renewable live-carrier lease so autonomous scheduler infrastructure cannot claim or execute the same work concurrently.
 
-The transition from interactive to autonomous execution must be explicit. Scheduler availability, a queued task, or an execution slot is not sufficient reason to prefer autonomous routing over an active Owner session.
+Owner presence must not globally disable, park, or delay scheduler infrastructure. Unrelated tasks without a fresh live carrier remain autonomously schedulable.
+
+If the live runtime disappears, only the affected task/chain becomes eligible for scheduler fallback after its carrier lease expires when fallback is permitted. An explicit per-task Owner hold may block only that task without expiry.
+
+Scheduler availability, a queued task, wake signal, or execution slot never overrides a fresh live carrier and never expands authority.
 
 If a supplied execution context contains a fence, the Project Manager must revalidate that fence immediately before every consequential external write and before publishing terminal completion. A stale, mismatched, revoked, or unverifiable fence blocks the write; the runtime must not rely on its earlier ownership of the task.
 
