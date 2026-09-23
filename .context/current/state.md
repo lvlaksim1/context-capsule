@@ -4,25 +4,22 @@
 
 - stable production: Context Capsule v1.3.1 on `main`;
 - v2 development and durable manager state: `v2-manager-runtime`;
-- canonical Core provenance: `.context/capsule.json.core_commit = 8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`;
+- canonical installed Core provenance is read only from `.context/capsule.json.core_commit`;
 - no consumer migration or stable-v2 promotion is authorized.
 
-## Task-scoped interactive-first amendment
+## Task-scoped interactive-first baseline
 
-The Core requires:
+PTC-003 is CLOSED / High confidence. The Core preserves task-scoped live-carrier execution, direct Owner invocation, and unrelated autonomous scheduler availability.
 
-- live Owner-carried inter-agent work uses GitHub durable handoff plus immediate same-runtime reinstantiation;
-- scheduler-visible interactive work MUST establish or verify a fresh task-scoped live-carrier ownership fence before execution;
-- direct Owner work with no scheduler-visible projection does not require control-plane state;
-- Owner presence never globally disables, parks, or delays scheduler infrastructure;
-- unrelated autonomous tasks remain schedulable;
-- successful live scheduler-visible work must terminalize its projection before carrier expiry.
+## Active pre-scaling Core work
 
-## Verification and audit
+Owner-directed live delegation return semantics are being added:
 
-- Core implementation: `8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`;
-- binding: `b1e5ef97235400f8f3f98aae109a687b2643be30`;
-- CI `35928337273`: SUCCESS;
-- focused Auditor retest `AUD-2026-09-24-PER-TASK-CARRIER-001-RETEST-001`: PTC-003 CLOSED / High confidence.
+- bounded delegation preserves active commitment/responsibility/authority with the caller;
+- live bounded delegation identifies that caller as return target;
+- verified terminal child completion reinstantiates the caller immediately in the same live runtime and continues from the durable result without another Owner message;
+- explicit handoff is a distinct authorized responsibility transfer and implies no automatic return;
+- nested bounded delegations unwind one caller at a time;
+- Supervisor is not a mandatory return hop.
 
-No active Context Capsule finding remains from the task-carrier amendment.
+Implementation is under verification and is not yet a closed Core baseline.
