@@ -193,6 +193,9 @@ class ServiceAgentBaseTests(unittest.TestCase):
             "direct_owner_invocation_first_class",
             "interactive_first_execution_required",
             "autonomous_scheduler_fallback_only",
+            "task_scoped_live_carrier_required",
+            "scheduler_global_shutdown_on_owner_presence_forbidden",
+            "expired_live_carrier_fallback_supported",
             "external_task_authority_non_escalating",
             "supplied_execution_fence_enforced",
             "evidence_backed_external_completion_required",
@@ -211,13 +214,15 @@ class ServiceAgentBaseTests(unittest.TestCase):
         self.assertIn("Direct requester/Owner invocation is first-class", contract)
         self.assertIn("Supervisor mediation is not a universal requirement", contract)
         self.assertIn("Interactive-first execution boundary", contract)
-        self.assertIn("autonomous scheduler infrastructure must not advance", contract)
-        self.assertIn("Before using any autonomous scheduler or wake mechanism", protocol)
+        self.assertIn("task/chain scoped, not global", contract)
+        self.assertIn("must not globally disable, park, or delay scheduler infrastructure", contract)
+        self.assertIn("specific task/chain carrier", protocol)
+        self.assertIn("Owner presence does not globally disable", protocol)
         self.assertIn("same live runtime", protocol)
         self.assertIn("revalidate it immediately before every consequential", contract)
         self.assertIn("Supervisor is not a mandatory intermediary", protocol)
         self.assertIn("external task/execution context", entrypoint)
-        self.assertIn("Determine whether the current chain is interactive or autonomous", entrypoint)
+        self.assertIn("Determine the current task/chain carrier", entrypoint)
 
     def test_profile_version_is_explicit(self):
         installed = self.install(ready_overrides())
