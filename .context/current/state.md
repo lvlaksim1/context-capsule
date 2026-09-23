@@ -5,30 +5,27 @@
 - stable production: Context Capsule v1.3.1 on `main`;
 - v2 development and durable manager state: `v2-manager-runtime`;
 - installed Core provenance is read only from canonical `.context/capsule.json.core_commit`;
-- current development Core binding for the interactive-first amendment: `d5002dd7566396ae1ee8552b07cf2468e708a184`;
+- current development Core binding: `bef230aa1599fd7ef04beabc19c6e42f5c1ec5e7`;
 - no existing consumer migration to v2 has been authorized.
 
 ## Audit continuity
 
 - CCPM-001 through CCPM-004: CLOSED / High confidence.
 - Historical CCPM-R001: CLOSED / High confidence.
-- ACP-CC-001: CLOSED / High confidence by focused Auditor retest `ACP-TASK-CC-ACP-RETEST-001`.
-- The new interactive-first Core interoperability amendment materially changes the external-orchestration mechanism and therefore requires fresh independent verification before closure.
+- ACP-CC-001: CLOSED / High confidence.
+- EW-001, EW-002, EW-003 were CLOSED / High confidence by the earlier focused scheduler retest, but a later Owner clarification replaced the global interactive-mode interpretation with task-scoped live carriers. The combined ACP/Core task-carrier model requires fresh narrow acceptance.
 
-## Interactive-first interoperability amendment
+## Task-scoped interactive-first amendment
 
 Owner directive now requires:
 
-- while an Owner-facing live runtime actively carries an authorized work chain, GitHub stores durable task/handoff state but the next persistent agent is reinstantiated directly in that same runtime;
-- Scheduled Tasks / wake brokers / execution workers are fallback autonomous carriers only;
-- autonomous scheduler delivery during a live Owner session requires explicit Owner delegation;
-- execution mode constrains routing but never grants authority.
+- the task/chain currently carried by a live Owner runtime uses GitHub durable handoff plus immediate same-runtime reinstantiation of the next persistent agent;
+- a renewable live-carrier lease is attached to that task/chain so scheduler execution cannot race it;
+- Owner presence never globally disables, parks, or delays Broker/Worker;
+- unrelated tasks without a fresh live carrier remain autonomously schedulable;
+- only the affected task may fall back after carrier expiry when fallback is declared;
+- explicit Owner hold is per-task.
 
-Implemented on `v2-manager-runtime` across:
-- Project Manager Contract / Protocol / ENTRYPOINT;
-- Service Agent Contract / Protocol / ENTRYPOINT;
-- Agent Control Plane interoperability specification;
-- installer-generated manifest flags and validators;
-- permanent regression tests.
+Implemented on `v2-manager-runtime` across Project Manager and Service Agent contracts/protocols/entrypoints, interoperability specs, manifest flags/validators, and regression tests.
 
 Stable `main`, v1.3.1 consumers, stable-v2 promotion, and migration remain unchanged.
