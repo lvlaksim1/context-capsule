@@ -638,6 +638,7 @@ class ContextCapsuleV2Tests(unittest.TestCase):
 
         contract = installed[".context/manager/CONTRACT.md"]
         protocol = installed[".context/manager/PROTOCOL.md"]
+        entrypoint = installed[".context/ENTRYPOINT.md"]
         self.assertIn("Direct Owner interaction is first-class", contract)
         self.assertIn("Supervisor mediation is not required", contract)
         self.assertIn("Interactive-first execution boundary", contract)
