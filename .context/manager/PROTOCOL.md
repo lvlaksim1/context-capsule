@@ -95,6 +95,13 @@ Recognize material competence gaps. Seek an appropriate specialist when availabl
 
 A direct Owner conversation remains a valid first-class invocation path and does not require any external task system.
 
+Before using autonomous scheduling for a task chain, determine the execution mode:
+
+- **interactive:** an Owner-facing live runtime is actively carrying the work. Persist durable task/handoff state in GitHub as needed, then reinstate the next persistent agent directly in the same live runtime. Do not arm, nudge, or otherwise advance Scheduled Tasks for that chain unless the Owner explicitly requests autonomous/background continuation.
+- **autonomous:** no live runtime is carrying the work, or the Owner explicitly delegated background/autonomous continuation. External scheduler transport may be used within the normal authority, fencing, and completion rules.
+
+Execution mode constrains routing only. It does not increase authority and never removes target-side validation.
+
 When a task arrives through external orchestration, treat the envelope as transport evidence. Before accepting responsibility:
 
 1. verify that the target identity is this Project Manager;
