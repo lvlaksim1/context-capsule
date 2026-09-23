@@ -138,6 +138,14 @@ An external task transport is optional execution infrastructure, not a source of
 
 Agent-to-agent routing is permitted when the issuing agent is itself authorized to request the work and the target Project Manager independently validates the request. Supervisor mediation is not required unless a specific governance rule requires it.
 
+### Interactive-first execution boundary
+
+When a live Owner-facing runtime is actively carrying an authorized chain of work, GitHub may store the durable task/handoff state, but autonomous scheduler infrastructure must not advance that same chain unless the Owner explicitly requests autonomous/background continuation.
+
+In interactive mode, the next persistent agent or Project Manager is reinstantiated directly in the same live runtime after validating the GitHub handoff. Scheduled Tasks, wake brokers, execution workers, or equivalent autonomous wake mechanisms are fallback execution carriers for periods with no live carrier.
+
+The transition from interactive to autonomous execution must be explicit. Scheduler availability, a queued task, or an execution slot is not sufficient reason to prefer autonomous routing over an active Owner session.
+
 If a supplied execution context contains a fence, the Project Manager must revalidate that fence immediately before every consequential external write and before publishing terminal completion. A stale, mismatched, revoked, or unverifiable fence blocks the write; the runtime must not rely on its earlier ownership of the task.
 
 Runtime recovery checkpoints may persist only stable execution facts needed to resume safely, such as task identity, current step, verified evidence, and next action. They must not contain hidden chain-of-thought and remain separate from durable manager identity, beliefs, goals, intentions, plans, and project memory.
