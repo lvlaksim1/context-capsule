@@ -21,5 +21,7 @@ This contract is transport-neutral. Core intentionally does not depend on a part
 9. **Checkpointing is resumable, not cognitive persistence.** Checkpoints contain stable task/execution facts, verified evidence, current step, and next action; never hidden chain-of-thought.
 10. **Completion is evidence-backed.** Success requires the declared completion evidence, not an agent assertion.
 11. **Terminal cleanup is canonical.** A terminal task cannot retain an active execution claim/fence projection.
+12. **Bounded delegation preserves responsibility.** Live agent-to-agent bounded delegation keeps the active commitment, responsibility, and authority with the caller; the immutable task names that caller as return target, and verified terminal completion must immediately reinstate the caller in the same live runtime without requiring a new Owner message.
+13. **Explicit handoff is distinct.** Responsibility transfer exists only through an explicit authorized handoff contract to the target agent; bounded delegation and transport never imply such transfer, and an explicit handoff does not imply automatic return.
 
 Profiles may add stricter requirements but may not weaken these invariants.
