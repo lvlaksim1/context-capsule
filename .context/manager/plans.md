@@ -11,7 +11,7 @@
 
 ## Current focused milestone
 
-A bounded Core interoperability amendment is active under direct Owner authority: interactive-first execution is now normative for Project Manager and Service Agent profiles. Core templates, protocols, manifest invariants, validators, interoperability spec, and regression tests have been updated on `v2-manager-runtime`. The governing Core is provenance-bound to implementation snapshot `d5002dd7566396ae1ee8552b07cf2468e708a184`; hosted CI and independent audit are required before treating this amendment as closed.
+A bounded Core interoperability amendment is active under direct Owner authority: interactive-first execution is now task/chain scoped rather than a global runtime mode. Project Manager and Service Agent templates/protocols, interoperability specs, installer manifest invariants/validators, and regression tests now require per-task live carriers, forbid global scheduler shutdown merely because the Owner is present, and permit declared fallback after carrier expiry. Canonical Core provenance is bound to implementation snapshot `bef230aa1599fd7ef04beabc19c6e42f5c1ec5e7`. Hosted CI and independent acceptance of the combined ACP/Core model are required before closure.
 
 ## Prior audit continuity
 
