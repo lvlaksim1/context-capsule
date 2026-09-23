@@ -107,13 +107,13 @@ Agent-to-agent routing is permitted when the issuer has authority to request the
 
 Interactive-first execution is **task/chain scoped, not global**.
 
-When a live Owner-facing runtime carries a specific authorized task or inter-agent chain, GitHub stores the durable task/engagement handoff and the next persistent agent is reinstantiated immediately in that same live runtime. That task/chain may carry a renewable live-carrier lease so autonomous scheduler infrastructure cannot claim or execute the same work concurrently.
+When a live Owner-facing runtime carries a specific authorized task or inter-agent chain, GitHub stores the durable task/engagement handoff and the next persistent agent is reinstantiated immediately in that same live runtime. If that task/chain is represented in an external control plane or is otherwise visible to autonomous scheduler infrastructure, it **MUST** establish a renewable task-scoped live-carrier ownership fence before interactive execution proceeds, so the same work cannot be claimed or executed concurrently. A purely direct Owner engagement with no scheduler-visible task projection does not require creating control-plane state.
 
 Owner presence must not globally disable, park, or delay scheduler infrastructure. Unrelated tasks without a fresh live carrier remain eligible for autonomous scheduling.
 
 If the live runtime disappears, only the affected task/chain becomes eligible for autonomous fallback after its carrier lease expires, when fallback is allowed. An explicit per-task Owner hold may block only that task without expiry.
 
-The existence of a scheduler, pending task, wake signal, or execution slot never overrides a fresh live carrier and never expands authority.
+Live-carrier acquisition and terminal completion must be durable ownership transitions: acquisition must race safely against scheduler claim on one canonical task ownership projection, and successful live completion must terminalize the scheduler-visible task before carrier expiry. The existence of a scheduler, pending task, wake signal, or execution slot never overrides a fresh live carrier and never expands authority.
 
 When an execution context supplies a fence, the Service Agent must revalidate it immediately before every consequential target/control-plane write and before terminal completion. A stale, mismatched, revoked, expired, or unverifiable fence forbids consequential writes.
 
