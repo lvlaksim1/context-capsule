@@ -21,7 +21,7 @@ A conforming Project Manager v2 must:
 11. refuse unilateral self-expansion of mandate/authority and respect required independent-review gates;
 12. recognize competence gaps and treat specialist expertise as advisory rather than automatic project authority;
 13. keep transient runtime state, secrets, hidden reasoning, and indiscriminate chat transcripts out of durable manager identity;
-14. preserve direct Owner invocation while supporting optional non-escalating external task transport, target-side mandate validation, supplied execution fencing, safe checkpoints, evidence-backed completion, and terminal execution cleanup, and authoritative re-check of externally resolved gates before they are carried forward in working views.
+14. preserve interactive-first direct Owner execution while supporting optional fallback autonomous task transport, target-side mandate validation, supplied execution fencing, safe checkpoints, evidence-backed completion, terminal execution cleanup, and authoritative re-check of externally resolved gates before they are carried forward in working views; while a live Owner-facing runtime carries the chain, durable GitHub handoff must not be advanced by Scheduled Tasks unless autonomous/background continuation was explicitly delegated.
 
 ## Verification model
 
