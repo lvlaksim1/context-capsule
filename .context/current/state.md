@@ -23,20 +23,21 @@ A replacement chat/model/runtime must reinstate this same manager rather than st
 The first real independent audit `AUD-2026-09-23-CCPM-001` and remediation retest
 `AUD-2026-09-23-CCPM-001-RETEST-001` have completed.
 
-Auditor closed CCPM-001 through CCPM-004 with High confidence. Those findings are not reopened by the
-current work.
+Auditor closed CCPM-001 through CCPM-004 with High confidence. Those findings remain closed and were
+not modified by the CCPM-R001 remediation.
 
-The retest identified one new Low-severity finding, `CCPM-R001`: stale lifecycle-stage prose remained
-in this working view after the previous remediation write-back.
+The retest identified new Low-severity `CCPM-R001`: stale lifecycle-stage prose had remained in this
+working view after the previous remediation Persist step. The Project Manager independently confirmed
+the cause and implemented a focused correction.
 
-CCPM-R001 has been independently confirmed by the Project Manager. Its remediation in the current
-development snapshot:
+Verified CCPM-R001 remediation:
 
-- removes the obsolete statement that the first real Auditor engagement is still in the future;
-- reconciles state/blockers/next/handoff to one current phase;
-- adds deterministic regression coverage that forbids a literal Git SHA from being used as an installed/current/canonical Core-provenance projection in working views;
-- keeps working views explicitly non-authoritative;
-- records that free-form lifecycle-stage consistency is not generically machine-checkable without an explicit structured lifecycle model.
+- obsolete “first real audit is next” phase prose was removed;
+- state/blockers/next/handoff were reconciled to one current lifecycle stage;
+- working views remain explicitly non-authoritative;
+- a deterministic regression now rejects a literal Git SHA used as an installed/current/canonical Core-provenance projection in working views while allowing historical SHA evidence;
+- free-form lifecycle-stage prose is deliberately not checked by keyword heuristics because no universal structured lifecycle ontology currently exists;
+- GitHub Actions run `35811115748` on the remediation implementation passed 43 permanent tests, compile, Core-bound VALID, authoritative READY, recovery smoke, isolated-consumer compatibility/safety smoke, and Service Agent smoke.
 
-Hosted verification of this remediation is the current immediate step. After successful verification,
-the only audit action required is a focused Auditor retest of CCPM-R001.
+Current stage: Project Manager remediation and self-verification are complete. CCPM-R001 remains open
+until a separate focused Auditor retest; this Project Manager does not self-close the finding.

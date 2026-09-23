@@ -12,6 +12,7 @@
 ## Current focused milestone
 
 The first real independent audit and its remediation retest have completed. CCPM-001 through CCPM-004
-are closed with High confidence. Remediate only CCPM-R001, run the full current verification suite,
-then provide the exact pinned result to Supervisor/Owner for a separate focused Auditor retest of
-CCPM-R001 while continuing to own project state and any subsequent remediation responsibility.
+are closed with High confidence. CCPM-R001 remediation is implemented and passed the full current
+verification suite. Provide the current authoritative snapshot to Supervisor/Owner and support a
+separate focused Auditor retest of CCPM-R001 only while continuing to own project state and any
+subsequent remediation responsibility.

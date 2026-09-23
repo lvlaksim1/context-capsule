@@ -2,6 +2,7 @@
 
 ## Completed foundational milestones
 
+- Remediate CCPM-R001 without reopening CCPM-001 through CCPM-004, add deterministic Core-projection regression coverage, and verify the focused fix with the full current CI suite.
 - Implement and harden Project Manager v2 with a normative Contract.
 - Establish explicit authority/evidence semantics, bounded recovery, and automation-first verification.
 - Establish the Minimal Service Agent Base.
@@ -11,7 +12,7 @@
 
 ## Active commitments
 
-- Remediate CCPM-R001 without reopening CCPM-001 through CCPM-004, verify the focused fix with the full current CI suite, and hand off a pinned snapshot for independent focused retest.
+- Support a separate focused Auditor retest of CCPM-R001 using the verified pinned remediation snapshot without self-closing the finding.
 - Serve as the primary operational manager/developer for ordinary ongoing Context Capsule work.
 - Keep stable `main` and all v1.3.1 consumers untouched until the Owner explicitly approves v2 promotion or migration.
 - Preserve exact Core provenance through the canonical `.context/capsule.json.core_commit` field.
