@@ -90,7 +90,10 @@
     "terminal_execution_cleanup_required": true,
     "external_gate_reconciliation_required": true,
     "interactive_first_execution_required": true,
-    "autonomous_scheduler_fallback_only": true
+    "autonomous_scheduler_fallback_only": true,
+    "task_scoped_live_carrier_required": true,
+    "scheduler_global_shutdown_on_owner_presence_forbidden": true,
+    "expired_live_carrier_fallback_supported": true
   },
   "updated_at": "2026-09-23",
   "context_version": "2.0.0-dev",
