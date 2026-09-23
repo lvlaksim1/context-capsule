@@ -11,7 +11,7 @@
 
 ## Current focused milestone
 
-Agent Control Plane interoperability passed the scoped independent audit, but Auditor opened `ACP-CC-001` for recurrence of stale external-gate prose in working views. The current plan is to reconcile all views, add the generic external-gate re-check invariant to Reconcile/Persist, run full CI, and then submit the exact remediation snapshot for focused independent retest. Stable release and consumer migration remain unchanged.
+Agent Control Plane interoperability passed the scoped independent audit. `ACP-CC-001` remediation is implemented and verified by GitHub Actions run `35867274011`; the only remaining item-19 gate is a separate focused Auditor retest of this remediation. Stable release and consumer migration remain unchanged.
 
 ## Prior audit continuity
 
