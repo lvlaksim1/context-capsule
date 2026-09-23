@@ -1,8 +1,7 @@
 # Next actions
 
-1. Execute Master Plan item 3: create a dedicated Supervisor repository.
-2. Install Service Agent Base into that repository using the pinned current Core.
-3. Convert the temporary Supervisor seed context into structured Supervisor identity, mandate, portfolio state, goals, intentions, plans, professional memory, and engagement/principal rules.
-4. Verify Supervisor VALID, READY, and deterministic reinstantiation before treating it as the persistent Supervisor.
-5. Preserve Project Manager v2 and Service Agent Base regression baselines while creating the profile.
-6. Do not publish stable v2 or migrate existing consumers without explicit owner approval.
+1. Execute Master Plan item 4: create an independent Auditor Service Agent with the Owner and persistent Supervisor.
+2. Define Auditor mandate, independence rules, audit methodology, severity model, public audit contract, report contract, and hidden-probe separation.
+3. Install Auditor in its own repository on the Minimal Service Agent Base and verify deterministic reinstantiation.
+4. After Auditor readiness, proceed to Master Plan item 5: transfer ordinary Context Capsule development to its own Project Manager.
+5. Keep stable v1.3.1 and known consumers unchanged unless the owner explicitly authorizes promotion or migration.

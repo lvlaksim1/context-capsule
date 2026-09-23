@@ -56,3 +56,13 @@ One immediately preceding run failed only because the new `SERVICE_AGENT_BASE_VE
 Master Plan item 2 is complete enough to proceed to item 3: create the Supervisor in its own repository using the Service Agent Base.
 
 No stable v2 release or consumer migration has been authorized.
+
+## FACT — persistent Supervisor is established
+
+`lvlaksim1/supervisor` now hosts the persistent `ecosystem-supervisor` Service Agent.
+
+Final bootstrap state `ff914b4aef130411d4c6fac97d10a55fad96eec0` was independently executed against pinned Core `7aa1e697504e686b02a4d7f1539a157214d5e692` and passed service VALID, READY, deterministic RECOVER, stable agent identity, and mandatory Supervisor profile-state recovery.
+
+The Supervisor repository's own GitHub Actions currently has a non-blocking pre-runner startup failure; independent Core execution proved the agent state itself is valid.
+
+Master Plan item 3 is complete. The next stage is Owner + Supervisor creation of the independent Auditor.

@@ -8,6 +8,10 @@
 - Complete Master Plan item 1: mature Project Manager v2.
 - Complete Master Plan item 2: design and implement the Minimal Service Agent Base with stable identity, mandate/capabilities/limitations, principal/invocation/result contracts, BDI state, engagement lifecycle, professional memory isolation, lifecycle CLI, schemas, permanent tests, and CI smoke.
 
+## Completed — ecosystem milestone
+
+- Create the dedicated persistent Supervisor on the Minimal Service Agent Base and independently verify VALID, READY, and deterministic recovery.
+
 ## Active commitments
 
 - Keep stable `main` and all v1.3.1 consumers untouched until the owner explicitly approves v2 promotion or migration.
