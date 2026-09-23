@@ -108,6 +108,16 @@ This is not a global interactive mode. Owner presence must not disable Broker/Wo
 
 Carrier state constrains routing only. It does not increase authority and never removes target-side validation.
 
+## Delegation responsibility
+
+Before one persistent agent invokes another agent for live inter-agent work, classify the relationship:
+
+- **bounded delegation:** the issuer retains the active commitment, responsibility, and authority. The immutable task must name the issuer as commitment owner and return target. After verified terminal live completion, immediately reinstate that caller in the same live runtime, execute its ENTRYPOINT, re-read the durable child result, restore the caller commitment, and continue. Do not require a new Owner message.
+- **explicit handoff:** responsibility transfers only through an explicit authorized handoff contract. The target becomes the commitment owner for the transferred scope, and no automatic return to the issuer is implied.
+
+A live agent-to-agent task with ambiguous responsibility semantics must not proceed. Nested bounded delegations return one level at a time using durable parent/workflow provenance. Delegation never expands authority.
+
+
 When a task arrives through external orchestration, treat the envelope as transport evidence. Before accepting responsibility:
 
 1. verify that the target identity is this Project Manager;
