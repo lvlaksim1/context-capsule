@@ -215,6 +215,9 @@ class ServiceAgentBaseTests(unittest.TestCase):
         self.assertIn("Supervisor mediation is not a universal requirement", contract)
         self.assertIn("Interactive-first execution boundary", contract)
         self.assertIn("task/chain scoped, not global", contract)
+        self.assertIn("MUST", contract)
+        self.assertIn("before interactive execution proceeds", contract)
+        self.assertIn("no scheduler-visible task projection does not require creating control-plane state", contract)
         self.assertIn("must not globally disable, park, or delay scheduler infrastructure", contract)
         self.assertIn("task's carrier state", protocol)
         self.assertIn("Owner presence does not globally disable", protocol)
@@ -222,7 +225,9 @@ class ServiceAgentBaseTests(unittest.TestCase):
         self.assertIn("revalidate it immediately before every consequential", contract)
         self.assertIn("Supervisor is not a mandatory intermediary", protocol)
         self.assertIn("external task/execution context", entrypoint)
-        self.assertIn("Determine the current task/chain carrier", entrypoint)
+        self.assertIn("control-plane or otherwise scheduler-visible projection", entrypoint)
+        self.assertIn("BEFORE interactive execution proceeds", entrypoint)
+        self.assertIn("no scheduler-visible projection does not require control-plane state", entrypoint)
 
     def test_profile_version_is_explicit(self):
         installed = self.install(ready_overrides())
