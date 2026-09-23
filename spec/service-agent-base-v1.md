@@ -60,6 +60,8 @@ Active engagements survive runtime replacement.
 
 Direct requester/Owner invocation remains first-class. External task/control-plane transport is optional and may not expand mandate or target authority. Externally routed work must preserve issuer/authority provenance, be independently validated by the target Service Agent, honor any supplied execution fence before consequential writes, checkpoint only stable resume facts, require declared completion evidence, and clear active execution ownership at terminal state. Agent-to-agent invocation does not require Supervisor mediation unless a profile-specific governance rule says otherwise.
 
+While an Owner-facing live runtime is carrying the current chain, inter-agent handoff is interactive-first: persist the durable task/engagement in GitHub and reinstate the next persistent agent directly in the same runtime. Scheduled Tasks and equivalent autonomous wake infrastructure are fallback carriers only after explicit autonomous/background delegation or when no live carrier remains.
+
 ## Profile-specific durable state
 
 Profiles may register additional durable files through `manifest.profile_state`:
