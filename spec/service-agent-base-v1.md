@@ -56,6 +56,10 @@ The agent may generalize safe reusable lessons, but must not silently copy targe
 
 Active engagements survive runtime replacement.
 
+## Optional orchestration interoperability
+
+Direct requester/Owner invocation remains first-class. External task/control-plane transport is optional and may not expand mandate or target authority. Externally routed work must preserve issuer/authority provenance, be independently validated by the target Service Agent, honor any supplied execution fence before consequential writes, checkpoint only stable resume facts, require declared completion evidence, and clear active execution ownership at terminal state. Agent-to-agent invocation does not require Supervisor mediation unless a profile-specific governance rule says otherwise.
+
 ## Profile-specific durable state
 
 Profiles may register additional durable files through `manifest.profile_state`:
