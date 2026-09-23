@@ -12,7 +12,6 @@
 
 ## Active commitments
 
-- Support a separate focused Auditor retest of the verified `ACP-CC-001` remediation before treating Master Plan item 19 as independently verified.
 - Serve as the primary operational manager/developer for ordinary ongoing Context Capsule work.
 - Keep stable `main` and all v1.3.1 consumers untouched until the Owner explicitly approves v2 promotion or migration.
 - Preserve exact Core provenance through the canonical `.context/capsule.json.core_commit` field.

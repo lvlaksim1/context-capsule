@@ -10,23 +10,30 @@
 ## Audit continuity
 
 - CCPM-001 through CCPM-004: CLOSED / High confidence.
-- Historical CCPM-R001: CLOSED / High confidence by focused Auditor retest `AUD-2026-09-23-CCPM-R001-RETEST-001`; no further focused CCPM-R001 retest is required.
-- Item-19 interoperability audit `ACP-TASK-CC-ACP-AUDIT-001` independently verified the scoped interoperability invariants and opened separate finding `ACP-CC-001` Low / High confidence.
+- Historical CCPM-R001: CLOSED / High confidence.
+- ACP-CC-001: CLOSED / High confidence by focused Auditor retest `ACP-TASK-CC-ACP-RETEST-001`.
+- No open finding remains from the item-19 interoperability audit chain.
 
-## ACP-CC-001 remediation
+## Item 19 — Agent Control Plane interoperability
 
-Systemic remediation is implemented and Project-Manager-verified:
+Independently verified within the defined scope.
 
-- pending external audit/retest/approval gates must be re-checked against the authoritative durable result before being carried into a later substantial Persist;
-- terminal external results update all affected working views in the same Persist operation;
-- any new follow-on gate is represented separately;
-- the rule is enforced as a provenance/reconciliation invariant, not a universal keyword-based lifecycle ontology;
-- working views now consistently preserve historical CCPM-R001 as CLOSED and identify only ACP-CC-001 as the current focused gate.
+Verified properties include:
+- direct Owner/requester ↔ agent invocation remains first-class;
+- Supervisor is not a mandatory routing hop;
+- external task transport cannot manufacture authority;
+- target agents validate issuer/authority provenance and mandate;
+- supplied execution fences guard consequential writes and terminal completion;
+- checkpoints remain non-cognitive execution state;
+- completion is evidence-backed and terminal ownership clears;
+- Core remains transport-neutral;
+- externally resolved audit/retest/approval gates are re-checked before being carried into later working-view persistence.
 
-Implementation commit: `670c24bf431a80bb21ff4e8e78c9edd7779dfe1f`.
-Provenance-bound snapshot: `87f10b2da51eb4f38234fbf0eb2c1311082e7c7b`.
-Hosted verification: GitHub Actions run `35867274011` SUCCESS.
+Evidence:
+- remediation exact snapshot `32a452e8153d4026b488216685c6c92ab3870180`;
+- exact-snapshot CI run `35867437341` SUCCESS;
+- canonical independent retest report `audits/ACP-TASK-CC-ACP-RETEST-001.md` in `lvlaksim1/project-manager-auditor`, publication commit `82166622e607b2e34b3b681a611dca1ad197e2f3`.
 
-Current gate: separate focused Auditor retest of `ACP-CC-001`. The Project Manager does not self-close the finding.
+No further focused item-19 retest is required unless the affected mechanism changes materially.
 
 Stable `main`, v1.3.1 consumers, stable-v2 promotion, and migration remain unchanged.

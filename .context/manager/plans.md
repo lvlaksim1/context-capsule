@@ -11,8 +11,8 @@
 
 ## Current focused milestone
 
-Agent Control Plane interoperability passed the scoped independent audit. `ACP-CC-001` remediation is implemented and verified by GitHub Actions run `35867274011`; the only remaining item-19 gate is a separate focused Auditor retest of this remediation. Stable release and consumer migration remain unchanged.
+Agent Control Plane interoperability is independently verified within the defined item-19 scope. Focused Auditor retest `ACP-TASK-CC-ACP-RETEST-001` closed `ACP-CC-001` with High confidence and found no new defects. No further item-19 remediation/retest action is open. Stable release and consumer migration remain unchanged.
 
 ## Prior audit continuity
 
-The first real audit chain is complete. CCPM-001 through CCPM-004 and historical CCPM-R001 are CLOSED with High confidence. They remain closed unless objective new evidence changes those mechanisms. `ACP-CC-001` is a separate later regression finding and is the only focused remediation/retest gate in this area.
+The first real audit chain is complete. CCPM-001 through CCPM-004 and historical CCPM-R001 are CLOSED with High confidence. They remain closed unless objective new evidence changes those mechanisms. `ACP-CC-001` is CLOSED / High confidence after focused retest and is no longer an active gate.

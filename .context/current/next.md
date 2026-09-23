@@ -1,7 +1,7 @@
 # Next actions
 
-1. Complete control-plane task `TASK-CC-ACP-REMEDIATION-001` with the verified remediation commit and CI evidence.
-2. Execute dependent `TASK-CC-ACP-RETEST-001` as a focused independent read-only Auditor retest of `ACP-CC-001`.
-3. Verify the retest checks working-view consistency, the external-gate reconciliation invariant, the absence of a universal lifecycle keyword ontology, and preservation of item-19 interoperability safeguards.
-4. If Auditor closes `ACP-CC-001`, treat Master Plan item 19 as independently verified; otherwise remediate only the new evidence.
-5. Keep stable v1.3.1, `main`, stable-v2 promotion, and consumer migration unchanged until explicit Owner authorization.
+1. Continue ordinary Context Capsule maintenance only when requested or when ecosystem work requires a bounded compatibility change.
+2. Preserve the item-19 interoperability contract and external-gate reconciliation invariant in future v2 changes.
+3. Re-open ACP-CC-001 only if objective later evidence materially changes the affected mechanism.
+4. Keep stable v1.3.1, `main`, stable-v2 promotion, and consumer migration unchanged until explicit Owner authorization.
+5. Ecosystem-level continuation after completed item 19 belongs to Supervisor/master-plan coordination rather than this Project Manager.

@@ -1,6 +1,6 @@
 # Latest handoff
 
-## ACP-CC-001 remediated and self-verified; focused Auditor retest pending
+## Item 19 independently verified
 
 Persistent manager:
 - `manager_id = context-capsule-project-manager`
@@ -8,22 +8,18 @@ Persistent manager:
 - manager-state branch: `v2-manager-runtime`
 - product authority branch: `main`
 
-Audit continuity:
-- CCPM-001 through CCPM-004 remain CLOSED / High confidence.
-- Historical CCPM-R001 remains CLOSED / High confidence; no further focused CCPM-R001 retest is required.
-- Item-19 interoperability audit passed its scoped design/safety invariants and opened separate `ACP-CC-001` Low / High confidence for recurrence of stale external-gate prose.
+Audit status:
+- CCPM-001 through CCPM-004: CLOSED / High confidence;
+- historical CCPM-R001: CLOSED / High confidence;
+- ACP-CC-001: CLOSED / High confidence;
+- no open finding remains from the item-19 interoperability audit chain.
 
-ACP-CC-001 systemic remediation:
-- exact external audit/retest/approval result must be re-checked before a pending gate is carried into a later substantial Persist;
-- terminal external results must update all affected working views together;
-- follow-on gates are represented separately;
-- no universal prose keyword lifecycle ontology was introduced.
+Item-19 Agent Control Plane interoperability is independently verified within scope. The final remediation snapshot `32a452e8153d4026b488216685c6c92ab3870180` passed GitHub Actions run `35867437341`. Focused independent retest `ACP-TASK-CC-ACP-RETEST-001` found no new defects and closed ACP-CC-001.
 
-Evidence:
-- implementation: `670c24bf431a80bb21ff4e8e78c9edd7779dfe1f`;
-- provenance-bound snapshot: `87f10b2da51eb4f38234fbf0eb2c1311082e7c7b`;
-- GitHub Actions run `35867274011`: SUCCESS across permanent tests, compile, self VALID, authoritative READY, recovery, isolated-consumer compatibility, and Service Agent smoke.
+Canonical retest report:
+`lvlaksim1/project-manager-auditor/audits/ACP-TASK-CC-ACP-RETEST-001.md`
+publication commit `82166622e607b2e34b3b681a611dca1ad197e2f3`.
 
-Next gate: dependent focused Auditor task `TASK-CC-ACP-RETEST-001`. The Project Manager does not self-close ACP-CC-001.
+No further focused item-19 retest is required unless the affected mechanism changes materially.
 
-Do not modify `main`, publish stable v2, or migrate consumers without explicit Owner approval.
+Do not modify `main`, publish stable v2, or migrate consumers without explicit Owner approval. Ecosystem master-plan continuation is owned by Supervisor coordination, not this Project Manager.
