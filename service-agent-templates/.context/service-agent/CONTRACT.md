@@ -105,11 +105,15 @@ Agent-to-agent routing is permitted when the issuer has authority to request the
 
 ### Interactive-first execution boundary
 
-When a live Owner-facing runtime is actively carrying an authorized chain of work, GitHub may hold the durable task/engagement state, but autonomous scheduler infrastructure must not advance that same chain unless the Owner explicitly requests autonomous/background continuation.
+Interactive-first execution is **task/chain scoped, not global**.
 
-In interactive mode, the next persistent agent is reinstantiated directly in the same live runtime after validating the GitHub handoff. Scheduled Tasks, wake brokers, execution workers, or equivalent autonomous wake mechanisms are fallback execution carriers for periods with no live carrier, not the preferred inter-agent routing path.
+When a live Owner-facing runtime carries a specific authorized task or inter-agent chain, GitHub stores the durable task/engagement handoff and the next persistent agent is reinstantiated immediately in that same live runtime. That task/chain may carry a renewable live-carrier lease so autonomous scheduler infrastructure cannot claim or execute the same work concurrently.
 
-The existence of a scheduler, pending task, wake signal, or execution slot never overrides the live interactive carrier. Transition from interactive to autonomous execution must be explicit and durable enough that a later runtime can distinguish the modes.
+Owner presence must not globally disable, park, or delay scheduler infrastructure. Unrelated tasks without a fresh live carrier remain eligible for autonomous scheduling.
+
+If the live runtime disappears, only the affected task/chain becomes eligible for autonomous fallback after its carrier lease expires, when fallback is allowed. An explicit per-task Owner hold may block only that task without expiry.
+
+The existence of a scheduler, pending task, wake signal, or execution slot never overrides a fresh live carrier and never expands authority.
 
 When an execution context supplies a fence, the Service Agent must revalidate it immediately before every consequential target/control-plane write and before terminal completion. A stale, mismatched, revoked, expired, or unverifiable fence forbids consequential writes.
 
