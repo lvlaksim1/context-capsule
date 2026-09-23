@@ -44,6 +44,8 @@ Do not represent a recommendation as an executed change.
 
 External orchestration is optional. Direct invocation remains valid.
 
+Before accepting interactive execution of a task that already has a control-plane/scheduler-visible projection, first establish or verify its task-scoped live-carrier ownership fence. Do not begin target effects while that projection is scheduler-eligible without the live carrier. Carrier acquisition must be reconciled atomically against scheduler ownership, and successful live execution must terminalize the scheduler-visible projection before the carrier can expire. Direct Owner work with no scheduler-visible task projection remains valid without creating control-plane state.
+
 Before using autonomous scheduler transport for a task, determine that **task's carrier state**:
 
 - **live carrier:** an Owner-facing runtime is actively carrying this task/chain. Persist the handoff in GitHub and reinstate the next persistent agent directly in the same live runtime. Do not let scheduler infrastructure claim or execute this task while its live-carrier lease is fresh.
