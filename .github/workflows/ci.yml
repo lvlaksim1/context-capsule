@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.13'
@@ -25,13 +27,27 @@ jobs:
       - name: Self validate
         run: python installer/capsulectl.py validate --target .
       - name: Self Project Manager readiness
-        run: python installer/capsulectl.py ready --target .
+        run: |
+          EXTRA=()
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            EXTRA+=(--non-authoritative)
+          fi
+          python installer/capsulectl.py ready --target . "${EXTRA[@]}"
       - name: Project Manager reinstantiation smoke test
         run: |
-          python installer/capsulectl.py recover --target . --max-chars 50000 > /tmp/context-recovery.txt
+          EXTRA=()
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            EXTRA+=(--non-authoritative)
+          fi
+          python installer/capsulectl.py recover --target . --max-chars 50000 "${EXTRA[@]}" > /tmp/context-recovery.txt
           test -s /tmp/context-recovery.txt
           grep -q "Manager ID: context-capsule-project-manager" /tmp/context-recovery.txt
-          grep -q "new runtime instance of the existing Project Manager" /tmp/context-recovery.txt
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            grep -q "NON-AUTHORITATIVE MAINTENANCE/AUDIT PACK" /tmp/context-recovery.txt
+            grep -q "Do not instantiate, resume, or continue the Project Manager" /tmp/context-recovery.txt
+          else
+            grep -q "new runtime instance of the existing Project Manager" /tmp/context-recovery.txt
+          fi
           grep -q "## MANAGER CONTRACT" /tmp/context-recovery.txt
 
       - name: Isolated consumer compatibility smoke
@@ -40,6 +56,21 @@ jobs:
           git clone --depth 1 https://github.com/lvlaksim1/evrasia-hd-testbed.git /tmp/evrasia-hd-testbed
           python installer/capsulectl.py repair             --target /tmp/evrasia-hd-testbed             --repository lvlaksim1/evrasia-hd-testbed             --branch main             --core-commit "$GITHUB_SHA"
           python installer/capsulectl.py validate --target /tmp/evrasia-hd-testbed
+          if python installer/capsulectl.py ready --target /tmp/evrasia-hd-testbed > /tmp/legacy-ready.txt 2>&1; then
+            echo "Expected legacy unprovenanced procedural memory to block READY"
+            exit 1
+          fi
+          grep -q "memory.procedural entry" /tmp/legacy-ready.txt
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("/tmp/evrasia-hd-testbed/.context/memory/procedural.md")
+          lines = []
+          for line in path.read_text(encoding="utf-8").splitlines():
+              if line.startswith("- ") and "source:" not in line.lower():
+                  line += " source: existing project procedural memory; authority: project-owned-memory."
+              lines.append(line)
+          path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
           python installer/capsulectl.py ready --target /tmp/evrasia-hd-testbed
           python installer/capsulectl.py recover --target /tmp/evrasia-hd-testbed --max-chars 50000 > /tmp/consumer-recovery.txt
           test -s /tmp/consumer-recovery.txt

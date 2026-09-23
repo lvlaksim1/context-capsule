@@ -1,6 +1,6 @@
 # Procedural memory
 
-- For a major Context Capsule change, develop on an isolated branch, keep the stable release line untouched, add explicit migration rather than overloading repair, and verify both local tests and hosted CI.
-- Test continuity by creating manager state with an open commitment, rebuilding recovery from repository-only state, and asserting identity plus commitment survive without prior chat history.
-- Treat specialist-agent or external-source output as evidence until the Project Manager evaluates provenance and promotes a durable conclusion.
-- After a significant architecture/release milestone, consolidate manager state: resolve completed intentions, supersede stale beliefs explicitly, and move reusable lessons into typed memory.
+- For a major Context Capsule change, develop on an isolated branch, keep the stable release line untouched, add explicit migration rather than overloading repair, and verify both local tests and hosted CI. source: verified v1.3/v2 development history and Project Manager mandate; authority: verified-repository plus owner-directed constraints.
+- Test continuity by creating manager state with an open commitment, rebuilding recovery from repository-only state, and asserting identity plus commitment survive without prior chat history. source: Project Manager v2 acceptance methodology and permanent regression suite; authority: verified-repository.
+- Treat specialist-agent or external-source output as evidence until the Project Manager evaluates provenance and promotes a durable conclusion. source: Project Manager Contract and Protocol; authority: core-contract.
+- After a significant architecture/release milestone, consolidate manager state: resolve completed intentions, supersede stale beliefs explicitly, and move reusable lessons into typed memory. source: Project Manager Contract durable-memory lifecycle and established v2 procedure; authority: core-contract plus verified-repository.

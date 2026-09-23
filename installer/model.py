@@ -21,6 +21,8 @@ SYSTEM_TEXT_PATHS = (
     ".context/manager/CONTRACT.md",
     ".context/manager/PROTOCOL.md",
 )
+CORE_GOVERNING_PATHS = SYSTEM_TEXT_PATHS
+_PROVENANCE_ENTRY_START = re.compile(r"^(?:[-*+]\s+|\d+[.)]\s+)")
 PROJECT_SEED_PATHS = (
     ".context/project/identity.md",
     ".context/project/goals.md",
@@ -438,7 +440,12 @@ def _validate_manager_identity(files: dict[str, str], repository: str | None) ->
     return errors
 
 
-def validate_snapshot(files: dict[str, str]) -> list[str]:
+def validate_snapshot(
+    files: dict[str, str],
+    *,
+    core_reference: dict[str, str] | None = None,
+    require_core_binding: bool = False,
+) -> list[str]:
     errors: list[str] = []
     try:
         meta = parse_json_text(files, ".context/capsule.json")
@@ -544,6 +551,7 @@ def validate_snapshot(files: dict[str, str]) -> list[str]:
 
     repository = meta.get("repository") if isinstance(meta, dict) else None
     errors.extend(_validate_manager_identity(files, repository))
+    errors.extend(_core_binding_errors(files, core_reference, require_core_binding=require_core_binding))
     return errors
 
 
@@ -567,15 +575,93 @@ def _is_substantive(text: str | None) -> bool:
     return not any(pattern in lower for pattern in PLACEHOLDER_PATTERNS)
 
 
-def _has_belief_provenance(text: str | None) -> bool:
+def _durable_entries(text: str | None) -> list[str]:
+    if text is None:
+        return []
+    entries: list[str] = []
+    current: list[str] = []
+    bullet_entry = False
+
+    def finish() -> None:
+        nonlocal current, bullet_entry
+        if current:
+            entries.append(" ".join(current).strip())
+        current = []
+        bullet_entry = False
+
+    for raw in text.splitlines():
+        stripped = raw.strip()
+        if not stripped or stripped.startswith("#") or stripped.startswith("<!--"):
+            if not stripped and current and not bullet_entry:
+                finish()
+            continue
+        if _PROVENANCE_ENTRY_START.match(stripped):
+            finish()
+            current = [stripped]
+            bullet_entry = True
+            continue
+        if current:
+            current.append(stripped)
+        else:
+            current = [stripped]
+            bullet_entry = False
+    finish()
+    return entries
+
+
+def _entry_provenance_errors(text: str | None, label: str) -> list[str]:
     if not _is_substantive(text):
-        return False
-    lower = text.lower()
-    return "source:" in lower and "authority:" in lower
+        return []
+    errors: list[str] = []
+    for index, entry in enumerate(_durable_entries(text), start=1):
+        lower = entry.lower()
+        missing = []
+        if "source:" not in lower:
+            missing.append("source:")
+        if "authority:" not in lower:
+            missing.append("authority:")
+        if missing:
+            errors.append(
+                f"{label} entry {index} missing provenance field(s): {', '.join(missing)}"
+            )
+    return errors
 
 
-def readiness_snapshot(files: dict[str, str]) -> tuple[bool, list[str]]:
-    validation = validate_snapshot(files)
+def _core_binding_errors(
+    files: dict[str, str],
+    core_reference: dict[str, str] | None,
+    *,
+    require_core_binding: bool,
+) -> list[str]:
+    if core_reference is None:
+        return ["core provenance binding reference is required"] if require_core_binding else []
+    errors: list[str] = []
+    for path in CORE_GOVERNING_PATHS:
+        expected = core_reference.get(path)
+        if expected is None:
+            errors.append(f"core provenance reference missing governing file: {path}")
+            continue
+        actual = files.get(path)
+        if actual is None:
+            continue
+        if actual != expected:
+            errors.append(
+                f"core provenance mismatch: {path} does not match the declared core_commit"
+            )
+    return errors
+
+
+def readiness_snapshot(
+    files: dict[str, str],
+    *,
+    core_reference: dict[str, str] | None = None,
+    require_core_binding: bool = False,
+) -> tuple[bool, list[str]]:
+    validation = validate_snapshot(
+        files,
+        core_reference=core_reference,
+        require_core_binding=require_core_binding,
+    )
     if validation:
         return False, [f"VALIDATION: {item}" for item in validation]
 
@@ -599,8 +685,17 @@ def readiness_snapshot(files: dict[str, str]) -> tuple[bool, list[str]]:
             missing.append(f"{label} is empty or still a template")
 
     beliefs_path = manifest["manager"]["beliefs"]
-    if not _has_belief_provenance(files.get(beliefs_path)):
-        missing.append("manager.beliefs must be substantive and include source: and authority: provenance")
+    beliefs_text = files.get(beliefs_path)
+    if not _is_substantive(beliefs_text):
+        missing.append("manager.beliefs is empty or still a template")
+    else:
+        missing.extend(_entry_provenance_errors(beliefs_text, "manager.beliefs"))
+
+    for memory_key in ("semantic", "procedural"):
+        memory_path = manifest["memory"][memory_key]
+        missing.extend(
+            _entry_provenance_errors(files.get(memory_path), f"memory.{memory_key}")
+        )
 
     rule_ready = any(_is_substantive(files.get(path)) for path in manifest.get("rules", []))
     decision_ready = any(_is_substantive(files.get(path)) for path in manifest.get("decisions", []))
@@ -610,8 +705,19 @@ def readiness_snapshot(files: dict[str, str]) -> tuple[bool, list[str]]:
     return not missing, missing
 
 
-def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str:
-    ready, reasons = readiness_snapshot(files)
+def build_recovery_pack(
+    files: dict[str, str],
+    *,
+    max_chars: int = 50000,
+    core_reference: dict[str, str] | None = None,
+    require_core_binding: bool = False,
+    authoritative: bool = True,
+) -> str:
+    ready, reasons = readiness_snapshot(
+        files,
+        core_reference=core_reference,
+        require_core_binding=require_core_binding,
+    )
     if not ready:
         raise CapsuleModelError("capsule is not READY: " + "; ".join(reasons))
     manifest = parse_json_text(files, ".context/manifest.json") or {}
@@ -648,16 +754,31 @@ def build_recovery_pack(files: dict[str, str], *, max_chars: int = 50000) -> str
     for path in manifest.get("decisions", []):
         optional.append(("DURABLE DECISION", path))
 
+    title = (
+        "# CONTEXT CAPSULE PROJECT MANAGER REINSTANTIATION PACK"
+        if authoritative
+        else "# CONTEXT CAPSULE NON-AUTHORITATIVE MAINTENANCE/AUDIT PACK"
+    )
+    mode_lines = (
+        [
+            "You are a new runtime instance of the existing Project Manager, not a new manager.",
+            "Preserve manager identity, open intentions, and durable memory unless newer authoritative evidence invalidates them.",
+        ]
+        if authoritative
+        else [
+            "NON-AUTHORITATIVE MODE: this checkout is evidence for maintenance/audit only.",
+            "Do not instantiate, resume, or continue the Project Manager from this pack.",
+        ]
+    )
     chunks = [
-        "# CONTEXT CAPSULE PROJECT MANAGER REINSTANTIATION PACK",
+        title,
         "",
         f"Repository: {manifest.get('repository')}",
         f"Manager state authority branch: {manifest.get('authority', {}).get('manager_state_branch')}",
         f"Product authority branch: {manifest.get('authority', {}).get('product_branch')}",
         f"Manager ID: {manager_id}",
         "",
-        "You are a new runtime instance of the existing Project Manager, not a new manager.",
-        "Preserve manager identity, open intentions, and durable memory unless newer authoritative evidence invalidates them.",
+        *mode_lines,
         "Runtime conversation/checkpoint state is not manager identity and must not override durable capsule state.",
         "current/* and handoff are non-authoritative working views. If they conflict with manager BDI state or newer live evidence, treat the view as stale, reconcile against authoritative evidence, and repair the view.",
         "",

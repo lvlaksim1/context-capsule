@@ -23,6 +23,12 @@ from installer.model import (
     validate_snapshot,
 )
 from installer.safety import CapsuleSafetyError, confined_local_path, validate_core_commit
+from installer.runtime_guard import (
+    LifecycleGuardError,
+    load_core_reference,
+    manager_checkout_status,
+    snapshot_core_commit,
+)
 from installer.service_agent import (
     ServiceAgentModelError,
     build_service_recovery_pack,
@@ -146,6 +152,15 @@ def infer_core_commit(explicit: str | None) -> str:
         raise SystemExit("--core-commit is required when Core is not running from a Git checkout") from exc
 
 
+def infer_bound_core_commit(explicit: str | None) -> str:
+    core_commit = infer_core_commit(explicit)
+    try:
+        load_core_reference(CORE_ROOT, core_commit)
+    except LifecycleGuardError as exc:
+        raise SystemExit(str(exc)) from exc
+    return core_commit
+
+
 def actual_branch(target: Path) -> str | None:
     try:
         return subprocess.run(
@@ -179,6 +194,7 @@ def cmd_install(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     ensure_branch(target, args.branch)
     files = load_snapshot(target)
+    core_commit = infer_bound_core_commit(args.core_commit)
     return _apply_planned(
         target,
         "install",
@@ -187,7 +203,7 @@ def cmd_install(args: argparse.Namespace) -> int:
             TEMPLATES,
             args.repository,
             args.branch,
-            infer_core_commit(args.core_commit),
+            core_commit,
             discovery_branch=args.discovery_branch,
             product_branch=args.product_branch,
         ),
@@ -198,6 +214,7 @@ def cmd_upgrade(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     ensure_branch(target, args.branch)
     files = load_snapshot(target)
+    core_commit = infer_bound_core_commit(args.core_commit)
     return _apply_planned(
         target,
         "upgrade",
@@ -206,7 +223,7 @@ def cmd_upgrade(args: argparse.Namespace) -> int:
             TEMPLATES,
             repository=args.repository,
             branch=args.branch,
-            core_commit=infer_core_commit(args.core_commit),
+            core_commit=core_commit,
             product_branch=args.product_branch,
         ),
     )
@@ -216,6 +233,7 @@ def cmd_repair(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     ensure_branch(target, args.branch)
     files = load_snapshot(target)
+    core_commit = infer_bound_core_commit(args.core_commit)
     return _apply_planned(
         target,
         "repair",
@@ -224,7 +242,7 @@ def cmd_repair(args: argparse.Namespace) -> int:
             TEMPLATES,
             repository=args.repository,
             branch=args.branch,
-            core_commit=infer_core_commit(args.core_commit),
+            core_commit=core_commit,
         ),
     )
 
@@ -248,12 +266,21 @@ def cmd_discovery(args: argparse.Namespace) -> int:
     return 0
 
 
+def _bound_core_reference(files: dict[str, str]) -> dict[str, str]:
+    return load_core_reference(CORE_ROOT, snapshot_core_commit(files))
+
+
 def cmd_validate(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     try:
         files = load_snapshot(target)
-        errors = validate_snapshot(files)
-    except (CapsuleModelError, CapsuleSafetyError, SystemExit) as exc:
+        core_reference = _bound_core_reference(files)
+        errors = validate_snapshot(
+            files,
+            core_reference=core_reference,
+            require_core_binding=True,
+        )
+    except (CapsuleModelError, CapsuleSafetyError, LifecycleGuardError, SystemExit) as exc:
         print(f"Context Capsule validation: FAIL\n  - {exc}")
         return 1
     if errors:
@@ -261,7 +288,7 @@ def cmd_validate(args: argparse.Namespace) -> int:
         for error in errors:
             print(f"  - {error}")
         return 1
-    print("Context Capsule validation: VALID")
+    print("Context Capsule validation: VALID (CORE PROVENANCE BOUND)")
     return 0
 
 
@@ -269,8 +296,19 @@ def cmd_ready(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     try:
         files = load_snapshot(target)
-        ready, reasons = readiness_snapshot(files)
-    except (CapsuleModelError, CapsuleSafetyError, SystemExit) as exc:
+        authoritative, branch, head = manager_checkout_status(
+            target,
+            files,
+            expected_ref=args.expected_manager_ref,
+            non_authoritative=args.non_authoritative,
+        )
+        core_reference = _bound_core_reference(files)
+        ready, reasons = readiness_snapshot(
+            files,
+            core_reference=core_reference,
+            require_core_binding=True,
+        )
+    except (CapsuleModelError, CapsuleSafetyError, LifecycleGuardError, SystemExit) as exc:
         print(f"Context Capsule readiness: NOT READY\n  - {exc}")
         return 1
     if not ready:
@@ -278,15 +316,38 @@ def cmd_ready(args: argparse.Namespace) -> int:
         for reason in reasons:
             print(f"  - {reason}")
         return 1
-    print("Context Capsule readiness: READY (PROJECT MANAGER REINSTANTIABLE)")
+    if authoritative:
+        print(
+            "Context Capsule readiness: READY (PROJECT MANAGER REINSTANTIABLE; "
+            f"authoritative checkout {branch}@{head})"
+        )
+    else:
+        print(
+            "Context Capsule readiness: READY FOR NON-AUTHORITATIVE MAINTENANCE/AUDIT "
+            f"(NOT PROJECT MANAGER REINSTATIATION; checkout {branch or 'detached/unknown'}@{head or 'unknown'})"
+        )
     return 0
 
 
 def cmd_recover(args: argparse.Namespace) -> int:
     target = target_root(args.target)
     try:
-        pack = build_recovery_pack(load_snapshot(target), max_chars=args.max_chars)
-    except (CapsuleModelError, CapsuleSafetyError, SystemExit) as exc:
+        files = load_snapshot(target)
+        authoritative, _branch, _head = manager_checkout_status(
+            target,
+            files,
+            expected_ref=args.expected_manager_ref,
+            non_authoritative=args.non_authoritative,
+        )
+        core_reference = _bound_core_reference(files)
+        pack = build_recovery_pack(
+            files,
+            max_chars=args.max_chars,
+            core_reference=core_reference,
+            require_core_binding=True,
+            authoritative=authoritative,
+        )
+    except (CapsuleModelError, CapsuleSafetyError, LifecycleGuardError, SystemExit) as exc:
         print(f"Context Capsule recovery: FAIL\n  - {exc}")
         return 1
     sys.stdout.write(pack)
@@ -424,11 +485,23 @@ def build_parser() -> argparse.ArgumentParser:
 
     ready = sub.add_parser("ready", help="check Project Manager reinstantiation readiness")
     ready.add_argument("--target", required=True)
+    ready.add_argument("--expected-manager-ref", help="optional commit/ref pin for deterministic authority verification")
+    ready.add_argument(
+        "--non-authoritative",
+        action="store_true",
+        help="allow maintenance/audit inspection from a non-authoritative checkout; never declares PM reinstantiable",
+    )
     ready.set_defaults(func=cmd_ready)
 
     recover = sub.add_parser("recover", help="emit a deterministic Project Manager reinstantiation pack")
     recover.add_argument("--target", required=True)
     recover.add_argument("--max-chars", type=int, default=50000)
+    recover.add_argument("--expected-manager-ref", help="optional commit/ref pin for deterministic authority verification")
+    recover.add_argument(
+        "--non-authoritative",
+        action="store_true",
+        help="emit an explicitly non-authoritative maintenance/audit pack from a divergent checkout",
+    )
     recover.set_defaults(func=cmd_recover)
 
     service_install = sub.add_parser("service-install", help="clean-install a persistent Service Agent profile")

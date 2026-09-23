@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
 
 from installer.github_atomic import ConcurrentBranchUpdate, HeadState, MutationPlan, publish_single_commit
 from installer.model import (
+    CORE_GOVERNING_PATHS,
     CapsuleModelError,
     VERSION,
     build_recovery_pack,
@@ -18,6 +20,7 @@ from installer.model import (
     validate_snapshot,
 )
 from installer.safety import BEGIN_MARKER, END_MARKER, CapsuleSafetyError, render_managed_block
+from installer.runtime_guard import LifecycleGuardError, manager_checkout_status
 
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES = ROOT / "templates"
@@ -50,7 +53,7 @@ def ready_overrides():
         ".context/manager/intentions.md": "# Intentions\n\n- Verify fresh-runtime continuity before declaring the v2 manager implementation complete.\n",
         ".context/manager/plans.md": "# Plans\n\nRun structural tests, recovery tests, and then evaluate repository CI evidence before completion.\n",
         ".context/memory/semantic.md": "# Semantic memory\n\nRuntime identity is replaceable; durable manager identity is repository-local. source: architecture decision; authority: verified-repository.\n",
-        ".context/memory/procedural.md": "# Procedural memory\n\nFor major upgrades, use explicit upgrade and verify VALID before attempting READY.\n",
+        ".context/memory/procedural.md": "# Procedural memory\n\n- For major upgrades, use explicit upgrade and verify VALID before attempting READY. source: Project Manager Contract; authority: core-contract.\n",
         ".context/handoffs/latest.md": "# Handoff\n\nOptional emergency summary only; manager continuity does not depend on this file.\n",
         ".context/decisions/DEC-test.md": "# Decision\n\nKeep runtime checkpoints separate from durable Project Manager state.\n",
     }
@@ -221,6 +224,112 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         ready, reasons = readiness_snapshot(installed)
         self.assertFalse(ready)
         self.assertTrue(any("source:" in x and "authority:" in x for x in reasons))
+
+    def test_core_governing_files_are_bound_to_declared_core_reference(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        core_reference = {path: installed[path] for path in CORE_GOVERNING_PATHS}
+        self.assertEqual(
+            validate_snapshot(installed, core_reference=core_reference, require_core_binding=True),
+            [],
+        )
+
+        tampered = dict(installed)
+        tampered[".context/manager/CONTRACT.md"] += "\nUnauthorized governing change.\n"
+        errors = validate_snapshot(
+            tampered,
+            core_reference=core_reference,
+            require_core_binding=True,
+        )
+        self.assertTrue(any("core provenance mismatch" in error for error in errors))
+
+        ready, reasons = readiness_snapshot(
+            tampered,
+            core_reference=core_reference,
+            require_core_binding=True,
+        )
+        self.assertFalse(ready)
+        self.assertTrue(any("core provenance mismatch" in reason for reason in reasons))
+        with self.assertRaisesRegex(CapsuleModelError, "core provenance mismatch"):
+            build_recovery_pack(
+                tampered,
+                core_reference=core_reference,
+                require_core_binding=True,
+            )
+
+    def test_mixed_belief_file_requires_provenance_per_entry(self):
+        overrides = ready_overrides()
+        overrides[".context/manager/beliefs.md"] = (
+            "# Beliefs\n\n"
+            "- Verified belief. source: repository test; authority: verified-repository.\n"
+            "- Unsourced decision-relevant belief that must not inherit provenance from its neighbor.\n"
+        )
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=overrides
+        ))
+        ready, reasons = readiness_snapshot(installed)
+        self.assertFalse(ready)
+        self.assertTrue(any("manager.beliefs entry 2" in reason for reason in reasons))
+
+    def test_semantic_and_procedural_memory_require_provenance_per_entry(self):
+        for path, label in (
+            (".context/memory/semantic.md", "memory.semantic entry 2"),
+            (".context/memory/procedural.md", "memory.procedural entry 2"),
+        ):
+            overrides = ready_overrides()
+            overrides[path] = (
+                "# Durable memory\n\n"
+                "- Verified reusable item. source: contract; authority: core-contract.\n"
+                "- Unsourced durable guidance must be rejected.\n"
+            )
+            installed = apply({}, clean_install_changes(
+                {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=overrides
+            ))
+            ready, reasons = readiness_snapshot(installed)
+            self.assertFalse(ready)
+            self.assertTrue(any(label in reason for reason in reasons), (path, reasons))
+
+    def test_non_authoritative_checkout_cannot_reinstantiate_manager(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        with tempfile.TemporaryDirectory() as td:
+            target = Path(td)
+            subprocess.run(["git", "init", "-b", "main"], cwd=target, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.email", "ci@example.invalid"], cwd=target, check=True)
+            subprocess.run(["git", "config", "user.name", "CI"], cwd=target, check=True)
+            (target / "marker.txt").write_text("main\n", encoding="utf-8")
+            subprocess.run(["git", "add", "marker.txt"], cwd=target, check=True)
+            subprocess.run(["git", "commit", "-m", "main"], cwd=target, check=True, capture_output=True)
+            main_sha = subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=target, check=True, text=True, capture_output=True
+            ).stdout.strip()
+            subprocess.run(["git", "switch", "-c", "feature"], cwd=target, check=True, capture_output=True)
+            (target / "marker.txt").write_text("feature\n", encoding="utf-8")
+            subprocess.run(["git", "commit", "-am", "feature"], cwd=target, check=True, capture_output=True)
+
+            with self.assertRaisesRegex(LifecycleGuardError, "manager-state authority"):
+                manager_checkout_status(target, installed)
+
+            authoritative, branch, _head = manager_checkout_status(
+                target, installed, non_authoritative=True
+            )
+            self.assertFalse(authoritative)
+            self.assertEqual(branch, "feature")
+
+            with self.assertRaisesRegex(LifecycleGuardError, "expected manager ref"):
+                manager_checkout_status(
+                    target,
+                    installed,
+                    expected_ref=main_sha,
+                    non_authoritative=True,
+                )
+
+        pack = build_recovery_pack(installed, authoritative=False)
+        self.assertIn("NON-AUTHORITATIVE MAINTENANCE/AUDIT PACK", pack)
+        self.assertIn("Do not instantiate, resume, or continue the Project Manager", pack)
+        self.assertNotIn("new runtime instance of the existing Project Manager", pack)
 
     def test_working_views_are_non_authoritative_and_recovery_marks_them(self):
         installed = apply({}, clean_install_changes(
