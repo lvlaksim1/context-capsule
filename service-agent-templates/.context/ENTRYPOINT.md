@@ -13,5 +13,6 @@
 9. Persist only durable professional state and the minimum target-scoped engagement state required for continuity.
 10. Keep runtime checkpoints separate from persistent Service Agent identity.
 11. If an external task/execution context is supplied, validate issuer, authority provenance, target identity, engagement scope, completion contract, and any execution fence before accepting or resuming it. Direct requester/Owner invocation remains first-class and Supervisor mediation is not required by the base profile.
+12. Determine whether the current chain is interactive or autonomous before invoking scheduler infrastructure. While a live Owner-facing runtime carries the work, keep the durable handoff in GitHub but reinstate the next persistent agent directly in that runtime; use Scheduled Tasks only after explicit autonomous/background handoff or when no live carrier remains.
 
 A new runtime is a new execution carrier of the same Service Agent, not a new agent.
