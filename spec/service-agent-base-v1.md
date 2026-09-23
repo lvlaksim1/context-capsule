@@ -62,6 +62,9 @@ Direct requester/Owner invocation remains first-class. External task/control-pla
 
 When an Owner-facing live runtime carries a specific task/chain, inter-agent handoff is interactive-first: persist the durable task/engagement in GitHub and reinstate the next persistent agent directly in the same runtime. If that work is represented in a control plane or otherwise visible to autonomous scheduler infrastructure, the agent **must establish or verify a fresh task-scoped live-carrier ownership fence before interactive execution proceeds** and must terminalize the scheduler-visible projection on successful live completion. A direct Owner engagement with no scheduler-visible projection remains valid without creating control-plane state. The carrier blocks scheduler execution only for its own task/chain; Owner presence never globally disables scheduler infrastructure, and unrelated tasks remain independently schedulable. If the carrier expires and fallback is allowed, only that task/chain becomes eligible for autonomous continuation.
 
+Live agent-to-agent responsibility is explicit. In **bounded delegation**, the calling agent retains the active commitment/responsibility/authority; the immutable task identifies that caller as return target, and verified terminal completion immediately reinstantiates the caller in the same live runtime and continues from the durable child result. In an **explicit handoff**, responsibility transfers only through an authorized handoff contract to the target and no automatic return is implied. Nested bounded delegations unwind one caller at a time.
+
+
 ## Profile-specific durable state
 
 Profiles may register additional durable files through `manifest.profile_state`:
