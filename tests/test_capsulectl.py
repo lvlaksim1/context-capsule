@@ -608,6 +608,51 @@ class ContextCapsuleV2Tests(unittest.TestCase):
             security,
         )
 
+
+    def test_external_task_interoperability_is_optional_bounded_and_fenced(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        manifest = json.loads(installed[".context/manifest.json"])
+        required = {
+            "direct_owner_invocation_first_class",
+            "external_task_authority_non_escalating",
+            "supplied_execution_fence_enforced",
+            "evidence_backed_external_completion_required",
+            "terminal_execution_cleanup_required",
+        }
+        for key in required:
+            self.assertIs(manifest["sync_policy"][key], True)
+            broken = json.loads(json.dumps(manifest))
+            broken["sync_policy"][key] = False
+            installed[".context/manifest.json"] = json.dumps(broken)
+            self.assertTrue(validate_snapshot(installed), key)
+            installed[".context/manifest.json"] = json.dumps(manifest)
+
+        contract = installed[".context/manager/CONTRACT.md"]
+        protocol = installed[".context/manager/PROTOCOL.md"]
+        self.assertIn("Direct Owner interaction is first-class", contract)
+        self.assertIn("Supervisor mediation is not required", contract)
+        self.assertIn("revalidate that fence immediately before every consequential external write", contract)
+        self.assertIn("Supervisor is not a mandatory routing hop", protocol)
+        self.assertIn("canonicalize terminal execution state", protocol)
+
+        interop = (ROOT / "spec" / "agent-control-plane-interoperability-v1.md").read_text(encoding="utf-8")
+        self.assertIn("transport-neutral", interop)
+        self.assertNotIn("agent-control-plane-gateway", interop)
+        self.assertNotIn("dispatcher-00", interop)
+
+        task_schema = json.loads((ROOT / "schemas" / "agent-task-envelope.schema.json").read_text(encoding="utf-8"))
+        execution_schema = json.loads((ROOT / "schemas" / "execution-context.schema.json").read_text(encoding="utf-8"))
+        checkpoint_schema = json.loads((ROOT / "schemas" / "agent-checkpoint.schema.json").read_text(encoding="utf-8"))
+        result_schema = json.loads((ROOT / "schemas" / "agent-task-result.schema.json").read_text(encoding="utf-8"))
+        self.assertIn("authority_provenance", task_schema["required"])
+        self.assertIn("completion_contract", task_schema["required"])
+        self.assertIn("externally-fenced", execution_schema["properties"]["mode"]["enum"])
+        self.assertFalse(checkpoint_schema["additionalProperties"])
+        self.assertEqual(result_schema["properties"]["terminal_execution"]["properties"]["claim_active"]["const"], False)
+        self.assertEqual(result_schema["properties"]["terminal_execution"]["properties"]["fence_active"]["const"], False)
+
     def test_redirect_topology_remains_supported(self):
         full = apply({}, clean_install_changes(
             {}, TEMPLATES, "owner/repo", "context", CORE_SHA,

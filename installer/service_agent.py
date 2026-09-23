@@ -216,6 +216,11 @@ def build_service_manifest(repository: str, branch: str, *, existing: dict | Non
                 "service_output_advisory_by_default": True,
                 "authority_transport_non_escalating": True,
                 "self_authority_expansion_forbidden": True,
+                "direct_owner_invocation_first_class": True,
+                "external_task_authority_non_escalating": True,
+                "supplied_execution_fence_enforced": True,
+                "evidence_backed_external_completion_required": True,
+                "terminal_execution_cleanup_required": True,
             },
             "updated_at": dt.date.today().isoformat(),
         }
@@ -463,6 +468,11 @@ def validate_service_snapshot(files: dict[str, str]) -> list[str]:
             "service_output_advisory_by_default": "service output must be advisory by default",
             "authority_transport_non_escalating": "authority must not escalate through transport",
             "self_authority_expansion_forbidden": "service agent must not self-expand authority",
+            "direct_owner_invocation_first_class": "direct owner/requester invocation must remain first-class",
+            "external_task_authority_non_escalating": "external task transport must not escalate authority",
+            "supplied_execution_fence_enforced": "supplied execution fences must guard consequential writes",
+            "evidence_backed_external_completion_required": "external completion must be evidence-backed",
+            "terminal_execution_cleanup_required": "terminal external execution must clear active ownership",
         }
         for key, message in required_flags.items():
             if not isinstance(sync, dict) or sync.get(key) is not True:

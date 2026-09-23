@@ -185,6 +185,33 @@ class ServiceAgentBaseTests(unittest.TestCase):
             manifest["profile_state"],
         )
 
+
+    def test_external_task_interoperability_preserves_direct_service_invocation(self):
+        installed = self.install(ready_overrides())
+        manifest = json.loads(installed[".context/manifest.json"])
+        for key in (
+            "direct_owner_invocation_first_class",
+            "external_task_authority_non_escalating",
+            "supplied_execution_fence_enforced",
+            "evidence_backed_external_completion_required",
+            "terminal_execution_cleanup_required",
+        ):
+            self.assertIs(manifest["sync_policy"][key], True)
+            broken = json.loads(json.dumps(manifest))
+            broken["sync_policy"][key] = False
+            installed[".context/manifest.json"] = json.dumps(broken)
+            self.assertTrue(validate_service_snapshot(installed), key)
+            installed[".context/manifest.json"] = json.dumps(manifest)
+
+        contract = installed[".context/service-agent/CONTRACT.md"]
+        protocol = installed[".context/service-agent/PROTOCOL.md"]
+        entrypoint = installed[".context/ENTRYPOINT.md"]
+        self.assertIn("Direct requester/Owner invocation is first-class", contract)
+        self.assertIn("Supervisor mediation is not a universal requirement", contract)
+        self.assertIn("revalidate it immediately before every consequential", contract)
+        self.assertIn("Supervisor is not a mandatory intermediary", protocol)
+        self.assertIn("external task/execution context", entrypoint)
+
     def test_profile_version_is_explicit(self):
         installed = self.install(ready_overrides())
         meta = json.loads(installed[".context/capsule.json"])

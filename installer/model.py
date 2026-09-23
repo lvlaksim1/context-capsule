@@ -336,6 +336,11 @@ def build_manifest(
             "reconcile_before_high_impact_action": True,
             "self_authority_expansion_forbidden": True,
             "service_expertise_not_project_authority": True,
+            "direct_owner_invocation_first_class": True,
+            "external_task_authority_non_escalating": True,
+            "supplied_execution_fence_enforced": True,
+            "evidence_backed_external_completion_required": True,
+            "terminal_execution_cleanup_required": True,
         }
     )
 
@@ -545,6 +550,16 @@ def validate_snapshot(
             errors.append("manifest.json: manager must not self-expand authority")
         if not isinstance(sync, dict) or sync.get("service_expertise_not_project_authority") is not True:
             errors.append("manifest.json: service expertise must not imply project authority")
+        if not isinstance(sync, dict) or sync.get("direct_owner_invocation_first_class") is not True:
+            errors.append("manifest.json: direct owner invocation must remain first-class")
+        if not isinstance(sync, dict) or sync.get("external_task_authority_non_escalating") is not True:
+            errors.append("manifest.json: external task transport must not escalate authority")
+        if not isinstance(sync, dict) or sync.get("supplied_execution_fence_enforced") is not True:
+            errors.append("manifest.json: supplied execution fences must guard consequential writes")
+        if not isinstance(sync, dict) or sync.get("evidence_backed_external_completion_required") is not True:
+            errors.append("manifest.json: external completion must be evidence-backed")
+        if not isinstance(sync, dict) or sync.get("terminal_execution_cleanup_required") is not True:
+            errors.append("manifest.json: terminal external execution must clear active ownership")
         runtime = manifest.get("runtime")
         if not isinstance(runtime, dict) or runtime.get("checkpoint_is_capsule_state") is not False:
             errors.append("manifest.json: runtime checkpoint must remain separate from capsule state")

@@ -81,7 +81,12 @@
     "memory_writes_require_provenance": true,
     "reconcile_before_high_impact_action": true,
     "self_authority_expansion_forbidden": true,
-    "service_expertise_not_project_authority": true
+    "service_expertise_not_project_authority": true,
+    "direct_owner_invocation_first_class": true,
+    "external_task_authority_non_escalating": true,
+    "supplied_execution_fence_enforced": true,
+    "evidence_backed_external_completion_required": true,
+    "terminal_execution_cleanup_required": true
   },
   "updated_at": "2026-09-23",
   "context_version": "2.0.0-dev",
