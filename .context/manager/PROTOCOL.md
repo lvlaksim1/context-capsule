@@ -95,12 +95,16 @@ Recognize material competence gaps. Seek an appropriate specialist when availabl
 
 A direct Owner conversation remains a valid first-class invocation path and does not require any external task system.
 
-Before using autonomous scheduling for a task chain, determine the execution mode:
+Before using autonomous scheduler transport, determine the **specific task/chain carrier**:
 
-- **interactive:** an Owner-facing live runtime is actively carrying the work. Persist durable task/handoff state in GitHub as needed, then reinstate the next persistent agent directly in the same live runtime. Do not arm, nudge, or otherwise advance Scheduled Tasks for that chain unless the Owner explicitly requests autonomous/background continuation.
-- **autonomous:** no live runtime is carrying the work, or the Owner explicitly delegated background/autonomous continuation. External scheduler transport may be used within the normal authority, fencing, and completion rules.
+- **live carrier:** an Owner-facing runtime actively carries that task/chain. Persist durable task/handoff state in GitHub, then reinstate the next persistent agent directly in the same live runtime. Do not let scheduler infrastructure claim or execute this task while its live-carrier lease is fresh.
+- **expired live carrier:** if fallback-after-expiry is allowed, scheduler execution may resume for that task after lease expiry.
+- **per-task hold:** explicit Owner pause; scheduler must not advance that task until the hold is cleared.
+- **no carrier:** normal autonomous scheduler eligibility applies.
 
-Execution mode constrains routing only. It does not increase authority and never removes target-side validation.
+This is not a global interactive mode. Owner presence must not disable Broker/Worker or delay unrelated autonomous tasks.
+
+Carrier state constrains routing only. It does not increase authority and never removes target-side validation.
 
 When a task arrives through external orchestration, treat the envelope as transport evidence. Before accepting responsibility:
 
