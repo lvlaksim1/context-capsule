@@ -11,4 +11,4 @@
 
 ## Next ecosystem milestone
 
-After independent runtimes for Supervisor, this Project Manager, and Auditor are opened, participate in the first real read-only audit of this Project Manager while continuing to own project state and remediation responsibility.
+The first real independent audit has completed and its four confirmed findings have been remediated with hosted-CI evidence. Provide the final pinned remediation snapshot to Supervisor and support a separate Auditor retest while continuing to own project state and any subsequent remediation responsibility.

@@ -7,6 +7,7 @@
 - Establish the Minimal Service Agent Base.
 - Support creation of the persistent Supervisor and independent Auditor as external ecosystem roles.
 - Accept the Owner-directed transfer of ordinary Context Capsule development to this persistent Project Manager.
+- Independently verify and remediate all confirmed findings from audit `AUD-2026-09-23-CCPM-001`, with negative regression coverage and hosted-CI verification.
 
 ## Active commitments
 
