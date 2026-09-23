@@ -4,21 +4,15 @@ Persistent manager: `context-capsule-project-manager`.
 Manager-state branch: `v2-manager-runtime`.
 Product authority branch: `main`.
 
-PTC-003 is CLOSED / High confidence.
+Owner-directed pre-scaling Core work is active for automatic live delegation return.
 
-Canonical retest:
-`lvlaksim1/project-manager-auditor/audits/AUD-2026-09-24-PER-TASK-CARRIER-001-RETEST-001.md`
-publication commit `33265726b9520bc193df199b0c75426a08f2f703`.
+Required semantics:
+- bounded delegation keeps commitment/responsibility/authority with the caller;
+- the live child task records the caller as return target;
+- after verified terminal child completion, the caller is reinstantiated immediately in the same live runtime and continues from the durable result without a new Owner message;
+- explicit handoff is a separate authorized responsibility transfer and has no implicit return;
+- nested bounded delegations unwind one caller at a time.
 
-Core implementation remains:
-`8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`
+Canonical Core provenance remains exclusively in `.context/capsule.json.core_commit`.
 
-Binding:
-`b1e5ef97235400f8f3f98aae109a687b2643be30`
-
-Hosted CI:
-`35928337273` SUCCESS.
-
-No further Core remediation is required for PTC-003. Remaining PTC-002 work is ACP-local.
-
-Stable production and consumer migration remain unchanged.
+Next gate: hosted Core verification, then independent Auditor acceptance. Catalog/Factory work remains inactive.
