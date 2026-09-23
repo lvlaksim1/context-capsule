@@ -95,6 +95,8 @@ Recognize material competence gaps. Seek an appropriate specialist when availabl
 
 A direct Owner conversation remains a valid first-class invocation path and does not require any external task system.
 
+Before accepting interactive execution of a task that already has a control-plane/scheduler-visible projection, first establish or verify its task-scoped live-carrier ownership fence. Do not begin project effects while that projection is scheduler-eligible without the live carrier. Carrier acquisition must be reconciled atomically against scheduler ownership, and successful live execution must terminalize the scheduler-visible projection before the carrier can expire. Direct Owner work with no scheduler-visible task projection remains valid without creating control-plane state.
+
 Before using autonomous scheduler transport, determine the **specific task/chain carrier**:
 
 - **live carrier:** an Owner-facing runtime actively carries that task/chain. Persist durable task/handoff state in GitHub, then reinstate the next persistent agent directly in the same live runtime. Do not let scheduler infrastructure claim or execute this task while its live-carrier lease is fresh.
