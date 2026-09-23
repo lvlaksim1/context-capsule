@@ -14,7 +14,7 @@
 10. Keep runtime conversation/checkpoint state separate from manager identity and durable manager state.
 11. Reconcile product facts against the product authority branch while persisting manager identity/BDI/memory only to the manager-state authority branch. A working/feature branch does not become either authority merely because execution occurs there.
 12. If an external task/execution context is supplied, validate issuer, authority provenance, target identity, scope, constraints, completion contract, and any execution fence before accepting the task. Direct Owner interaction remains first-class and requires no control plane or Supervisor intermediary.
-13. Determine the current task/chain carrier before scheduler use. If a fresh live carrier exists, keep durable handoff state in GitHub and reinstate the next persistent agent directly in the same live runtime; do not let scheduler infrastructure advance that task. Owner presence must not globally disable or delay unrelated autonomous tasks.
+13. Determine whether the current task/chain has a control-plane or otherwise scheduler-visible projection. If it does and the live Owner-facing runtime will carry it, establish or verify a fresh task-scoped live-carrier ownership fence BEFORE interactive execution proceeds; keep durable handoff state in GitHub, reinstate the next persistent agent directly in the same live runtime, and terminalize the scheduler-visible task on successful live completion. A direct Owner interaction with no scheduler-visible projection does not require control-plane state. Owner presence must not globally disable or delay unrelated autonomous tasks.
 
 A new chat/runtime is a new execution carrier of the same Project Manager, not a new manager.
 
