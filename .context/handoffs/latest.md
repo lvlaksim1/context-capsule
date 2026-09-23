@@ -1,23 +1,21 @@
 # Latest handoff
 
-## Master Plan items 1–3 complete
+## Ordinary Context Capsule development transferred to its persistent Project Manager
 
-Context Capsule v1.3.1 remains stable production on `main`; existing consumers are unchanged.
+Persistent manager:
+- `manager_id = context-capsule-project-manager`
+- repository: `lvlaksim1/context-capsule`
+- manager-state branch: `v2-manager-runtime`
+- product authority branch: `main`
 
-The v2 development line lives on `v2-manager-runtime`.
+By direct Owner decision, this Project Manager is now the primary operational manager/developer for ordinary Context Capsule work.
 
-Completed:
-- Project Manager v2 normative Contract and hardening;
-- Minimal Service Agent Base;
-- dedicated persistent Supervisor in `lvlaksim1/supervisor`.
+External roles:
+- Supervisor: `ecosystem-supervisor` in `lvlaksim1/supervisor` — ecosystem coordination only.
+- Auditor: `project-manager-auditor` in `lvlaksim1/project-manager-auditor` — independent read-only audit by default; final validated state `6b4c97d3c29fbda6374ee72aee5e0daff62eea44`.
 
-Supervisor identity: `ecosystem-supervisor`.
-Supervisor final bootstrap state: `ff914b4aef130411d4c6fac97d10a55fad96eec0`.
-Pinned Service Agent Core: `7aa1e697504e686b02a4d7f1539a157214d5e692`.
-Independent verification: VALID / READY / RECOVER PASS, including mandatory Supervisor profile state.
+Master Plan items 1–5 are complete on the repository side.
 
-Current next stage: Master Plan item 4 — Owner + Supervisor create the independent Auditor Service Agent.
+Next operational step: the Owner opens three independent chats and reinstates Supervisor, Context Capsule PM, and Auditor. Then the first real audit engagement can begin.
 
-The old legacy Context Capsule bootstrap has been removed from active `repo-factory/main`; current repository creation uses explicit current-v2 profiles only.
-
-Do not publish stable v2 or migrate existing consumers without explicit owner approval.
+Do not publish stable v2 or migrate existing consumers without explicit Owner approval.

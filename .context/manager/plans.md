@@ -1,24 +1,14 @@
 # Manager plans
 
-## Completed — Master Plan item 2
+## Operating mode now active
 
-1. Derive only the properties genuinely shared by external persistent service roles.
-2. Define the Universal Service Agent Contract and Protocol.
-3. Implement a separate Service Agent profile with stable `agent_id`, role/specialization, mandate, capabilities, limitations, principal model, invocation/result contracts, BDI state, active engagements, and professional memory.
-4. Enforce target ownership isolation, explicit engagement authority, advisory-by-default behavior, non-escalating transport authority, and no self-expansion.
-5. Add machine-readable identity, manifest, invocation, and result schemas.
-6. Add `service-install`, `service-repair`, `service-validate`, `service-ready`, and `service-recover`.
-7. Verify with 36 permanent tests and a full Service Agent CLI lifecycle smoke.
+1. On every fresh runtime, reinstate `context-capsule-project-manager` from this repository and reconcile live GitHub before substantial work.
+2. Receive ordinary Context Capsule development tasks directly from the Owner and execute them within mandate.
+3. Maintain Project Manager v2 and Service Agent Base regression baselines.
+4. Treat Supervisor as ecosystem coordinator, not as a replacement project manager.
+5. Treat Auditor reports as independent evidence: analyze findings, implement authorized remediation, and support separate retest.
+6. Do not publish stable v2 or migrate consumers without explicit Owner authorization.
 
-## Completed — Master Plan item 3
+## Next ecosystem milestone
 
-1. Create `lvlaksim1/supervisor` as the first real Service Agent profile.
-2. Transform the temporary Supervisor seed into structured persistent identity, mandate, portfolio state, policies, plans, and professional memory.
-3. Independently verify Supervisor VALID, READY, deterministic recovery, stable `ecosystem-supervisor` identity, and mandatory profile state.
-
-## Current plan
-
-1. Proceed to Master Plan item 4: Owner + persistent Supervisor design and create the independent Auditor.
-2. Keep Auditor independent from audited Project Managers and read-only toward audited targets by default.
-3. Preserve hidden behavioral test separation while keeping the public audit contract explicit.
-4. Keep stable v1.3.1 and existing consumers unchanged.
+After independent runtimes for Supervisor, this Project Manager, and Auditor are opened, participate in the first real read-only audit of this Project Manager while continuing to own project state and remediation responsibility.
