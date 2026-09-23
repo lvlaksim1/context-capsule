@@ -616,6 +616,8 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         manifest = json.loads(installed[".context/manifest.json"])
         required = {
             "direct_owner_invocation_first_class",
+            "interactive_first_execution_required",
+            "autonomous_scheduler_fallback_only",
             "external_task_authority_non_escalating",
             "supplied_execution_fence_enforced",
             "evidence_backed_external_completion_required",
@@ -634,6 +636,10 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         protocol = installed[".context/manager/PROTOCOL.md"]
         self.assertIn("Direct Owner interaction is first-class", contract)
         self.assertIn("Supervisor mediation is not required", contract)
+        self.assertIn("Interactive-first execution boundary", contract)
+        self.assertIn("autonomous scheduler infrastructure must not advance", contract)
+        self.assertIn("Before using autonomous scheduling for a task chain", protocol)
+        self.assertIn("same live runtime", protocol)
         self.assertIn("revalidate that fence immediately before every consequential external write", contract)
         self.assertIn("Supervisor is not a mandatory routing hop", protocol)
         self.assertIn("canonicalize terminal execution state", protocol)
@@ -642,6 +648,8 @@ class ContextCapsuleV2Tests(unittest.TestCase):
 
         interop = (ROOT / "spec" / "agent-control-plane-interoperability-v1.md").read_text(encoding="utf-8")
         self.assertIn("transport-neutral", interop)
+        self.assertIn("Interactive-first execution is mandatory", interop)
+        self.assertIn("Autonomous scheduling is fallback transport", interop)
         self.assertNotIn("agent-control-plane-gateway", interop)
         self.assertNotIn("dispatcher-00", interop)
 
