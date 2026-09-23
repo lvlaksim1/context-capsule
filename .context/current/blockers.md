@@ -1,11 +1,12 @@
 # Current blockers and open risks
 
-No Context Capsule blocker remains from PTC-003.
+No historical PTC Core blocker remains.
 
-PTC-003 is CLOSED / High confidence by focused independent retest.
+Current development gate:
+- live bounded-delegation return semantics require successful hosted Core verification and independent acceptance before being treated as closed.
 
 Stable-production / migration boundaries remain:
 - no stable v2 publication without explicit Owner authorization;
 - no consumer migration without explicit Owner authorization.
 
-The remaining ecosystem finding PTC-002 is ACP-local partial-completion recovery work and is not a current Context Capsule Core blocker unless new evidence changes that boundary.
+Agent Catalog / Agent Factory remain outside current work.
