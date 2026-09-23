@@ -216,7 +216,7 @@ class ServiceAgentBaseTests(unittest.TestCase):
         self.assertIn("Interactive-first execution boundary", contract)
         self.assertIn("task/chain scoped, not global", contract)
         self.assertIn("must not globally disable, park, or delay scheduler infrastructure", contract)
-        self.assertIn("specific task/chain carrier", protocol)
+        self.assertIn("task's carrier state", protocol)
         self.assertIn("Owner presence does not globally disable", protocol)
         self.assertIn("same live runtime", protocol)
         self.assertIn("revalidate it immediately before every consequential", contract)
