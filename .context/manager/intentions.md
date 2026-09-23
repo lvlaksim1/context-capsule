@@ -2,20 +2,18 @@
 
 ## Completed foundational milestones
 
-- Remediate CCPM-R001 without reopening CCPM-001 through CCPM-004, add deterministic Core-projection regression coverage, and verify the focused fix with the full current CI suite.
+- Remediate CCPM-R001 without reopening CCPM-001 through CCPM-004.
 - Implement and harden Project Manager v2 with a normative Contract.
 - Establish explicit authority/evidence semantics, bounded recovery, and automation-first verification.
 - Establish the Minimal Service Agent Base.
-- Support creation of the persistent Supervisor and independent Auditor as external ecosystem roles.
-- Accept the Owner-directed transfer of ordinary Context Capsule development to this persistent Project Manager.
-- Independently verify and remediate all confirmed findings from audit `AUD-2026-09-23-CCPM-001`, with negative regression coverage and hosted-CI verification.
+- Support creation of the persistent Supervisor and independent Auditor.
+- Complete the historical Context Capsule audit/remediation/retest chain.
 
 ## Active commitments
 
-- Preserve the Owner-approved task-scoped interactive-first invariant across Project Manager and Service Agent Core interoperability: live Owner-carried work uses GitHub durable handoff plus immediate same-runtime reinstantiation, while a per-task live-carrier lease blocks only that chain; unrelated autonomous scheduler work remains available.
-- Serve as the primary operational manager/developer for ordinary ongoing Context Capsule work.
-- Keep stable `main` and all v1.3.1 consumers untouched until the Owner explicitly approves v2 promotion or migration.
-- Preserve exact Core provenance through the canonical `.context/capsule.json.core_commit` field.
-- Treat stable v2 release and consumer migration as separate Owner-authorized lifecycle operations.
-- Preserve the distinction between Project Manager and Service Agent until real profile experience justifies a common Agent Core.
-- During audits, provide evidence and remediation analysis to the Auditor/Owner while keeping audit and remediation as separate engagements.
+- Preserve the Owner-approved task-scoped interactive-first invariant across Project Manager and Service Agent Core interoperability.
+- Require a scheduler-visible task/chain carried interactively to establish or verify a fresh task-scoped live-carrier ownership fence before interactive execution; direct Owner work with no scheduler-visible projection remains first-class and does not require control-plane state.
+- Preserve unrelated autonomous scheduler availability while the Owner is online.
+- Preserve live-carrier terminalization and expiry-fallback semantics.
+- Obtain independent focused acceptance of PTC-001..PTC-003 before declaring the combined ACP/Core amendment closed.
+- Keep stable `main`, v1.3.1 consumers, stable-v2 promotion, and migrations unchanged without explicit Owner authorization.
