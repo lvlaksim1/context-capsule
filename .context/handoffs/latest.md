@@ -1,27 +1,24 @@
 # Latest handoff
 
-Persistent manager:
-- `manager_id = context-capsule-project-manager`
-- repository: `lvlaksim1/context-capsule`
-- manager-state branch: `v2-manager-runtime`
-- product authority branch: `main`
+Persistent manager: `context-capsule-project-manager`.
+Manager-state branch: `v2-manager-runtime`.
+Product authority branch: `main`.
 
-Latest Owner clarification establishes **task-scoped interactive-first execution**, not global interactive scheduler shutdown.
+PTC-003 Core remediation is complete.
 
-Required semantics:
-- GitHub is the durable handoff channel;
-- when the Owner is online, the next agent for the current task/chain is reinstantiated immediately in the same live runtime;
-- that task/chain carries a renewable live-carrier lease to prevent duplicate scheduler execution;
-- Broker/Worker remain available for unrelated autonomous tasks;
-- after live-carrier expiry, only that task may fall back autonomously when its policy permits;
-- explicit holds are per-task.
+Mandatory semantics now state that if interactive work has a control-plane or otherwise scheduler-visible projection, its task-scoped live-carrier ownership fence must be established or verified before interactive execution proceeds. Direct Owner work with no scheduler-visible projection remains first-class and requires no control-plane state. Owner presence does not globally disable scheduler infrastructure.
 
 Core implementation snapshot:
-`bef230aa1599fd7ef04beabc19c6e42f5c1ec5e7`
+`8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`
 
 Binding commit:
-`90741e192a6ea49110f7edab4c463e329c89e736`
+`b1e5ef97235400f8f3f98aae109a687b2643be30`
 
-A test-assertion-only follow-up was committed after binding; hosted CI and fresh independent acceptance remain required.
+Hosted CI:
+`35928337273` SUCCESS on `7d3c21770e439e7957185fda263d1636ec77e653`; permanent tests, compile, self-validation/readiness, reinstantiation, consumer compatibility, and Service Agent CLI smoke all passed.
 
-Historical CCPM/ACP-CC findings remain CLOSED unless new evidence changes their mechanisms. Stable `main`, stable-v2 publication, and consumer migration remain unauthorized.
+PTC-003 remains formally OPEN only until independent focused retest.
+
+Next: focused Auditor retest of PTC-001..PTC-003 together with ACP remediation snapshot `708a8ab6d4ac97c10d10021e47e7e845051a99bb`.
+
+Stable production and consumer migration remain unchanged.
