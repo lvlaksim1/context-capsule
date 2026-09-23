@@ -1,12 +1,14 @@
 # Current blockers and open risks
 
-No architecture, hosted-CI, or open audit blocker is currently known for the completed item-19 interoperability scope.
+No stable-production or migration action is authorized.
 
-Closed findings:
+Current development gate:
+- hosted CI must pass for the interactive-first Core amendment bound to implementation snapshot `d5002dd7566396ae1ee8552b07cf2468e708a184`;
+- independent Auditor verification is required because the change modifies universal Project Manager / Service Agent orchestration behavior.
+
+Closed historical findings remain:
 - CCPM-001 through CCPM-004: CLOSED / High confidence.
 - CCPM-R001: CLOSED / High confidence.
 - ACP-CC-001: CLOSED / High confidence.
 
-Open development risks remain adversarial memory/provenance, belief supersession, commitment lifecycle, concurrent runtime reconciliation, and bounded recovery as project history grows.
-
-Stable v2 release readiness has not been assessed. Stable release and consumer migration remain separately Owner-gated.
+Agent Catalog / Agent Factory are outside this Project Manager's scope and remain controlled by Supervisor/Owner.
