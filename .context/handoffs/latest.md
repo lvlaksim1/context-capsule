@@ -6,22 +6,22 @@ Persistent manager:
 - manager-state branch: `v2-manager-runtime`
 - product authority branch: `main`
 
-Owner correction on 2026-09-23 established interactive-first execution as a universal interoperability invariant.
+Latest Owner clarification establishes **task-scoped interactive-first execution**, not global interactive scheduler shutdown.
 
-Implemented development amendment:
-- live Owner-carried chains use GitHub durable handoff plus direct same-runtime reinstantiation of the next persistent agent;
-- Scheduled Tasks / wake infrastructure are autonomous fallback only;
-- scheduler use during a live Owner session requires explicit autonomous/background delegation;
-- routing mode never expands authority.
+Required semantics:
+- GitHub is the durable handoff channel;
+- when the Owner is online, the next agent for the current task/chain is reinstantiated immediately in the same live runtime;
+- that task/chain carries a renewable live-carrier lease to prevent duplicate scheduler execution;
+- Broker/Worker remain available for unrelated autonomous tasks;
+- after live-carrier expiry, only that task may fall back autonomously when its policy permits;
+- explicit holds are per-task.
 
 Core implementation snapshot:
-`d5002dd7566396ae1ee8552b07cf2468e708a184`
+`bef230aa1599fd7ef04beabc19c6e42f5c1ec5e7`
 
 Binding commit:
-`2eebe0ceccff939fa4a7a654b320ee236cdfa517`
+`90741e192a6ea49110f7edab4c463e329c89e736`
 
-The amendment touches Project Manager and Service Agent universal contracts/protocols, interoperability spec, installer manifest invariants/validators, and regression tests. Hosted CI and a fresh independent audit are required before closure.
+A test-assertion-only follow-up was committed after binding; hosted CI and fresh independent acceptance remain required.
 
-Historical findings CCPM-001 through CCPM-004, CCPM-R001, and ACP-CC-001 remain CLOSED unless objective new evidence changes their mechanisms.
-
-Do not modify `main`, publish stable v2, or migrate consumers without explicit Owner approval.
+Historical CCPM/ACP-CC findings remain CLOSED unless new evidence changes their mechanisms. Stable `main`, stable-v2 publication, and consumer migration remain unauthorized.
