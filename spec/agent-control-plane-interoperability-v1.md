@@ -10,7 +10,7 @@ This contract is transport-neutral. Core intentionally does not depend on a part
 
 ## Invariants
 
-1. **Interactive-first execution is task-scoped and mandatory.** When an Owner-facing live runtime carries a specific authorized task/chain, GitHub stores the durable handoff and the next persistent agent is reinstantiated directly in that live runtime. A fresh live-carrier lease blocks scheduler execution only for that task/chain.
+1. **Interactive-first execution is task-scoped and mandatory.** When an Owner-facing live runtime carries a specific authorized task/chain, GitHub stores the durable handoff and the next persistent agent is reinstantiated directly in that live runtime. If that task/chain has a control-plane or otherwise scheduler-visible projection, a fresh task-scoped live-carrier ownership fence **MUST be established before interactive execution proceeds**; a direct Owner interaction with no scheduler-visible projection does not require creating control-plane state.
 2. **Direct invocation remains first-class.** Owner/requester ↔ agent interaction does not require Supervisor or a control plane.
 3. **Autonomous scheduling remains available for unrelated work.** Owner presence must not globally disable, park, or delay scheduler infrastructure; unrelated tasks without fresh live carriers remain scheduler-eligible.
 4. **Task-scoped fallback is explicit.** An expired live carrier may fall back to scheduler execution when configured; an explicit per-task Owner hold may block only that task indefinitely.
