@@ -339,6 +339,9 @@ def build_manifest(
             "direct_owner_invocation_first_class": True,
             "interactive_first_execution_required": True,
             "autonomous_scheduler_fallback_only": True,
+            "task_scoped_live_carrier_required": True,
+            "scheduler_global_shutdown_on_owner_presence_forbidden": True,
+            "expired_live_carrier_fallback_supported": True,
             "external_task_authority_non_escalating": True,
             "supplied_execution_fence_enforced": True,
             "evidence_backed_external_completion_required": True,
@@ -559,6 +562,12 @@ def validate_snapshot(
             errors.append("manifest.json: interactive-first execution must be required")
         if not isinstance(sync, dict) or sync.get("autonomous_scheduler_fallback_only") is not True:
             errors.append("manifest.json: autonomous scheduler transport must remain fallback-only")
+        if not isinstance(sync, dict) or sync.get("task_scoped_live_carrier_required") is not True:
+            errors.append("manifest.json: interactive live carriers must be task-scoped")
+        if not isinstance(sync, dict) or sync.get("scheduler_global_shutdown_on_owner_presence_forbidden") is not True:
+            errors.append("manifest.json: owner presence must not globally disable scheduler infrastructure")
+        if not isinstance(sync, dict) or sync.get("expired_live_carrier_fallback_supported") is not True:
+            errors.append("manifest.json: expired live carriers must support declared autonomous fallback")
         if not isinstance(sync, dict) or sync.get("external_task_authority_non_escalating") is not True:
             errors.append("manifest.json: external task transport must not escalate authority")
         if not isinstance(sync, dict) or sync.get("supplied_execution_fence_enforced") is not True:
