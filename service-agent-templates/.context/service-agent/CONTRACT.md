@@ -111,6 +111,17 @@ When a live Owner-facing runtime carries a specific authorized task or inter-age
 
 Owner presence must not globally disable, park, or delay scheduler infrastructure. Unrelated tasks without a fresh live carrier remain eligible for autonomous scheduling.
 
+### Delegation responsibility and live return
+
+Agent-to-agent routing MUST distinguish **bounded delegation** from **explicit handoff**.
+
+For bounded delegation, the calling persistent agent keeps the active commitment, project responsibility, and authority. Transport never transfers them implicitly. If the bounded delegation runs in the same live Owner-facing runtime, its immutable task contract MUST identify the caller as both commitment owner and return target. After the callee reaches verified terminal live completion, the runtime MUST immediately reinstate that caller, read the durable child result, restore the caller's active commitment, and continue without requiring the Owner to invoke the caller again.
+
+An explicit handoff is different: responsibility transfers only through an explicit authorized handoff contract to the target agent, and no automatic return to the issuer is implied.
+
+Nested bounded delegations unwind one caller at a time. Supervisor is not a mandatory return hop.
+
+
 If the live runtime disappears, only the affected task/chain becomes eligible for autonomous fallback after its carrier lease expires, when fallback is allowed. An explicit per-task Owner hold may block only that task without expiry.
 
 Live-carrier acquisition and terminal completion must be durable ownership transitions: acquisition must race safely against scheduler claim on one canonical task ownership projection, and successful live completion must terminalize the scheduler-visible task before carrier expiry. The existence of a scheduler, pending task, wake signal, or execution slot never overrides a fresh live carrier and never expands authority.
