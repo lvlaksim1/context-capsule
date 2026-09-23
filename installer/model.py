@@ -337,6 +337,8 @@ def build_manifest(
             "self_authority_expansion_forbidden": True,
             "service_expertise_not_project_authority": True,
             "direct_owner_invocation_first_class": True,
+            "interactive_first_execution_required": True,
+            "autonomous_scheduler_fallback_only": True,
             "external_task_authority_non_escalating": True,
             "supplied_execution_fence_enforced": True,
             "evidence_backed_external_completion_required": True,
@@ -553,6 +555,10 @@ def validate_snapshot(
             errors.append("manifest.json: service expertise must not imply project authority")
         if not isinstance(sync, dict) or sync.get("direct_owner_invocation_first_class") is not True:
             errors.append("manifest.json: direct owner invocation must remain first-class")
+        if not isinstance(sync, dict) or sync.get("interactive_first_execution_required") is not True:
+            errors.append("manifest.json: interactive-first execution must be required")
+        if not isinstance(sync, dict) or sync.get("autonomous_scheduler_fallback_only") is not True:
+            errors.append("manifest.json: autonomous scheduler transport must remain fallback-only")
         if not isinstance(sync, dict) or sync.get("external_task_authority_non_escalating") is not True:
             errors.append("manifest.json: external task transport must not escalate authority")
         if not isinstance(sync, dict) or sync.get("supplied_execution_fence_enforced") is not True:
