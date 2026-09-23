@@ -4,28 +4,26 @@
 
 - stable production: Context Capsule v1.3.1 on `main`;
 - v2 development and durable manager state: `v2-manager-runtime`;
-- installed Core provenance is read only from canonical `.context/capsule.json.core_commit`;
-- current development Core binding: `bef230aa1599fd7ef04beabc19c6e42f5c1ec5e7`;
-- no existing consumer migration to v2 has been authorized.
-
-## Audit continuity
-
-- CCPM-001 through CCPM-004: CLOSED / High confidence.
-- Historical CCPM-R001: CLOSED / High confidence.
-- ACP-CC-001: CLOSED / High confidence.
-- EW-001, EW-002, EW-003 were CLOSED / High confidence by the earlier focused scheduler retest, but a later Owner clarification replaced the global interactive-mode interpretation with task-scoped live carriers. The combined ACP/Core task-carrier model requires fresh narrow acceptance.
+- canonical Core provenance: `.context/capsule.json.core_commit = 8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`;
+- no consumer migration or stable-v2 promotion is authorized.
 
 ## Task-scoped interactive-first amendment
 
-Owner directive now requires:
+The Core now requires:
 
-- the task/chain currently carried by a live Owner runtime uses GitHub durable handoff plus immediate same-runtime reinstantiation of the next persistent agent;
-- a renewable live-carrier lease is attached to that task/chain so scheduler execution cannot race it;
-- Owner presence never globally disables, parks, or delays Broker/Worker;
-- unrelated tasks without a fresh live carrier remain autonomously schedulable;
-- only the affected task may fall back after carrier expiry when fallback is declared;
-- explicit Owner hold is per-task.
+- live Owner-carried inter-agent work uses GitHub durable handoff plus immediate same-runtime reinstantiation;
+- if that task/chain is scheduler-visible, a fresh task-scoped live-carrier ownership fence MUST be established or verified before interactive execution;
+- direct Owner work with no scheduler-visible projection does not require control-plane state;
+- Owner presence never globally disables, parks, or delays scheduler infrastructure;
+- unrelated autonomous tasks remain schedulable;
+- successful live scheduler-visible work must terminalize its projection before carrier expiry;
+- only the affected nonterminal task may fall back after expiry when allowed.
 
-Implemented on `v2-manager-runtime` across Project Manager and Service Agent contracts/protocols/entrypoints, interoperability specs, manifest flags/validators, and regression tests.
+## Verification
 
-Stable `main`, v1.3.1 consumers, stable-v2 promotion, and migration remain unchanged.
+- Core implementation snapshot: `8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`;
+- binding commit: `b1e5ef97235400f8f3f98aae109a687b2643be30`;
+- CI: run `35928337273` SUCCESS on `7d3c21770e439e7957185fda263d1636ec77e653`;
+- all CI stages passed.
+
+PTC-003 implementation remediation is complete but the finding remains formally OPEN until independent focused retest.
