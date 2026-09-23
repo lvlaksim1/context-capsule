@@ -11,7 +11,7 @@
 
 ## Current focused milestone
 
-Agent Control Plane interoperability is independently verified within the defined item-19 scope. Focused Auditor retest `ACP-TASK-CC-ACP-RETEST-001` closed `ACP-CC-001` with High confidence and found no new defects. No further item-19 remediation/retest action is open. Stable release and consumer migration remain unchanged.
+A bounded Core interoperability amendment is active under direct Owner authority: interactive-first execution is now normative for Project Manager and Service Agent profiles. Core templates, protocols, manifest invariants, validators, interoperability spec, and regression tests have been updated on `v2-manager-runtime`. The governing Core is provenance-bound to implementation snapshot `d5002dd7566396ae1ee8552b07cf2468e708a184`; hosted CI and independent audit are required before treating this amendment as closed.
 
 ## Prior audit continuity
 
