@@ -196,6 +196,9 @@ class ServiceAgentBaseTests(unittest.TestCase):
             "task_scoped_live_carrier_required",
             "scheduler_global_shutdown_on_owner_presence_forbidden",
             "expired_live_carrier_fallback_supported",
+            "live_bounded_delegation_return_required",
+            "delegation_preserves_commitment_owner",
+            "explicit_handoff_required_for_responsibility_transfer",
             "external_task_authority_non_escalating",
             "supplied_execution_fence_enforced",
             "evidence_backed_external_completion_required",
@@ -222,6 +225,11 @@ class ServiceAgentBaseTests(unittest.TestCase):
         self.assertIn("task's carrier state", protocol)
         self.assertIn("Owner presence does not globally disable", protocol)
         self.assertIn("same live runtime", protocol)
+        self.assertIn("bounded delegation", contract)
+        self.assertIn("without requiring the Owner to invoke the caller again", contract)
+        self.assertIn("explicit handoff", contract)
+        self.assertIn("Do not require a new Owner message", protocol)
+        self.assertIn("MUST automatically return to that caller", entrypoint)
         self.assertIn("revalidate it immediately before every consequential", contract)
         self.assertIn("Supervisor is not a mandatory intermediary", protocol)
         self.assertIn("external task/execution context", entrypoint)
