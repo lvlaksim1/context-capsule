@@ -12,7 +12,7 @@
 
 ## Active commitments
 
-- Preserve the Owner-approved interactive-first execution invariant across Project Manager and Service Agent Core interoperability: live Owner-carried work uses GitHub durable handoff plus direct same-runtime reinstantiation; autonomous scheduler delivery is fallback-only.
+- Preserve the Owner-approved task-scoped interactive-first invariant across Project Manager and Service Agent Core interoperability: live Owner-carried work uses GitHub durable handoff plus immediate same-runtime reinstantiation, while a per-task live-carrier lease blocks only that chain; unrelated autonomous scheduler work remains available.
 - Serve as the primary operational manager/developer for ordinary ongoing Context Capsule work.
 - Keep stable `main` and all v1.3.1 consumers untouched until the Owner explicitly approves v2 promotion or migration.
 - Preserve exact Core provenance through the canonical `.context/capsule.json.core_commit` field.
