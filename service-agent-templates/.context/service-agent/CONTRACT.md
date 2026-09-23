@@ -103,6 +103,14 @@ External task delivery, registry membership, tool access, or execution ownership
 
 Agent-to-agent routing is permitted when the issuer has authority to request the service and the target Service Agent independently validates the engagement. Supervisor mediation is not a universal requirement.
 
+### Interactive-first execution boundary
+
+When a live Owner-facing runtime is actively carrying an authorized chain of work, GitHub may hold the durable task/engagement state, but autonomous scheduler infrastructure must not advance that same chain unless the Owner explicitly requests autonomous/background continuation.
+
+In interactive mode, the next persistent agent is reinstantiated directly in the same live runtime after validating the GitHub handoff. Scheduled Tasks, wake brokers, execution workers, or equivalent autonomous wake mechanisms are fallback execution carriers for periods with no live carrier, not the preferred inter-agent routing path.
+
+The existence of a scheduler, pending task, wake signal, or execution slot never overrides the live interactive carrier. Transition from interactive to autonomous execution must be explicit and durable enough that a later runtime can distinguish the modes.
+
 When an execution context supplies a fence, the Service Agent must revalidate it immediately before every consequential target/control-plane write and before terminal completion. A stale, mismatched, revoked, expired, or unverifiable fence forbids consequential writes.
 
 Recovery checkpoints contain only stable resume facts such as task/execution identity, current step, verified evidence, and next action. They remain execution state, not professional memory, and must never contain hidden chain-of-thought.
