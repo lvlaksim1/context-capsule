@@ -342,6 +342,9 @@ def build_manifest(
             "task_scoped_live_carrier_required": True,
             "scheduler_global_shutdown_on_owner_presence_forbidden": True,
             "expired_live_carrier_fallback_supported": True,
+            "live_bounded_delegation_return_required": True,
+            "delegation_preserves_commitment_owner": True,
+            "explicit_handoff_required_for_responsibility_transfer": True,
             "external_task_authority_non_escalating": True,
             "supplied_execution_fence_enforced": True,
             "evidence_backed_external_completion_required": True,
@@ -568,6 +571,12 @@ def validate_snapshot(
             errors.append("manifest.json: owner presence must not globally disable scheduler infrastructure")
         if not isinstance(sync, dict) or sync.get("expired_live_carrier_fallback_supported") is not True:
             errors.append("manifest.json: expired live carriers must support declared autonomous fallback")
+        if not isinstance(sync, dict) or sync.get("live_bounded_delegation_return_required") is not True:
+            errors.append("manifest.json: bounded live delegation must automatically return to its caller")
+        if not isinstance(sync, dict) or sync.get("delegation_preserves_commitment_owner") is not True:
+            errors.append("manifest.json: bounded delegation must preserve caller commitment ownership")
+        if not isinstance(sync, dict) or sync.get("explicit_handoff_required_for_responsibility_transfer") is not True:
+            errors.append("manifest.json: responsibility transfer requires explicit handoff")
         if not isinstance(sync, dict) or sync.get("external_task_authority_non_escalating") is not True:
             errors.append("manifest.json: external task transport must not escalate authority")
         if not isinstance(sync, dict) or sync.get("supplied_execution_fence_enforced") is not True:
