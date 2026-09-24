@@ -10,6 +10,8 @@
 
 ## Active commitments
 
+- Implement the Owner-approved Master Plan 8.8 delegation/responsibility/authority hardening without weakening historical compatibility or closed live-return semantics.
+
 - Preserve task-scoped interactive-first execution and unrelated autonomous scheduler availability.
 - Preserve mandatory live carrier for scheduler-visible interactive work.
 - Preserve durable pending caller continuation, acknowledgement-before-effects, autonomous return recovery, and explicit handoff separation.

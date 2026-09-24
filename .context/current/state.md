@@ -38,3 +38,14 @@ Independent taxonomy audit:
 - new findings: none.
 
 A concrete continuity descriptor / Fast Resume subsystem is not part of this completed taxonomy stage.
+
+## Active Master Plan 8.8 Core work
+
+The Owner has commissioned delegation / responsibility / authority semantic hardening.
+
+The identified gap is not live-return routing itself; it is the semantic boundary around it:
+- responsibility ownership and authority grant must be represented separately;
+- an explicit handoff request proposes transfer but does not make the target commitment owner before target acceptance;
+- nested delegation must preserve root authority provenance and may attenuate, never amplify, allowed effects;
+- inherited prohibitions/constraints must survive subdelegation;
+- historical completed task artifacts remain readable.
