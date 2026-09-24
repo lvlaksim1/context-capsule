@@ -4,13 +4,13 @@
 
 - Project Manager v2 hardening and historical audit/remediation/retest chain.
 - Minimal Service Agent Base.
-- Task-scoped interactive-first Core amendment for PTC-003.
-- Independent focused PTC-003 retest: CLOSED / High confidence.
+- Task-scoped interactive-first Core amendment; PTC-003 CLOSED / High confidence.
+- Crash-safe bounded-delegation live-return Core amendment; LRC-001 CLOSED / High confidence.
 
 ## Active commitments
 
-- Preserve the Owner-approved task-scoped interactive-first invariant across Project Manager and Service Agent Core interoperability.
-- Preserve mandatory live-carrier establishment for scheduler-visible interactive work and direct Owner operation without ACP state when no scheduler-visible projection exists.
-- Preserve unrelated autonomous scheduler availability while the Owner is online.
-- Preserve stable `main`, v1.3.1 consumers, stable-v2 promotion, and migrations unchanged without explicit Owner authorization.
-- Support the remaining ACP-only PTC-002 remediation/retest without reopening PTC-003 absent contradictory evidence.
+- Preserve task-scoped interactive-first execution and unrelated autonomous scheduler availability.
+- Preserve mandatory live carrier for scheduler-visible interactive work.
+- Preserve durable pending caller continuation, acknowledgement-before-effects, autonomous return recovery, and explicit handoff separation.
+- Preserve direct Owner operation without synthetic ACP state when there is no scheduler-visible projection.
+- Keep stable `main`, v1.3.1 consumers, stable-v2 promotion, and migrations unchanged without explicit Owner authorization.
