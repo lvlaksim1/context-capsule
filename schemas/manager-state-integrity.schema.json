@@ -22,7 +22,7 @@
       "minimum": 1
     },
     "algorithm": {
-      "const": "sha256"
+      "const": "git-blob-sha1"
     },
     "coupled_paths": {
       "type": "array",
@@ -37,7 +37,7 @@
       "type": "object",
       "additionalProperties": {
         "type": "string",
-        "pattern": "^sha256:[0-9a-f]{64}$"
+        "pattern": "^git-blob-sha1:[0-9a-f]{40}$"
       }
     }
   },
