@@ -1054,17 +1054,6 @@ def clean_install_changes(
     if any(path == ".context" or path.startswith(".context/") for path in files):
         raise CapsuleModelError("clean install refused: existing .context content found")
     validate_core_commit(core_commit)
-    if (
-        isinstance(existing_manifest.get("sync_policy"), dict)
-        and existing_manifest["sync_policy"].get("manager_state_coherence_required") is True
-    ):
-        integrity_errors = _manager_state_integrity_errors(files, existing_manifest)
-        if integrity_errors:
-            raise CapsuleModelError(
-                "repair refuses to seal an incoherent manager state; reconcile the manager state first: "
-                + "; ".join(integrity_errors)
-            )
-
     provisional = dict(files)
     provisional.update(bootstrap_changes(files, template_root))
     _seed_v2_structure(provisional, template_root, repository, overwrite_system=True)
@@ -1165,6 +1154,17 @@ def repair_changes(
         raise CapsuleModelError(
             f"repair must run against authoritative branch {authoritative_branch!r}, not {branch!r}"
         )
+    if (
+        isinstance(existing_manifest.get("sync_policy"), dict)
+        and existing_manifest["sync_policy"].get("manager_state_coherence_required") is True
+    ):
+        integrity_errors = _manager_state_integrity_errors(files, existing_manifest)
+        if integrity_errors:
+            raise CapsuleModelError(
+                "repair refuses to seal an incoherent manager state; reconcile the manager state first: "
+                + "; ".join(integrity_errors)
+            )
+
     provisional = dict(files)
     provisional.update(bootstrap_changes(files, template_root))
     _seed_v2_structure(provisional, template_root, repository, overwrite_system=True)
