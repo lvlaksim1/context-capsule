@@ -6,6 +6,7 @@
 - Minimal Service Agent Base.
 - Task-scoped interactive-first Core amendment; PTC-003 CLOSED / High confidence.
 - Crash-safe bounded-delegation live-return Core amendment; LRC-001 CLOSED / High confidence.
+- Persistent-agent taxonomy (`Agent ≠ Runtime ≠ Skill ≠ Workflow`) with Tool/Task boundaries; TAX-001 CLOSED / High confidence.
 
 ## Active commitments
 
@@ -14,3 +15,4 @@
 - Preserve durable pending caller continuation, acknowledgement-before-effects, autonomous return recovery, and explicit handoff separation.
 - Preserve direct Owner operation without synthetic ACP state when there is no scheduler-visible projection.
 - Keep stable `main`, v1.3.1 consumers, stable-v2 promotion, and migrations unchanged without explicit Owner authorization.
+- Preserve the taxonomy boundary: execution carriers/capabilities/orchestration never become authority or responsibility holders merely through execution.

@@ -7,23 +7,34 @@
 - canonical installed Core provenance is read only from `.context/capsule.json.core_commit`;
 - no consumer migration or stable-v2 promotion is authorized.
 
-## Verified pre-scaling Core baseline
+## Verified pre-Catalog Core baseline
 
-Task-scoped interactive-first execution and crash-safe live delegation return are independently verified.
+The persistent-agent taxonomy plus task-scoped interactive-first execution and crash-safe live delegation return are independently verified.
 
 Current Core evidence:
-- canonical Core snapshot: `3a0573751dc309148b5d2fd48b8df48f05eaa779`;
-- binding: `e88cbb52e1ea1dd239442dfa31daf3376206021c`;
-- hosted CI: `35937735593` SUCCESS.
+- canonical Core snapshot: `da89a35b2c6aeb460ed6f3e7665cdb886a3bde89`;
+- binding: `45177bb3f7adb9ca965c9be067a4440d45a6085e`;
+- hosted CI: `35941006206` SUCCESS.
 
-Verified semantics:
+Verified taxonomy:
+- `Agent ≠ Runtime ≠ Skill ≠ Workflow`;
+- Tool and Task/Engagement are separate adjacent concepts;
+- Runtime/Skill/Workflow/Tool/Registry presence cannot create identity, commitment ownership, or authority;
+- conversation history is not authoritative proof of reinstantiation or current durable state;
+- installed contracts are self-sufficient; the full taxonomy spec remains a Core source artifact, not a required consumer file.
+
+Verified execution semantics remain unchanged:
 - bounded delegation preserves caller commitment/responsibility/authority;
 - terminal bounded child state durably carries a pending caller continuation;
 - live caller return is acknowledged before caller effects;
 - runtime loss leaves the pending continuation autonomously recoverable without child re-execution;
-- consumed continuation is not redelivered;
-- explicit handoff is a distinct responsibility transfer with no implicit return;
+- explicit handoff is a distinct authorized responsibility transfer;
 - nested bounded delegation unwinds one caller at a time;
 - direct Owner invocation remains first-class and Supervisor is not a mandatory hop.
 
-Independent retest `AUD-2026-09-24-LRC-001-RETEST-001` closed LRC-001 / High confidence with no new findings.
+Independent taxonomy audit:
+- `AUD-2026-09-24-AGENT-TAXONOMY-001` opened TAX-001 Low / High confidence;
+- focused retest `AUD-2026-09-24-TAX-001-RETEST-001` closed TAX-001 / High confidence;
+- new findings: none.
+
+A concrete continuity descriptor / Fast Resume subsystem is not part of this completed taxonomy stage.

@@ -11,23 +11,33 @@
 
 ## Current verified Core baseline
 
-Task-scoped carrier and automatic live return semantics are complete.
+The pre-Catalog taxonomy and the previously verified task-scoped carrier / automatic live-return semantics are complete.
 
-Canonical Core:
-`3a0573751dc309148b5d2fd48b8df48f05eaa779`
+Canonical Core snapshot:
+`da89a35b2c6aeb460ed6f3e7665cdb886a3bde89`
 
 Binding:
-`e88cbb52e1ea1dd239442dfa31daf3376206021c`
+`45177bb3f7adb9ca965c9be067a4440d45a6085e`
 
 Hosted CI:
-`35937735593` — SUCCESS.
+`35941006206` — SUCCESS.
 
 Independent acceptance:
 - PTC-003 CLOSED / High confidence;
-- LRC-001 CLOSED / High confidence.
+- LRC-001 CLOSED / High confidence;
+- TAX-001 CLOSED / High confidence;
+- taxonomy audit/retest found no remaining open finding in 8.7 scope.
 
-No further Core remediation is required for these mechanisms.
+Normative taxonomy:
+- Agent = persistent accountable identity/mandate/responsibility;
+- Runtime = disposable execution carrier;
+- Skill = reusable bounded capability without independent mandate/commitment;
+- Workflow = orchestration/execution state without inherent agent authority;
+- Tool capability = technical capability, not permission;
+- Task/Engagement = bounded work state carrying authority provenance rather than creating authority.
+
+The Owner-supplied Agent Continuity / Runtime Resume proposal contributed the explicit `Agent ≠ Runtime` and conversation-history-not-authority principles. A concrete `resume.json` / Fast Resume mechanism has not been implemented and remains a separate architecture decision.
 
 ## Prior audit continuity
 
-CCPM-001..CCPM-004, CCPM-R001, ACP-CC-001, EW-001..EW-003, PTC-003, and LRC-001 remain CLOSED for their verified mechanisms.
+CCPM-001..CCPM-004, CCPM-R001, ACP-CC-001, EW-001..EW-003, PTC-003, LRC-001, and TAX-001 remain CLOSED for their verified mechanisms.
