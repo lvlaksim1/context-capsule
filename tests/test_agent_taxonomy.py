@@ -44,7 +44,7 @@ class PersistentAgentTaxonomyTests(unittest.TestCase):
     def test_service_agent_contract_carries_taxonomy_boundary(self):
         contract = (ROOT / "service-agent-templates" / ".context" / "service-agent" / "CONTRACT.md").read_text(encoding="utf-8")
         self.assertIn("## Concept taxonomy boundary", contract)
-        self.assertIn("The Service Agent is the persistent Agent", contract)
+        self.assertIn("The Service Agent is the persistent **Agent**", contract)
         self.assertIn("A Runtime is only a disposable execution carrier", contract)
         self.assertIn("A Skill has no independent mandate", contract)
         self.assertIn("A Workflow may coordinate execution", contract)
