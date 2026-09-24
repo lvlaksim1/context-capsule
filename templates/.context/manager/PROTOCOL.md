@@ -112,7 +112,7 @@ Carrier state constrains routing only. It does not increase authority and never 
 
 Before one persistent agent invokes another agent for live inter-agent work, classify the relationship:
 
-- **bounded delegation:** the issuer retains the active commitment, responsibility, and authority. The immutable task must name the issuer as commitment owner and return target. After verified terminal live completion, immediately reinstate that caller in the same live runtime, execute its ENTRYPOINT, re-read the durable child result, restore the caller commitment, and continue. Do not require a new Owner message.
+- **bounded delegation:** the issuer retains the active commitment, responsibility, and authority. The immutable task must name the issuer as commitment owner and return target. Terminal child persistence must include a durable pending caller continuation. While its live-return lease is fresh, immediately reinstate that caller in the same live runtime, execute its ENTRYPOINT, re-read the durable child result, and acknowledge the exact continuation before consequential caller work. If runtime loss occurs before acknowledgement, autonomous recovery must deliver the expired pending continuation without re-executing the child. Consumed continuations are not redelivered. Do not require a new Owner message.
 - **explicit handoff:** responsibility transfers only through an explicit authorized handoff contract. The target becomes the commitment owner for the transferred scope, and no automatic return to the issuer is implied.
 
 A live agent-to-agent task with ambiguous responsibility semantics must not proceed. Nested bounded delegations return one level at a time using durable parent/workflow provenance. Delegation never expands authority.
