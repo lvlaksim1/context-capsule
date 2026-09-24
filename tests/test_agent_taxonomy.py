@@ -3,6 +3,9 @@ from __future__ import annotations
 import unittest
 from pathlib import Path
 
+from installer.model import clean_install_changes
+from installer.service_agent import service_clean_install_changes
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -49,6 +52,29 @@ class PersistentAgentTaxonomyTests(unittest.TestCase):
         self.assertIn("A Skill has no independent mandate", contract)
         self.assertIn("A Workflow may coordinate execution", contract)
         self.assertIn("Conversation history is not authoritative proof", contract)
+        self.assertIn("source-spec file is not a required local consumer artifact", contract)
+
+    def test_installed_profiles_are_self_sufficient_without_core_spec_tree(self):
+        manager = clean_install_changes(
+            {}, ROOT / "templates", "owner/project", "main", "a" * 40
+        )
+        service = service_clean_install_changes(
+            {}, ROOT / "service-agent-templates", "owner/service", "main", "b" * 40,
+            "example-service-agent", "Service Agent", "Taxonomy portability test"
+        )
+
+        self.assertNotIn("spec/agent-taxonomy-v1.md", manager)
+        self.assertNotIn("spec/agent-taxonomy-v1.md", service)
+        self.assertIn(
+            "source-spec file is not a required local consumer artifact",
+            manager[".context/manager/CONTRACT.md"],
+        )
+        self.assertIn(
+            "source-spec file is not a required local consumer artifact",
+            service[".context/service-agent/CONTRACT.md"],
+        )
+        self.assertIn("A Skill cannot own the manager's commitment", manager[".context/manager/CONTRACT.md"])
+        self.assertIn("A Skill has no independent mandate", service[".context/service-agent/CONTRACT.md"])
 
     def test_architecture_points_to_normative_taxonomy(self):
         architecture = (ROOT / "spec" / "architecture.md").read_text(encoding="utf-8")

@@ -177,4 +177,4 @@ The Project Manager is the persistent Agent. Its stable identity, mandate, durab
 - A Tool provides capability, never permission.
 - Conversation history is not authoritative proof that the current runtime has reinstantiated this Project Manager or that its durable state is current.
 
-The normative cross-profile definitions are in `spec/agent-taxonomy-v1.md`. Concrete continuity/resume mechanisms are outside this taxonomy and require a separate architecture decision.
+This installed contract is self-sufficient for the operational taxonomy boundary above. The full source-level taxonomy is maintained in Context Capsule Core (`lvlaksim1/context-capsule`, `spec/agent-taxonomy-v1.md`); that source-spec file is not a required local consumer artifact. Concrete continuity/resume mechanisms are outside this taxonomy and require a separate architecture decision.

@@ -24,7 +24,7 @@ The Service Agent is the persistent **Agent**. It is not interchangeable with th
 - A Tool provides technical capability, never permission.
 - Conversation history is not authoritative proof that the current runtime has reinstantiated this Service Agent or that its durable state is current.
 
-The normative cross-profile definitions live in `spec/agent-taxonomy-v1.md`. Concrete continuity/resume mechanisms are separate from this taxonomy.
+This installed contract is self-sufficient for the operational taxonomy boundary above. The full source-level taxonomy is maintained in Context Capsule Core (`lvlaksim1/context-capsule`, `spec/agent-taxonomy-v1.md`); that source-spec file is not a required local consumer artifact. Concrete continuity/resume mechanisms are separate from this taxonomy.
 
 ## Principal, requester, target, and engagement
 
