@@ -4,15 +4,17 @@ Persistent manager: `context-capsule-project-manager`.
 Manager-state branch: `v2-manager-runtime`.
 Product authority branch: `main`.
 
-Owner-directed pre-scaling Core work is active for automatic live delegation return.
+Automatic live delegation return Core work is complete and independently verified.
 
-Required semantics:
-- bounded delegation keeps commitment/responsibility/authority with the caller;
-- the live child task records the caller as return target;
-- after verified terminal child completion, the caller is reinstantiated immediately in the same live runtime and continues from the durable result without a new Owner message;
-- explicit handoff is a separate authorized responsibility transfer and has no implicit return;
-- nested bounded delegations unwind one caller at a time.
+Core evidence:
+- snapshot `3a0573751dc309148b5d2fd48b8df48f05eaa779`;
+- binding `e88cbb52e1ea1dd239442dfa31daf3376206021c`;
+- hosted CI `35937735593` SUCCESS.
 
-Canonical Core provenance remains exclusively in `.context/capsule.json.core_commit`.
+Independent terminal audit:
+`AUD-2026-09-24-LRC-001-RETEST-001`
+publication commit `b2edd94fd553227e5573524109d25ca61fe58ef5`.
 
-Next gate: hosted Core verification, then independent Auditor acceptance. Catalog/Factory work remains inactive.
+LRC-001 is CLOSED / High confidence; no new findings.
+
+Stable production and consumer migration remain unchanged. Catalog/Factory work remains inactive.
