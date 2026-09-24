@@ -156,6 +156,25 @@ An explicit handoff is different: responsibility transfers only through an expli
 
 Nested bounded delegations unwind one caller at a time. Supervisor is not a mandatory return hop.
 
+### Responsibility / authority hardening
+
+Responsibility, authority, and execution ownership are separate dimensions.
+
+For every **new executable agent-to-agent task**, use the hardened responsibility semantics:
+
+- the task names the caller and the current commitment owner explicitly;
+- bounded delegation keeps the caller as current commitment owner and return target;
+- explicit handoff names the target only as the **proposed** next commitment owner until that target explicitly accepts the handoff in durable Agent state;
+- responsibility transfer never implies unrestricted authority transfer;
+- effective authority is the intersection of root authority provenance, caller authority, the immediate task grant, target Agent mandate, target rules/gates, scope, and constraints;
+- missing or unverifiable authority fails closed.
+
+Nested delegation MUST preserve root authority provenance. Each child may only attenuate authority: allowed effects form a subset, forbidden effects and inherited constraints cannot be dropped, and delegation depth increases. A parent that forbids subdelegation cannot be used to authorize an executable child delegation.
+
+Execution lease/carrier/fence ownership remains concurrency control only. It never changes commitment ownership or authority.
+
+Historical completed tasks may retain the older responsibility shape for audit/provenance. Newly admitted agent-to-agent execution uses semantics version 2.
+
 
 If the live runtime disappears, only the affected task/chain becomes eligible for scheduler fallback after its carrier lease expires when fallback is permitted. An explicit per-task Owner hold may block only that task without expiry.
 

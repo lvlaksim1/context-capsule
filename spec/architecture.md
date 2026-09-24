@@ -39,3 +39,11 @@ Context Capsule distinguishes `Agent ≠ Runtime ≠ Skill ≠ Workflow`:
 - Tool capability never implies permission.
 
 This boundary is semantic infrastructure only. It does not create Agent Catalog, Agent Factory, or a runtime/continuity subsystem.
+
+## Delegation / responsibility / authority boundary
+
+The normative source-level semantics are in `spec/delegation-responsibility-authority-v1.md`.
+
+Core treats commitment responsibility, execution responsibility, authority, and execution ownership as separate concepts.
+
+New executable agent-to-agent tasks use hardened responsibility semantics version 2. Historical completed version-1 responsibility artifacts remain readable and are not rewritten.

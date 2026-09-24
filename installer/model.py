@@ -345,6 +345,11 @@ def build_manifest(
             "live_bounded_delegation_return_required": True,
             "delegation_preserves_commitment_owner": True,
             "explicit_handoff_required_for_responsibility_transfer": True,
+            "responsibility_authority_orthogonal": True,
+            "handoff_requires_target_acceptance": True,
+            "delegated_authority_attenuation_required": True,
+            "authority_root_provenance_required": True,
+            "subdelegation_inherits_constraints": True,
             "external_task_authority_non_escalating": True,
             "supplied_execution_fence_enforced": True,
             "evidence_backed_external_completion_required": True,
@@ -577,6 +582,16 @@ def validate_snapshot(
             errors.append("manifest.json: bounded delegation must preserve caller commitment ownership")
         if not isinstance(sync, dict) or sync.get("explicit_handoff_required_for_responsibility_transfer") is not True:
             errors.append("manifest.json: responsibility transfer requires explicit handoff")
+        if not isinstance(sync, dict) or sync.get("responsibility_authority_orthogonal") is not True:
+            errors.append("manifest.json: responsibility and authority must remain orthogonal")
+        if not isinstance(sync, dict) or sync.get("handoff_requires_target_acceptance") is not True:
+            errors.append("manifest.json: explicit handoff requires target acceptance")
+        if not isinstance(sync, dict) or sync.get("delegated_authority_attenuation_required") is not True:
+            errors.append("manifest.json: delegated authority must attenuate")
+        if not isinstance(sync, dict) or sync.get("authority_root_provenance_required") is not True:
+            errors.append("manifest.json: nested delegation must preserve root authority provenance")
+        if not isinstance(sync, dict) or sync.get("subdelegation_inherits_constraints") is not True:
+            errors.append("manifest.json: subdelegation must inherit constraints")
         if not isinstance(sync, dict) or sync.get("external_task_authority_non_escalating") is not True:
             errors.append("manifest.json: external task transport must not escalate authority")
         if not isinstance(sync, dict) or sync.get("supplied_execution_fence_enforced") is not True:
