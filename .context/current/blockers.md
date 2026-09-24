@@ -1,9 +1,10 @@
 # Current blockers and open risks
 
-No historical PTC Core blocker remains.
+No Context Capsule Core blocker remains from the task-scoped carrier or live return-chain work.
 
-Current development gate:
-- live bounded-delegation return semantics require successful hosted Core verification and independent acceptance before being treated as closed.
+Closed / High confidence:
+- PTC-003;
+- LRC-001.
 
 Stable-production / migration boundaries remain:
 - no stable v2 publication without explicit Owner authorization;
