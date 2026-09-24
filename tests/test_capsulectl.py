@@ -660,7 +660,7 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         self.assertIn("Consumed continuations MUST NOT be redelivered", contract)
         self.assertIn("Do not require a new Owner message", protocol)
         self.assertIn("autonomous recovery must deliver the expired pending continuation", protocol)
-        self.assertIn("MUST automatically return to that caller", entrypoint)
+        self.assertIn("MUST persist a pending caller continuation", entrypoint)
         self.assertIn("control-plane/scheduler-visible projection", protocol)
         self.assertIn("terminalize the scheduler-visible projection before the carrier can expire", protocol)
         self.assertIn("control-plane or otherwise scheduler-visible projection", entrypoint)
