@@ -44,3 +44,15 @@ Executable ACP evidence:
 - public exact-snapshot verifier run `35948730227` SUCCESS.
 
 The private-repository hosted-runner quota is no longer part of the verification path for ACP; exact ACP verification is performed by the existing public `repo-factory` workflow without changing ACP runtime semantics.
+
+## IOSPM-001 remediation gate
+
+The systemic implementation adds a manager-state integrity marker that seals the Git blob identities of beliefs/goals/intentions/plans/current state/blockers/next/latest handoff.
+
+Required behavior:
+- partial or interrupted multi-file Persist is NOT READY;
+- recovery refuses a mismatching protected snapshot before consequential continuation;
+- explicit v2 repair bootstraps protection for legacy-unsealed capsules;
+- repair refuses to bless an already-protected mismatching snapshot.
+
+Next: bind this repository's own capsule to the remediated Core, publish its first coherent sealed generation, then obtain independent Auditor retest. IOSPM-001 remains open until that retest.

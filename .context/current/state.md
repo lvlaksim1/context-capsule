@@ -1,41 +1,21 @@
 # Current state
 
-## Production / development topology
+Context Capsule v2 remains development-only on `v2-manager-runtime`; stable `main` / v1.3.1 and known consumers are unchanged.
 
-- stable production: Context Capsule v1.3.1 on `main`;
-- v2 development and durable manager state: `v2-manager-runtime`;
-- canonical installed Core provenance is read only from `.context/capsule.json.core_commit`;
-- no consumer migration or stable-v2 promotion is authorized.
+## IOSPM-001 remediation
 
-## Verified Core baseline
+Owner-authorized systemic remediation is implemented in the v2 Core development line.
 
-Current bound Core snapshot:
-`ec465bd31a02fdc2602fa4d4808ac8a99ccda480`
+The new coherence mechanism seals semantically coupled Project Manager state as one generation using the Git blob identities of:
+- manager beliefs;
+- manager goals;
+- manager intentions;
+- manager plans;
+- current state;
+- blockers;
+- next actions;
+- latest handoff.
 
-Binding:
-`9ad957063e16298e3117dd4f99015fbda7f12e3c`
+For a protected capsule, `READY` and `recover` fail closed when any coupled file no longer matches the sealed generation. Explicit repair bootstraps protection for legacy-unsealed v2 capsules, while repair refuses to auto-seal an already-protected mismatching snapshot.
 
-Core hosted CI:
-`35947165325` SUCCESS.
-
-Master Plan 8.8 is complete.
-
-Verified responsibility/authority semantics:
-- responsibility, authority, and execution ownership are separate;
-- bounded delegation keeps caller responsibility and return semantics;
-- explicit handoff does not transfer responsibility until target acceptance is durably proven;
-- target acceptance must be independently re-read from target Agent authoritative home at an immutable commit and projected only under the exact current execution fence;
-- Owner-derived delegable work carries a normalized immutable root grant;
-- first-hop and nested delegation may only attenuate allowed effects/scope while preserving prohibitions, inherited constraints, and subdelegation policy;
-- direct Owner invocation remains first-class;
-- historical completed task artifacts remain readable.
-
-Independent terminal evidence:
-- `AUD-2026-09-24-DRA-EVIDENCE-RETEST-001`;
-- DRA-001 CLOSED / High confidence;
-- DRA-002 CLOSED / High confidence;
-- new findings: none.
-
-Agent Control Plane exact executable evidence:
-- snapshot `5039c15fe7debd779132a06f17edf168bce2b2ea`;
-- public verifier run `35948730227` SUCCESS.
+Implementation verification is green. IOSPM-001 is **remediated but not closed** pending independent Auditor retest.

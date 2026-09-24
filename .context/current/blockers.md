@@ -1,14 +1,4 @@
 # Current blockers and open risks
 
-No open Context Capsule blocker remains from Master Plan 8.8.
-
-Closed / High confidence:
-- PTC-003;
-- LRC-001;
-- TAX-001;
-- DRA-001;
-- DRA-002.
-
-Stable-production / migration boundaries remain:
-- no stable v2 publication without explicit Owner authorization;
-- no consumer migration without explicit Owner authorization.
+- IOSPM-001 is not yet independently closed. The implementation is complete and verified by repository CI, but the required independent Auditor retest has not yet produced a terminal result.
+- Stable v2 publication, merge to `main`, and consumer migration remain Owner-gated and are outside this remediation.

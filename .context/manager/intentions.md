@@ -17,3 +17,10 @@
 - Preserve direct Owner operation without synthetic ACP state when there is no scheduler-visible projection.
 - Keep stable `main`, v1.3.1 consumers, stable-v2 promotion, and migrations unchanged without explicit Owner authorization.
 - Preserve the taxonomy boundary: execution carriers/capabilities/orchestration never become authority or responsibility holders merely through execution.
+
+## IOSPM-001 remediation
+
+- commitment: ENG-2026-09-24-IOSPM-001-REMEDIATION
+- status: active pending independent Auditor retest
+- responsibility: context-capsule-project-manager
+- closure rule: do not mark IOSPM-001 CLOSED until independent Auditor retest verifies fail-closed mixed-generation behavior and legacy bootstrap semantics.
