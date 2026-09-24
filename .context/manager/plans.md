@@ -9,21 +9,25 @@
 5. Treat Auditor reports as independent evidence and keep remediation/retest separate.
 6. Do not publish stable v2 or migrate consumers without explicit Owner authorization.
 
-## Current focused milestone
+## Current verified Core baseline
 
-PTC-003 is CLOSED / High confidence by `AUD-2026-09-24-PER-TASK-CARRIER-001-RETEST-001`.
+Task-scoped carrier and automatic live return semantics are complete.
 
-Canonical Core implementation remains:
-`8fc2da36f0a77d0f2a16508a8f7ee97fe1baa754`
+Canonical Core:
+`3a0573751dc309148b5d2fd48b8df48f05eaa779`
 
-Binding commit:
-`b1e5ef97235400f8f3f98aae109a687b2643be30`
+Binding:
+`e88cbb52e1ea1dd239442dfa31daf3376206021c`
 
-Hosted verification:
-GitHub Actions run `35928337273` on `7d3c21770e439e7957185fda263d1636ec77e653` — SUCCESS.
+Hosted CI:
+`35937735593` — SUCCESS.
 
-No further Context Capsule remediation is required for PTC-003. Remaining PTC-002 work is ACP-local unless new evidence contradicts Core semantics.
+Independent acceptance:
+- PTC-003 CLOSED / High confidence;
+- LRC-001 CLOSED / High confidence.
+
+No further Core remediation is required for these mechanisms.
 
 ## Prior audit continuity
 
-CCPM-001..CCPM-004, CCPM-R001, ACP-CC-001, EW-001..EW-003, and PTC-003 remain CLOSED for their verified mechanisms.
+CCPM-001..CCPM-004, CCPM-R001, ACP-CC-001, EW-001..EW-003, PTC-003, and LRC-001 remain CLOSED for their verified mechanisms.
