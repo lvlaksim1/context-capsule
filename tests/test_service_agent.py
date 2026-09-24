@@ -232,7 +232,7 @@ class ServiceAgentBaseTests(unittest.TestCase):
         self.assertIn("Consumed continuations MUST NOT be redelivered", contract)
         self.assertIn("Do not require a new Owner message", protocol)
         self.assertIn("autonomous recovery must deliver the expired pending continuation", protocol)
-        self.assertIn("MUST automatically return to that caller", entrypoint)
+        self.assertIn("MUST persist a pending caller continuation", entrypoint)
         self.assertIn("revalidate it immediately before every consequential", contract)
         self.assertIn("Supervisor is not a mandatory intermediary", protocol)
         self.assertIn("external task/execution context", entrypoint)
