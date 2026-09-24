@@ -112,13 +112,28 @@ The root authority must remain unchanged across a nested delegation chain.
 
 The immediate grantor must be the task issuer.
 
-## 7. Attenuation rule
+## 7. Normalized root grant and attenuation rule
 
-For every nested subdelegation:
+Root authority provenance (`kind + reference`) identifies where authority came from; it is not by itself a complete delegation budget.
 
-- child `allowed_effects` MUST be a subset of the parent's allowed effects;
-- child `forbidden_effects` MUST be a superset of the parent's forbidden effects;
-- inherited task constraints MUST remain present;
+When Owner-derived work may be delegated, the authoritative Owner grant used for that delegation MUST be normalized into an immutable root grant containing:
+
+- `allowed_effects`;
+- `forbidden_effects`;
+- `scope`;
+- `inherited_constraints`;
+- `subdelegation = forbidden | bounded`.
+
+Direct Owner → Agent execution remains first-class and does not require synthetic agent responsibility metadata. But the **first** Agent → Agent child derived from Owner work MUST be validated against the complete normalized Owner grant actually held by the caller. If the represented Owner parent task does not carry a complete verifiable normalized grant, the child delegation fails closed.
+
+A root Agent → Agent delegation with no represented parent task MUST carry the same normalized grant in its own immutable authority provenance.
+
+For the first Owner-derived delegation and every nested subdelegation:
+
+- child `allowed_effects` MUST be a subset of the effective parent/root allowed effects;
+- child `forbidden_effects` MUST be a superset of the effective parent/root forbidden effects;
+- child task scope MUST be a subset of the effective parent/root scope;
+- inherited task/root constraints MUST remain present;
 - delegation depth MUST increase monotonically;
 - a parent marked `subdelegation = forbidden` cannot produce an executable child delegation.
 
@@ -139,9 +154,21 @@ The target persistent Agent independently validates:
 - target rules/gates;
 - responsibility mode.
 
-Claiming a task, receiving a message, or possessing tools is not target acceptance of an explicit handoff.
+Claiming a task, receiving a message, possessing tools, or writing an unverified reference string is not target acceptance of an explicit handoff.
 
 Handoff acceptance is a durable Agent-state transition.
+
+For a new executable explicit handoff:
+
+1. the target persists a structured acceptance record in its authoritative Agent home under `.context/responsibility/acceptances/`;
+2. the record binds a stable record id, task id, exact immutable request digest, accepting target Agent id, accepted commitment owner id, and acceptance timestamp;
+3. the runtime independently re-reads that exact record from the target Agent's Registry `home_repository@authority_ref` at an immutable commit;
+4. the re-read commit, path, blob SHA, and parsed record MUST match the supplied evidence exactly;
+5. the control-plane acceptance projection records that immutable target-home source pointer plus the **exact current execution fence** that projected acceptance;
+6. autonomous acceptance binds execution id, generation, and activation-projection receipt; live acceptance binds carrier id and lease expiry;
+7. stale/mismatched/unverifiable source evidence or execution fence fails closed.
+
+The control-plane projection is evidence of an already-durable target-Agent acceptance. It is never itself the source of responsibility transfer.
 
 ## 9. Result boundary
 

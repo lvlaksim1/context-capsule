@@ -169,7 +169,11 @@ For every **new executable agent-to-agent task**, use the hardened responsibilit
 - effective authority is the intersection of root authority provenance, caller authority, the immediate task grant, target Agent mandate, target rules/gates, scope, and constraints;
 - missing or unverifiable authority fails closed.
 
-Nested delegation MUST preserve root authority provenance. Each child may only attenuate authority: allowed effects form a subset, forbidden effects and inherited constraints cannot be dropped, and delegation depth increases. A parent that forbids subdelegation cannot be used to authorize an executable child delegation.
+Root provenance alone is not a delegation budget. When Owner-derived work may be delegated, the authoritative Owner grant used for delegation MUST be normalized into allowed effects, forbidden effects, scope, inherited constraints, and subdelegation policy. The first Agent → Agent child must be a deterministic attenuation of that complete grant; missing or unverifiable root grant fails closed. A root Agent → Agent delegation with no represented parent task must carry the same normalized grant in its immutable authority provenance.
+
+Nested delegation MUST preserve root authority provenance. Each child may only attenuate authority: allowed effects and scope form subsets, forbidden effects and inherited constraints cannot be dropped, and delegation depth increases. A parent/root grant that forbids subdelegation cannot authorize an executable child delegation.
+
+For explicit handoff, target acceptance is valid only after the target persists a structured acceptance record under its authoritative home `.context/responsibility/acceptances/`, the runtime independently re-reads that exact record from the target Registry home at an immutable commit and verifies commit/path/blob/content against the immutable request, and the acceptance projection is bound to the exact current autonomous or live execution fence. A caller-supplied reference string, stale fence, or unverifiable target-home record does not transfer responsibility.
 
 Execution lease/carrier/fence ownership remains concurrency control only. It never changes commitment ownership or authority.
 

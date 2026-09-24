@@ -23,6 +23,9 @@ class DelegationAuthoritySemanticsTests(unittest.TestCase):
             "forbidden_effects",
             "It may never widen it",
             "Historical version-1 responsibility artifacts may remain readable",
+            "normalized into an immutable root grant",
+            ".context/responsibility/acceptances/",
+            "exact current execution fence",
         ):
             self.assertIn(marker, text)
 
@@ -52,6 +55,24 @@ class DelegationAuthoritySemanticsTests(unittest.TestCase):
             "subdelegation",
         }.issubset(set(chain["required"])))
 
+    def test_authority_provenance_can_carry_complete_normalized_root_grant(self):
+        schema = json.loads((ROOT / "schemas" / "agent-task-envelope.schema.json").read_text(encoding="utf-8"))
+        grant = schema["properties"]["authority_provenance"]["properties"]["grant"]
+        self.assertEqual(
+            set(grant["required"]),
+            {"allowed_effects", "forbidden_effects", "scope", "inherited_constraints", "subdelegation"},
+        )
+        self.assertEqual(set(grant["properties"]["subdelegation"]["enum"]), {"forbidden", "bounded"})
+
+    def test_structured_handoff_acceptance_schema_is_request_and_target_bound(self):
+        schema = json.loads((ROOT / "schemas" / "responsibility-acceptance.schema.json").read_text(encoding="utf-8"))
+        self.assertEqual(schema["properties"]["schema"]["const"], "context-capsule-responsibility-acceptance")
+        self.assertTrue({
+            "record_id", "task_id", "request_digest", "accepted_by_agent_id",
+            "commitment_owner_agent_id", "accepted_at"
+        }.issubset(set(schema["required"])))
+        self.assertEqual(schema["properties"]["request_digest"]["pattern"], "^sha256:[0-9a-f]{64}$")
+
     def test_installed_contracts_carry_hardening_invariants(self):
         manager = clean_install_changes({}, ROOT / "templates", "owner/project", "main", "a" * 40)
         service = service_clean_install_changes(
@@ -67,6 +88,9 @@ class DelegationAuthoritySemanticsTests(unittest.TestCase):
             self.assertIn("effective authority is the intersection", contract)
             self.assertIn("allowed effects form a subset", contract)
             self.assertIn("Historical completed tasks may retain the older responsibility shape", contract)
+            self.assertIn("Root provenance alone is not a delegation budget", contract)
+            self.assertIn(".context/responsibility/acceptances/", contract)
+            self.assertIn("exact current autonomous or live execution fence", contract)
 
     def test_sync_policies_make_hardening_non_optional(self):
         manager = clean_install_changes({}, ROOT / "templates", "owner/project", "main", "a" * 40)
@@ -82,6 +106,11 @@ class DelegationAuthoritySemanticsTests(unittest.TestCase):
             "delegated_authority_attenuation_required",
             "authority_root_provenance_required",
             "subdelegation_inherits_constraints",
+            "owner_root_grant_normalized",
+            "first_delegation_attenuates_owner_grant",
+            "delegated_scope_attenuation_required",
+            "handoff_acceptance_target_home_verified",
+            "handoff_acceptance_execution_fence_bound",
         ):
             self.assertIs(manager_policy[key], True)
             self.assertIs(service_policy[key], True)
