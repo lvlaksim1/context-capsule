@@ -746,8 +746,10 @@ def manager_state_coupled_paths(manifest: dict) -> list[str]:
     return result
 
 
-def _sha256_text(text: str) -> str:
-    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+def _git_blob_sha1(text: str) -> str:
+    payload = text.encode("utf-8")
+    header = f"blob {len(payload)}\0".encode("ascii")
+    return hashlib.sha1(header + payload).hexdigest()
 
 
 def build_manager_state_integrity(
@@ -764,7 +766,7 @@ def build_manager_state_integrity(
         text = files.get(path)
         if text is None:
             raise CapsuleModelError(f"manager state integrity cannot seal missing path: {path}")
-        digests[path] = "sha256:" + _sha256_text(text)
+        digests[path] = "git-blob-sha1:" + _git_blob_sha1(text)
 
     previous_generation = 0
     previous_digests = None
@@ -783,7 +785,7 @@ def build_manager_state_integrity(
         "schema": "context-capsule-manager-state-integrity",
         "schema_version": MANAGER_STATE_INTEGRITY_SCHEMA_VERSION,
         "generation": generation,
-        "algorithm": "sha256",
+        "algorithm": "git-blob-sha1",
         "coupled_paths": coupled,
         "digests": digests,
     }
@@ -819,8 +821,8 @@ def _manager_state_integrity_errors(files: dict[str, str], manifest: dict) -> li
     generation = marker.get("generation")
     if not isinstance(generation, int) or generation < 1:
         errors.append("manager state integrity: generation must be a positive integer")
-    if marker.get("algorithm") != "sha256":
-        errors.append("manager state integrity: algorithm must be sha256")
+    if marker.get("algorithm") != "git-blob-sha1":
+        errors.append("manager state integrity: algorithm must be git-blob-sha1")
 
     expected_paths = manager_state_coupled_paths(manifest)
     if marker.get("coupled_paths") != expected_paths:
@@ -835,7 +837,7 @@ def _manager_state_integrity_errors(files: dict[str, str], manifest: dict) -> li
         if text is None:
             errors.append(f"manager state integrity: missing coupled path: {path}")
             continue
-        expected = "sha256:" + _sha256_text(text)
+        expected = "git-blob-sha1:" + _git_blob_sha1(text)
         actual = digests.get(path)
         if actual != expected:
             errors.append(
