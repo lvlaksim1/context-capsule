@@ -84,7 +84,13 @@
         "intentions",
         "plans"
       ],
-      "additionalProperties": true
+      "additionalProperties": true,
+      "properties": {
+        "state_integrity": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     },
     "memory": {
       "type": "object",
@@ -197,6 +203,9 @@
           "const": true
         },
         "service_expertise_not_project_authority": {
+          "const": true
+        },
+        "manager_state_coherence_required": {
           "const": true
         }
       }

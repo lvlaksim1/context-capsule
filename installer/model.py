@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import datetime as dt
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -14,6 +15,8 @@ SOURCE_REPOSITORY = "lvlaksim1/context-capsule"
 MANIFEST_SCHEMA_VERSION = 4
 MANAGER_IDENTITY_SCHEMA_VERSION = 1
 MANAGER_IDENTITY_PATH = ".context/manager/identity.json"
+MANAGER_STATE_INTEGRITY_PATH = ".context/manager/state-integrity.json"
+MANAGER_STATE_INTEGRITY_SCHEMA_VERSION = 1
 
 SYSTEM_TEXT_PATHS = (
     ".context/ENTRYPOINT.md",
@@ -291,6 +294,7 @@ def build_manifest(
             "goals": manager_old.get("goals") or ".context/manager/goals.md",
             "intentions": manager_old.get("intentions") or ".context/manager/intentions.md",
             "plans": manager_old.get("plans") or ".context/manager/plans.md",
+            "state_integrity": manager_old.get("state_integrity") or MANAGER_STATE_INTEGRITY_PATH,
         }
     )
 
@@ -360,6 +364,7 @@ def build_manifest(
             "evidence_backed_external_completion_required": True,
             "terminal_execution_cleanup_required": True,
             "external_gate_reconciliation_required": True,
+            "manager_state_coherence_required": True,
         }
     )
 
@@ -412,7 +417,7 @@ def referenced_paths(manifest: dict) -> list[tuple[str, str]]:
                 refs.append((f"project.{key}", value))
     manager = manifest.get("manager")
     if isinstance(manager, dict):
-        for key in ("contract", "protocol", "identity", "mandate", "beliefs", "goals", "intentions", "plans"):
+        for key in ("contract", "protocol", "identity", "mandate", "beliefs", "goals", "intentions", "plans", "state_integrity"):
             value = manager.get(key)
             if isinstance(value, str):
                 refs.append((f"manager.{key}", value))
@@ -607,6 +612,13 @@ def validate_snapshot(
             errors.append("manifest.json: terminal external execution must clear active ownership")
         if not isinstance(sync, dict) or sync.get("external_gate_reconciliation_required") is not True:
             errors.append("manifest.json: pending external gates must be reconciled against authoritative durable results")
+        coherence_required = isinstance(sync, dict) and sync.get("manager_state_coherence_required") is True
+        manager_section = manifest.get("manager") if isinstance(manifest.get("manager"), dict) else {}
+        integrity_path = manager_section.get("state_integrity") if isinstance(manager_section, dict) else None
+        if coherence_required and not isinstance(integrity_path, str):
+            errors.append("manifest.json: manager_state_coherence_required needs manager.state_integrity")
+        if isinstance(integrity_path, str) and not coherence_required:
+            errors.append("manifest.json: manager.state_integrity requires manager_state_coherence_required=true")
         runtime = manifest.get("runtime")
         if not isinstance(runtime, dict) or runtime.get("checkpoint_is_capsule_state") is not False:
             errors.append("manifest.json: runtime checkpoint must remain separate from capsule state")
@@ -713,6 +725,130 @@ def _core_binding_errors(
     return errors
 
 
+
+def manager_state_coupled_paths(manifest: dict) -> list[str]:
+    manager = manifest.get("manager") if isinstance(manifest.get("manager"), dict) else {}
+    current = manifest.get("current") if isinstance(manifest.get("current"), dict) else {}
+    paths = [
+        manager.get("beliefs"),
+        manager.get("goals"),
+        manager.get("intentions"),
+        manager.get("plans"),
+        current.get("state"),
+        current.get("blockers"),
+        current.get("next"),
+        manifest.get("latest_handoff"),
+    ]
+    result: list[str] = []
+    for raw in paths:
+        if isinstance(raw, str) and raw and raw not in result:
+            result.append(raw)
+    return result
+
+
+def _sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def build_manager_state_integrity(
+    files: dict[str, str],
+    manifest: dict,
+    *,
+    existing: dict | None = None,
+) -> dict:
+    coupled = manager_state_coupled_paths(manifest)
+    if not coupled:
+        raise CapsuleModelError("manager state integrity has no coupled paths")
+    digests: dict[str, str] = {}
+    for path in coupled:
+        text = files.get(path)
+        if text is None:
+            raise CapsuleModelError(f"manager state integrity cannot seal missing path: {path}")
+        digests[path] = "sha256:" + _sha256_text(text)
+
+    previous_generation = 0
+    previous_digests = None
+    if isinstance(existing, dict):
+        raw_generation = existing.get("generation")
+        if isinstance(raw_generation, int) and raw_generation >= 1:
+            previous_generation = raw_generation
+        if isinstance(existing.get("digests"), dict):
+            previous_digests = existing.get("digests")
+
+    generation = previous_generation if previous_generation and previous_digests == digests else previous_generation + 1
+    if generation < 1:
+        generation = 1
+
+    return {
+        "schema": "context-capsule-manager-state-integrity",
+        "schema_version": MANAGER_STATE_INTEGRITY_SCHEMA_VERSION,
+        "generation": generation,
+        "algorithm": "sha256",
+        "coupled_paths": coupled,
+        "digests": digests,
+    }
+
+
+def _manager_state_integrity_errors(files: dict[str, str], manifest: dict) -> list[str]:
+    sync = manifest.get("sync_policy")
+    coherence_required = isinstance(sync, dict) and sync.get("manager_state_coherence_required") is True
+    manager = manifest.get("manager") if isinstance(manifest.get("manager"), dict) else {}
+    marker_path = manager.get("state_integrity")
+
+    if not coherence_required:
+        return []
+    if not isinstance(marker_path, str) or not marker_path:
+        return ["manager state coherence is required but manager.state_integrity is missing from manifest"]
+
+    try:
+        marker = parse_json_text(files, marker_path)
+    except CapsuleModelError as exc:
+        return [f"manager state integrity: {exc}"]
+    if marker is None:
+        return [
+            f"manager state integrity marker is missing: {marker_path}; "
+            "run explicit v2 repair/bootstrap before READY"
+        ]
+    errors: list[str] = []
+    if marker.get("schema") != "context-capsule-manager-state-integrity":
+        errors.append("manager state integrity: invalid schema")
+    if marker.get("schema_version") != MANAGER_STATE_INTEGRITY_SCHEMA_VERSION:
+        errors.append(
+            f"manager state integrity: schema_version must be {MANAGER_STATE_INTEGRITY_SCHEMA_VERSION}"
+        )
+    generation = marker.get("generation")
+    if not isinstance(generation, int) or generation < 1:
+        errors.append("manager state integrity: generation must be a positive integer")
+    if marker.get("algorithm") != "sha256":
+        errors.append("manager state integrity: algorithm must be sha256")
+
+    expected_paths = manager_state_coupled_paths(manifest)
+    if marker.get("coupled_paths") != expected_paths:
+        errors.append("manager state integrity: coupled_paths do not match the current manifest")
+    digests = marker.get("digests")
+    if not isinstance(digests, dict):
+        errors.append("manager state integrity: digests must be an object")
+        return errors
+
+    for path in expected_paths:
+        text = files.get(path)
+        if text is None:
+            errors.append(f"manager state integrity: missing coupled path: {path}")
+            continue
+        expected = "sha256:" + _sha256_text(text)
+        actual = digests.get(path)
+        if actual != expected:
+            errors.append(
+                f"manager state integrity mismatch: {path} does not belong to sealed generation {generation}"
+            )
+    extra = sorted(set(digests) - set(expected_paths))
+    if extra:
+        errors.append(
+            "manager state integrity: digest set contains non-coupled path(s): " + ", ".join(extra)
+        )
+    return errors
+
+
 def readiness_snapshot(
     files: dict[str, str],
     *,
@@ -729,6 +865,7 @@ def readiness_snapshot(
 
     manifest = parse_json_text(files, ".context/manifest.json") or {}
     missing: list[str] = []
+    missing.extend(_manager_state_integrity_errors(files, manifest))
 
     required = {
         "project.identity": manifest["project"]["identity"],
@@ -839,6 +976,12 @@ def build_recovery_pack(
         f"Manager state authority branch: {manifest.get('authority', {}).get('manager_state_branch')}",
         f"Product authority branch: {manifest.get('authority', {}).get('product_branch')}",
         f"Manager ID: {manager_id}",
+        *(
+            [f"Manager state sealed generation: {(parse_json_text(files, manifest['manager']['state_integrity']) or {}).get('generation')}"]
+            if isinstance(manifest.get("sync_policy"), dict)
+            and manifest["sync_policy"].get("manager_state_coherence_required") is True
+            else ["Manager state sealed generation: legacy-unsealed"]
+        ),
         "",
         *mode_lines,
         "Runtime conversation/checkpoint state is not manager identity and must not override durable capsule state.",
@@ -911,6 +1054,17 @@ def clean_install_changes(
     if any(path == ".context" or path.startswith(".context/") for path in files):
         raise CapsuleModelError("clean install refused: existing .context content found")
     validate_core_commit(core_commit)
+    if (
+        isinstance(existing_manifest.get("sync_policy"), dict)
+        and existing_manifest["sync_policy"].get("manager_state_coherence_required") is True
+    ):
+        integrity_errors = _manager_state_integrity_errors(files, existing_manifest)
+        if integrity_errors:
+            raise CapsuleModelError(
+                "repair refuses to seal an incoherent manager state; reconcile the manager state first: "
+                + "; ".join(integrity_errors)
+            )
+
     provisional = dict(files)
     provisional.update(bootstrap_changes(files, template_root))
     _seed_v2_structure(provisional, template_root, repository, overwrite_system=True)
@@ -935,6 +1089,10 @@ def clean_install_changes(
         product_branch=product_branch,
     )
     provisional[".context/manifest.json"] = canonical_json(manifest)
+    previous_integrity = parse_json_text(files, MANAGER_STATE_INTEGRITY_PATH)
+    provisional[MANAGER_STATE_INTEGRITY_PATH] = canonical_json(
+        build_manager_state_integrity(provisional, manifest, existing=previous_integrity)
+    )
 
     errors = validate_snapshot(provisional)
     if errors:
@@ -977,6 +1135,11 @@ def upgrade_changes(
             product_branch=product_branch,
         )
     )
+    upgraded_manifest = parse_json_text(provisional, ".context/manifest.json") or {}
+    previous_integrity = parse_json_text(files, MANAGER_STATE_INTEGRITY_PATH)
+    provisional[MANAGER_STATE_INTEGRITY_PATH] = canonical_json(
+        build_manager_state_integrity(provisional, upgraded_manifest, existing=previous_integrity)
+    )
     errors = validate_snapshot(provisional)
     if errors:
         raise CapsuleModelError("planned v2 upgrade is invalid: " + "; ".join(errors))
@@ -1010,6 +1173,11 @@ def repair_changes(
     )
     provisional[".context/manifest.json"] = canonical_json(
         build_manifest(provisional, repository, branch, existing=existing_manifest)
+    )
+    repaired_manifest = parse_json_text(provisional, ".context/manifest.json") or {}
+    previous_integrity = parse_json_text(files, MANAGER_STATE_INTEGRITY_PATH)
+    provisional[MANAGER_STATE_INTEGRITY_PATH] = canonical_json(
+        build_manager_state_integrity(provisional, repaired_manifest, existing=previous_integrity)
     )
     errors = validate_snapshot(provisional)
     if errors:

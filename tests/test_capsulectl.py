@@ -12,6 +12,7 @@ from installer.model import (
     CORE_GOVERNING_PATHS,
     CapsuleModelError,
     VERSION,
+    build_manager_state_integrity,
     build_recovery_pack,
     clean_install_changes,
     discovery_redirect_changes,
@@ -733,6 +734,78 @@ class ContextCapsuleV2Tests(unittest.TestCase):
             (repo / ".context" / "escape.md").symlink_to(external)
             with self.assertRaises(CapsuleSafetyError):
                 load_snapshot(repo)
+
+
+    def test_manager_state_integrity_seals_coherent_snapshot(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        manifest = json.loads(installed[".context/manifest.json"])
+        self.assertIs(manifest["sync_policy"]["manager_state_coherence_required"], True)
+        self.assertEqual(manifest["manager"]["state_integrity"], ".context/manager/state-integrity.json")
+        marker = json.loads(installed[".context/manager/state-integrity.json"])
+        self.assertEqual(marker["generation"], 1)
+        self.assertTrue(readiness_snapshot(installed)[0])
+        self.assertIn("Manager state sealed generation: 1", build_recovery_pack(installed))
+
+    def test_mixed_manager_state_generation_fails_ready_and_recover(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        installed[".context/current/state.md"] = (
+            "# State\n\nA newer semantic event was published without the rest of its coupled Persist.\n"
+        )
+        ready, reasons = readiness_snapshot(installed)
+        self.assertFalse(ready)
+        self.assertTrue(any("manager state integrity mismatch" in item for item in reasons))
+        with self.assertRaises(CapsuleModelError):
+            build_recovery_pack(installed)
+
+    def test_coherent_reseal_advances_generation_and_restores_ready(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        installed[".context/current/state.md"] = (
+            "# State\n\nA verified semantic event changed the active state and all coupled views are reconciled.\n"
+        )
+        manifest = json.loads(installed[".context/manifest.json"])
+        previous = json.loads(installed[".context/manager/state-integrity.json"])
+        installed[".context/manager/state-integrity.json"] = json.dumps(
+            build_manager_state_integrity(installed, manifest, existing=previous),
+            indent=2,
+        ) + "\n"
+        marker = json.loads(installed[".context/manager/state-integrity.json"])
+        self.assertEqual(marker["generation"], 2)
+        self.assertTrue(readiness_snapshot(installed)[0])
+
+    def test_legacy_v2_repair_bootstraps_integrity_marker(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        manifest = json.loads(installed[".context/manifest.json"])
+        manifest["manager"].pop("state_integrity", None)
+        manifest["sync_policy"].pop("manager_state_coherence_required", None)
+        installed[".context/manifest.json"] = json.dumps(manifest, indent=2) + "\n"
+        installed.pop(".context/manager/state-integrity.json", None)
+        repaired = apply(installed, repair_changes(
+            installed, TEMPLATES, repository="owner/repo", branch="main", core_commit=CORE_SHA
+        ))
+        repaired_manifest = json.loads(repaired[".context/manifest.json"])
+        self.assertIs(repaired_manifest["sync_policy"]["manager_state_coherence_required"], True)
+        self.assertIn(".context/manager/state-integrity.json", repaired)
+        self.assertTrue(readiness_snapshot(repaired)[0])
+
+    def test_repair_refuses_to_seal_already_protected_mixed_state(self):
+        installed = apply({}, clean_install_changes(
+            {}, TEMPLATES, "owner/repo", "main", CORE_SHA, semantic_overrides=ready_overrides()
+        ))
+        installed[".context/manager/plans.md"] = (
+            "# Plans\n\nThis partial plan update must not be silently sealed by repair.\n"
+        )
+        with self.assertRaises(CapsuleModelError):
+            repair_changes(
+                installed, TEMPLATES, repository="owner/repo", branch="main", core_commit=CORE_SHA
+            )
 
 
 if __name__ == "__main__":
