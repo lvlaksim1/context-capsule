@@ -86,7 +86,7 @@ class DelegationAuthoritySemanticsTests(unittest.TestCase):
             self.assertIn("Responsibility / authority hardening", contract)
             self.assertIn("explicit handoff names the target only as the **proposed** next commitment owner", contract)
             self.assertIn("effective authority is the intersection", contract)
-            self.assertIn("allowed effects form a subset", contract)
+            self.assertIn("allowed effects and scope form subsets", contract)
             self.assertIn("Historical completed tasks may retain the older responsibility shape", contract)
             self.assertIn("Root provenance alone is not a delegation budget", contract)
             self.assertIn(".context/responsibility/acceptances/", contract)
