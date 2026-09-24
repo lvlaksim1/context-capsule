@@ -171,6 +171,11 @@ class ContextCapsuleV2Tests(unittest.TestCase):
             "reconcile_before_high_impact_action",
             "self_authority_expansion_forbidden",
             "service_expertise_not_project_authority",
+            "responsibility_authority_orthogonal",
+            "handoff_requires_target_acceptance",
+            "delegated_authority_attenuation_required",
+            "authority_root_provenance_required",
+            "subdelegation_inherits_constraints",
         }
         for key in required:
             self.assertIs(manifest["sync_policy"][key], True)
