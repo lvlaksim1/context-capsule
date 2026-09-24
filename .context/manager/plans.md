@@ -11,33 +11,36 @@
 
 ## Current verified Core baseline
 
-The pre-Catalog taxonomy and the previously verified task-scoped carrier / automatic live-return semantics are complete.
-
-Canonical Core snapshot:
-`da89a35b2c6aeb460ed6f3e7665cdb886a3bde89`
+Current bound Core snapshot:
+`ec465bd31a02fdc2602fa4d4808ac8a99ccda480`
 
 Binding:
-`45177bb3f7adb9ca965c9be067a4440d45a6085e`
+`9ad957063e16298e3117dd4f99015fbda7f12e3c`
 
-Hosted CI:
-`35941006206` — SUCCESS.
+Hosted Core CI:
+`35947165325` — SUCCESS.
+
+Verified semantics now include:
+
+- persistent-agent taxonomy;
+- task-scoped interactive-first execution;
+- crash-safe bounded-delegation return;
+- separation of responsibility, authority, and execution ownership;
+- explicit handoff as proposed responsibility transfer until verified target acceptance;
+- target-home immutable acceptance evidence bound to the exact current execution fence;
+- normalized Owner root grant for delegable work;
+- first-hop and nested delegation attenuation of allowed effects/scope with prohibitions/constraints preserved;
+- historical completed-task compatibility boundary.
 
 Independent acceptance:
 - PTC-003 CLOSED / High confidence;
 - LRC-001 CLOSED / High confidence;
 - TAX-001 CLOSED / High confidence;
-- taxonomy audit/retest found no remaining open finding in 8.7 scope.
+- DRA-001 CLOSED / High confidence;
+- DRA-002 CLOSED / High confidence.
 
-Normative taxonomy:
-- Agent = persistent accountable identity/mandate/responsibility;
-- Runtime = disposable execution carrier;
-- Skill = reusable bounded capability without independent mandate/commitment;
-- Workflow = orchestration/execution state without inherent agent authority;
-- Tool capability = technical capability, not permission;
-- Task/Engagement = bounded work state carrying authority provenance rather than creating authority.
+Executable ACP evidence:
+- verified snapshot `5039c15fe7debd779132a06f17edf168bce2b2ea`;
+- public exact-snapshot verifier run `35948730227` SUCCESS.
 
-The Owner-supplied Agent Continuity / Runtime Resume proposal contributed the explicit `Agent ≠ Runtime` and conversation-history-not-authority principles. A concrete `resume.json` / Fast Resume mechanism has not been implemented and remains a separate architecture decision.
-
-## Prior audit continuity
-
-CCPM-001..CCPM-004, CCPM-R001, ACP-CC-001, EW-001..EW-003, PTC-003, LRC-001, and TAX-001 remain CLOSED for their verified mechanisms.
+The private-repository hosted-runner quota is no longer part of the verification path for ACP; exact ACP verification is performed by the existing public `repo-factory` workflow without changing ACP runtime semantics.

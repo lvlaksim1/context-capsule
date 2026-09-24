@@ -4,28 +4,22 @@ Persistent manager: `context-capsule-project-manager`.
 Manager-state branch: `v2-manager-runtime`.
 Product authority branch: `main`.
 
-Master Plan 8.7 Core work is complete and independently verified.
+Master Plan 8.8 Core work is complete and independently verified.
 
 Core evidence:
-- snapshot `da89a35b2c6aeb460ed6f3e7665cdb886a3bde89`;
-- binding `45177bb3f7adb9ca965c9be067a4440d45a6085e`;
-- hosted CI `35941006206` SUCCESS.
+- snapshot `ec465bd31a02fdc2602fa4d4808ac8a99ccda480`;
+- binding `9ad957063e16298e3117dd4f99015fbda7f12e3c`;
+- hosted CI `35947165325` SUCCESS.
 
-Independent terminal retest:
-`AUD-2026-09-24-TAX-001-RETEST-001`
-publication commit `1c0a044db1eba709a41d2e16864a9a2aca7b3a7b`.
+Agent Control Plane executable evidence:
+- verified snapshot `5039c15fe7debd779132a06f17edf168bce2b2ea`;
+- public exact-snapshot verifier run `35948730227` SUCCESS.
 
-Final taxonomy state:
-- `Agent ≠ Runtime ≠ Skill ≠ Workflow`;
-- Tool capability does not grant authority;
-- Task/Engagement carries bounded work/authority provenance rather than becoming an Agent;
-- conversation history is not authoritative proof of current Agent identity/state;
-- installed PM/Service Agent contracts are self-sufficient;
-- TAX-001 CLOSED / High confidence;
+Independent terminal audit:
+- `AUD-2026-09-24-DRA-EVIDENCE-RETEST-001`;
+- publication commit `5a454450ffa4114c50a71ac8281fb936aab76ebe`;
+- DRA-001 CLOSED / High confidence;
+- DRA-002 CLOSED / High confidence;
 - new findings: none.
 
-The Owner-supplied continuity proposal informed the `Agent ≠ Runtime` boundary, but no `resume.json` / Fast Resume subsystem was introduced in 8.7.
-
-Stable production and consumer migration remain unchanged. Catalog/Factory work remains inactive.
-
-Return this verified result to `ecosystem-supervisor` for stage closure and Owner report.
+Return this verified result to `ecosystem-supervisor` for portfolio reconciliation and Owner report.

@@ -7,10 +7,9 @@
 - Task-scoped interactive-first Core amendment; PTC-003 CLOSED / High confidence.
 - Crash-safe bounded-delegation live-return Core amendment; LRC-001 CLOSED / High confidence.
 - Persistent-agent taxonomy (`Agent ≠ Runtime ≠ Skill ≠ Workflow`) with Tool/Task boundaries; TAX-001 CLOSED / High confidence.
+- Delegation / responsibility / authority hardening; DRA-001 and DRA-002 CLOSED / High confidence.
 
 ## Active commitments
-
-- Implement the Owner-approved Master Plan 8.8 delegation/responsibility/authority hardening without weakening historical compatibility or closed live-return semantics.
 
 - Preserve task-scoped interactive-first execution and unrelated autonomous scheduler availability.
 - Preserve mandatory live carrier for scheduler-visible interactive work.

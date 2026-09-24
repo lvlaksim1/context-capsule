@@ -7,45 +7,35 @@
 - canonical installed Core provenance is read only from `.context/capsule.json.core_commit`;
 - no consumer migration or stable-v2 promotion is authorized.
 
-## Verified pre-Catalog Core baseline
+## Verified Core baseline
 
-The persistent-agent taxonomy plus task-scoped interactive-first execution and crash-safe live delegation return are independently verified.
+Current bound Core snapshot:
+`ec465bd31a02fdc2602fa4d4808ac8a99ccda480`
 
-Current Core evidence:
-- canonical Core snapshot: `da89a35b2c6aeb460ed6f3e7665cdb886a3bde89`;
-- binding: `45177bb3f7adb9ca965c9be067a4440d45a6085e`;
-- hosted CI: `35941006206` SUCCESS.
+Binding:
+`9ad957063e16298e3117dd4f99015fbda7f12e3c`
 
-Verified taxonomy:
-- `Agent ≠ Runtime ≠ Skill ≠ Workflow`;
-- Tool and Task/Engagement are separate adjacent concepts;
-- Runtime/Skill/Workflow/Tool/Registry presence cannot create identity, commitment ownership, or authority;
-- conversation history is not authoritative proof of reinstantiation or current durable state;
-- installed contracts are self-sufficient; the full taxonomy spec remains a Core source artifact, not a required consumer file.
+Core hosted CI:
+`35947165325` SUCCESS.
 
-Verified execution semantics remain unchanged:
-- bounded delegation preserves caller commitment/responsibility/authority;
-- terminal bounded child state durably carries a pending caller continuation;
-- live caller return is acknowledged before caller effects;
-- runtime loss leaves the pending continuation autonomously recoverable without child re-execution;
-- explicit handoff is a distinct authorized responsibility transfer;
-- nested bounded delegation unwinds one caller at a time;
-- direct Owner invocation remains first-class and Supervisor is not a mandatory hop.
+Master Plan 8.8 is complete.
 
-Independent taxonomy audit:
-- `AUD-2026-09-24-AGENT-TAXONOMY-001` opened TAX-001 Low / High confidence;
-- focused retest `AUD-2026-09-24-TAX-001-RETEST-001` closed TAX-001 / High confidence;
+Verified responsibility/authority semantics:
+- responsibility, authority, and execution ownership are separate;
+- bounded delegation keeps caller responsibility and return semantics;
+- explicit handoff does not transfer responsibility until target acceptance is durably proven;
+- target acceptance must be independently re-read from target Agent authoritative home at an immutable commit and projected only under the exact current execution fence;
+- Owner-derived delegable work carries a normalized immutable root grant;
+- first-hop and nested delegation may only attenuate allowed effects/scope while preserving prohibitions, inherited constraints, and subdelegation policy;
+- direct Owner invocation remains first-class;
+- historical completed task artifacts remain readable.
+
+Independent terminal evidence:
+- `AUD-2026-09-24-DRA-EVIDENCE-RETEST-001`;
+- DRA-001 CLOSED / High confidence;
+- DRA-002 CLOSED / High confidence;
 - new findings: none.
 
-A concrete continuity descriptor / Fast Resume subsystem is not part of this completed taxonomy stage.
-
-## Active Master Plan 8.8 Core work
-
-The Owner has commissioned delegation / responsibility / authority semantic hardening.
-
-The identified gap is not live-return routing itself; it is the semantic boundary around it:
-- responsibility ownership and authority grant must be represented separately;
-- an explicit handoff request proposes transfer but does not make the target commitment owner before target acceptance;
-- nested delegation must preserve root authority provenance and may attenuate, never amplify, allowed effects;
-- inherited prohibitions/constraints must survive subdelegation;
-- historical completed task artifacts remain readable.
+Agent Control Plane exact executable evidence:
+- snapshot `5039c15fe7debd779132a06f17edf168bce2b2ea`;
+- public verifier run `35948730227` SUCCESS.
