@@ -39,7 +39,7 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
             EXTRA+=(--non-authoritative)
           fi
-          python installer/capsulectl.py recover --target . --max-chars 50000 "${EXTRA[@]}" > /tmp/context-recovery.txt
+          python installer/capsulectl.py recover --target . "${EXTRA[@]}" > /tmp/context-recovery.txt
           test -s /tmp/context-recovery.txt
           grep -q "Manager ID: context-capsule-project-manager" /tmp/context-recovery.txt
           if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then

@@ -750,7 +750,7 @@ def readiness_snapshot(
 def build_recovery_pack(
     files: dict[str, str],
     *,
-    max_chars: int = 50000,
+    max_chars: int = 65536,
     core_reference: dict[str, str] | None = None,
     require_core_binding: bool = False,
     authoritative: bool = True,
