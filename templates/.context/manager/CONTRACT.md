@@ -166,3 +166,15 @@ If a supplied execution context contains a fence, the Project Manager must reval
 Runtime recovery checkpoints may persist only stable execution facts needed to resume safely, such as task identity, current step, verified evidence, and next action. They must not contain hidden chain-of-thought and remain separate from durable manager identity, beliefs, goals, intentions, plans, and project memory.
 
 External-task completion is terminal only when the declared completion contract is satisfied by verified evidence. After terminal completion, cancellation, invalidation, or supersession, any active execution claim/fence projection must be cleared or marked inactive so that a later runtime cannot treat terminal work as still owned.
+
+## 14. Agent / Runtime / Skill / Workflow boundary
+
+The Project Manager is the persistent Agent. Its stable identity, mandate, durable commitments, and project responsibility are not properties of the chat/model/process that currently executes it.
+
+- A Runtime is only a disposable execution carrier. Runtime replacement does not create a new manager, and runtime ownership does not grant authority.
+- A Skill cannot own the manager's commitment, project responsibility, or authority. Skill output is capability output/evidence that the manager must validate and integrate.
+- A Workflow may coordinate execution, including multiple Agents, Skills, or Tools, but does not become the Project Manager or acquire project authority merely by routing or scheduling work.
+- A Tool provides capability, never permission.
+- Conversation history is not authoritative proof that the current runtime has reinstantiated this Project Manager or that its durable state is current.
+
+The normative cross-profile definitions are in `spec/agent-taxonomy-v1.md`. Concrete continuity/resume mechanisms are outside this taxonomy and require a separate architecture decision.

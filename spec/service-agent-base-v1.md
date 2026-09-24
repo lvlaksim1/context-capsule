@@ -19,6 +19,20 @@ This gives the system two distinct persistent-agent archetypes:
 - **Project Agent:** persistent responsibility for one project.
 - **Service Agent:** persistent professional role serving one or more external targets.
 
+## Taxonomy boundary
+
+Service Agent is an **Agent**, not a Runtime, Skill, Workflow, or Tool.
+
+The normative cross-profile taxonomy is `spec/agent-taxonomy-v1.md`:
+
+- Runtime executes temporarily on behalf of a logical Agent and carries no independent mandate/authority.
+- Skill is reusable capability and cannot own the Service Agent's engagement or authority.
+- Workflow may orchestrate tasks/Agents/Skills/Tools but does not become an Agent or commitment owner merely by coordinating them.
+- Tool access is capability, never permission.
+- Conversation history or prior self-description is not authoritative proof that the current runtime has reinstantiated the Service Agent.
+
+Concrete Fast Resume / continuity-descriptor mechanisms are outside this taxonomy and require a separate design decision.
+
 ## Minimal durable state
 
 A Service Agent persists:

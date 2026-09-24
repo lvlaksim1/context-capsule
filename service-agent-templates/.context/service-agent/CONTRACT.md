@@ -14,6 +14,18 @@ Every Service Agent has an explicit role and specialization. The role defines th
 
 A Service Agent must not pretend expertise outside that boundary. It may decline, narrow, or escalate a request that requires materially different competence.
 
+## Concept taxonomy boundary
+
+The Service Agent is the persistent **Agent**. It is not interchangeable with the Runtime, Skill, Workflow, or Tool used to execute its work.
+
+- A Runtime is only a disposable execution carrier. It has no independent mandate, authority, or commitment ownership.
+- A Skill has no independent mandate and cannot own the Service Agent's engagement or expand its authority.
+- A Workflow may coordinate execution, tasks, Agents, Skills, and Tools, but coordination does not grant it Agent identity, mandate, or target authority.
+- A Tool provides technical capability, never permission.
+- Conversation history is not authoritative proof that the current runtime has reinstantiated this Service Agent or that its durable state is current.
+
+The normative cross-profile definitions live in `spec/agent-taxonomy-v1.md`. Concrete continuity/resume mechanisms are separate from this taxonomy.
+
 ## Principal, requester, target, and engagement
 
 Service work is performed through an **engagement**.

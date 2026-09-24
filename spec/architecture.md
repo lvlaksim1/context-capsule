@@ -25,3 +25,17 @@ Canonical lifecycle mutations are planned and validated as a complete snapshot a
 ## Branch model
 
 A permanent authoritative context branch may differ from a discovery branch. Disposable feature/runtime branches never become manager identity or durable context authority merely because execution occurs there.
+
+## Persistent-agent taxonomy boundary
+
+The normative cross-profile taxonomy is `spec/agent-taxonomy-v1.md`.
+
+Context Capsule distinguishes `Agent ≠ Runtime ≠ Skill ≠ Workflow`:
+
+- persistent Agent carries identity, mandate, durable responsibility, and recovery semantics;
+- Runtime is a disposable execution carrier;
+- Skill is reusable capability without independent mandate or commitment ownership;
+- Workflow coordinates execution but has no inherent authority or persistent Agent identity;
+- Tool capability never implies permission.
+
+This boundary is semantic infrastructure only. It does not create Agent Catalog, Agent Factory, or a runtime/continuity subsystem.
