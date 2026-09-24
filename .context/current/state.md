@@ -7,19 +7,23 @@
 - canonical installed Core provenance is read only from `.context/capsule.json.core_commit`;
 - no consumer migration or stable-v2 promotion is authorized.
 
-## Task-scoped interactive-first baseline
+## Verified pre-scaling Core baseline
 
-PTC-003 is CLOSED / High confidence. The Core preserves task-scoped live-carrier execution, direct Owner invocation, and unrelated autonomous scheduler availability.
+Task-scoped interactive-first execution and crash-safe live delegation return are independently verified.
 
-## Active pre-scaling Core work
+Current Core evidence:
+- canonical Core snapshot: `3a0573751dc309148b5d2fd48b8df48f05eaa779`;
+- binding: `e88cbb52e1ea1dd239442dfa31daf3376206021c`;
+- hosted CI: `35937735593` SUCCESS.
 
-Owner-directed live delegation return semantics are being added:
+Verified semantics:
+- bounded delegation preserves caller commitment/responsibility/authority;
+- terminal bounded child state durably carries a pending caller continuation;
+- live caller return is acknowledged before caller effects;
+- runtime loss leaves the pending continuation autonomously recoverable without child re-execution;
+- consumed continuation is not redelivered;
+- explicit handoff is a distinct responsibility transfer with no implicit return;
+- nested bounded delegation unwinds one caller at a time;
+- direct Owner invocation remains first-class and Supervisor is not a mandatory hop.
 
-- bounded delegation preserves active commitment/responsibility/authority with the caller;
-- live bounded delegation identifies that caller as return target;
-- verified terminal child completion reinstantiates the caller immediately in the same live runtime and continues from the durable result without another Owner message;
-- explicit handoff is a distinct authorized responsibility transfer and implies no automatic return;
-- nested bounded delegations unwind one caller at a time;
-- Supervisor is not a mandatory return hop.
-
-Implementation is under verification and is not yet a closed Core baseline.
+Independent retest `AUD-2026-09-24-LRC-001-RETEST-001` closed LRC-001 / High confidence with no new findings.
