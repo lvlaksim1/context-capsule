@@ -1,61 +1,13 @@
 # Manager plans
 
-## Operating mode now active
+## Current verified baseline
 
-1. Reinstate `context-capsule-project-manager` from this repository and reconcile live GitHub before substantial work.
-2. Receive ordinary Context Capsule development tasks directly from the Owner and execute them within mandate.
-3. Maintain Project Manager v2 and Service Agent Base regression baselines.
-4. Treat Supervisor as ecosystem coordinator, not replacement project manager.
-5. Treat Auditor reports as independent evidence and keep remediation/retest separate.
-6. Do not publish stable v2 or migrate consumers without explicit Owner authorization.
+TASK-CC-RUNTIME-IDENTITY-ADOPTION-001 is complete.
 
-## Current verified Core baseline
+Implementation: 65a99617fea931858a15eabe737a705e39570a8a.
+Binding: 40af0efbcc7e8b3cd952bcb517620ce41aae6d8c.
+CI 36129787876: SUCCESS.
 
-Current bound Core snapshot:
-`ec465bd31a02fdc2602fa4d4808ac8a99ccda480`
+IOSPM-001 remains CLOSED / Medium / High confidence.
 
-Binding:
-`9ad957063e16298e3117dd4f99015fbda7f12e3c`
-
-Hosted Core CI:
-`35947165325` — SUCCESS.
-
-Verified semantics now include:
-
-- persistent-agent taxonomy;
-- task-scoped interactive-first execution;
-- crash-safe bounded-delegation return;
-- separation of responsibility, authority, and execution ownership;
-- explicit handoff as proposed responsibility transfer until verified target acceptance;
-- target-home immutable acceptance evidence bound to the exact current execution fence;
-- normalized Owner root grant for delegable work;
-- first-hop and nested delegation attenuation of allowed effects/scope with prohibitions/constraints preserved;
-- historical completed-task compatibility boundary.
-
-Independent acceptance:
-- PTC-003 CLOSED / High confidence;
-- LRC-001 CLOSED / High confidence;
-- TAX-001 CLOSED / High confidence;
-- DRA-001 CLOSED / High confidence;
-- DRA-002 CLOSED / High confidence.
-
-Executable ACP evidence:
-- verified snapshot `5039c15fe7debd779132a06f17edf168bce2b2ea`;
-- public exact-snapshot verifier run `35948730227` SUCCESS.
-
-The private-repository hosted-runner quota is no longer part of the verification path for ACP; exact ACP verification is performed by the existing public `repo-factory` workflow without changing ACP runtime semantics.
-
-## Current development task — fixed runtime identity
-
-`IOSPM-001` is independently CLOSED / Medium / High confidence by `AUD-2026-09-24-IOSPM-001-RETEST-002`.
-
-For `TASK-CC-RUNTIME-IDENTITY-ADOPTION-001`:
-1. Remove every normative path that permits a runtime to change persistent Agent identity.
-2. Require a separate runtime for a different target Agent.
-3. Preserve responsibility semantics v2 independently from runtime routing.
-4. Use manual-pull for interactive bounded delegation.
-5. Use dependency-bound fresh caller runtime for autonomous continuation.
-6. Add the mandatory Moscow-time diagnostic source header.
-7. Run deterministic source/template regression tests plus existing Context Capsule validation.
-8. Persist BDI/current/handoff state as one sealed generation.
-9. Do not modify `main`, publish stable v2, or migrate consumers.
+Stable main, stable-v2 publication, and consumer migration remain outside this completed task.

@@ -1,15 +1,11 @@
 # Latest handoff
 
-## TASK-CC-RUNTIME-IDENTITY-ADOPTION-001
+## TASK-CC-RUNTIME-IDENTITY-ADOPTION-001 — completed
 
-Owner-authorized Context Capsule v2 development task.
+Implementation: 65a99617fea931858a15eabe737a705e39570a8a.
+Binding: 40af0efbcc7e8b3cd952bcb517620ce41aae6d8c.
+CI 36129787876: SUCCESS.
 
-Runtime identity is fixed for the lifetime of a persistent-Agent runtime. A different persistent target requires a separate runtime.
+IOSPM-001 remains CLOSED / Medium / High confidence.
 
-Interactive bounded delegation preserves caller responsibility but uses durable `continuation:manual-pull`. Autonomous continuation uses a dependency-bound `runtime:caller-continuation` and a fresh caller runtime. Same-runtime persistent-Agent switching is forbidden.
-
-User-visible persistent-Agent/infrastructure messages require `DD.MM.YYYY · HH:MM MSK · <source_id>` as diagnostic metadata; repository-backed reinstantiation remains identity authority.
-
-IOSPM-001 has been reconciled against canonical Auditor evidence and is CLOSED / Medium / High confidence.
-
-Stable `main`, stable-v2 publication, and consumer migration remain outside scope.
+Stable main and existing consumers are unchanged.
