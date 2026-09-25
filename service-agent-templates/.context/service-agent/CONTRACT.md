@@ -119,7 +119,7 @@ Agent-to-agent routing is permitted when the issuer has authority to request the
 
 Interactive-first execution is **task/chain scoped, not global**.
 
-When a live Owner-facing runtime carries a specific authorized task or inter-agent chain, GitHub stores the durable task/engagement handoff and the next persistent agent is reinstantiated immediately in that same live runtime. If that task/chain is represented in an external control plane or is otherwise visible to autonomous scheduler infrastructure, it **MUST** establish a renewable task-scoped live-carrier ownership fence before interactive execution proceeds, so the same work cannot be claimed or executed concurrently. A purely direct Owner engagement with no scheduler-visible task projection does not require creating control-plane state.
+When a live Owner-facing runtime carries a specific authorized task or chain, that runtime remains bound to the persistent Agent identity it reinstantiated. A task-scoped live carrier may protect scheduler-visible work only when the task target is that same persistent Agent. Work targeting another persistent Agent MUST be persisted as an inter-Agent task and executed in a separate runtime bound to the target Agent. A purely direct Owner interaction with no scheduler-visible task projection does not require creating control-plane state.
 
 Owner presence must not globally disable, park, or delay scheduler infrastructure. Unrelated tasks without a fresh live carrier remain eligible for autonomous scheduling.
 
@@ -127,11 +127,11 @@ Owner presence must not globally disable, park, or delay scheduler infrastructur
 
 Agent-to-agent routing MUST distinguish **bounded delegation** from **explicit handoff**.
 
-For bounded delegation, the calling persistent agent keeps the active commitment, project responsibility, and authority. Transport never transfers them implicitly. If the bounded delegation runs in the same live Owner-facing runtime, its immutable task contract MUST identify the caller as both commitment owner and return target. Verified child completion MUST durably project a pending caller continuation together with the terminal child state. The live runtime immediately reinstates that caller, verifies the durable child result, and acknowledges the exact continuation before consequential caller work. If the live runtime is lost after child completion but before acknowledgement, the pending continuation MUST remain recoverable by autonomous infrastructure after its live-return lease expires, without re-executing the completed child. Consumed continuations MUST NOT be redelivered. The Owner must not be required to invoke the caller again.
+For bounded delegation, the calling persistent Agent keeps the active commitment, project responsibility, and authority. Transport never transfers them implicitly. A different target Agent MUST execute in a separate runtime. Interactive bounded delegation uses `continuation:manual-pull`: verified terminal child state/result remains durable and the caller retrieves it during a later Owner interaction; no runtime changes persistent Agent identity and no automatic caller runtime is created. Autonomous bounded delegation MAY use `continuation:automatic-new-runtime` only when the caller has precreated a dependency-bound `runtime:caller-continuation` task targeting itself; after verified child completion that continuation executes in a fresh runtime bound to the caller. The completed child MUST NOT be re-executed.
 
 An explicit handoff is different: responsibility transfers only through an explicit authorized handoff contract to the target agent, and no automatic return to the issuer is implied.
 
-Nested bounded delegations unwind one caller at a time. Supervisor is not a mandatory return hop.
+Nested bounded delegations preserve one-caller-at-a-time responsibility provenance, but each persistent Agent executes only in its own runtime. Supervisor is not a mandatory return hop.
 
 ### Responsibility / authority hardening
 
@@ -168,6 +168,9 @@ Recovery checkpoints contain only stable resume facts such as task/execution ide
 Successful completion requires the evidence declared by the completion contract. Terminal execution projection must clear or deactivate any active claim/fence so a stale runtime cannot continue writing after completion.
 
 ## Runtime boundary
+
+A runtime is identity-affine after persistent Service Agent reinstantiation. It may resume the same `agent_id`, but MUST NOT reinstate a different persistent Agent. Cross-Agent work requires a separate runtime.
+Every user-visible Service Agent or infrastructure message MUST begin with `DD.MM.YYYY · HH:MM MSK · <source_id>` using Europe/Moscow time. The header is diagnostic only and does not establish identity.
 
 Runtime conversation, pending tool calls, and workflow checkpoints are execution state, not durable Service Agent identity.
 

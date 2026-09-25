@@ -48,7 +48,7 @@ Before accepting interactive execution of a task that already has a control-plan
 
 Before using autonomous scheduler transport for a task, determine that **task's carrier state**:
 
-- **live carrier:** an Owner-facing runtime is actively carrying this task/chain. Persist the handoff in GitHub and reinstate the next persistent agent directly in the same live runtime. Do not let scheduler infrastructure claim or execute this task while its live-carrier lease is fresh.
+- **live carrier:** an Owner-facing runtime actively carries same-Agent work for the persistent Agent already bound to that runtime. A live carrier MUST NOT be used to execute work targeting another persistent Agent; such work requires `runtime:separate-target`.
 - **expired live carrier:** if fallback-after-expiry is allowed, the scheduler may pick up this task after the lease expires.
 - **per-task hold:** explicit Owner pause; scheduler must not advance this task until the hold is cleared.
 - **no carrier:** normal autonomous scheduler eligibility applies.
@@ -61,10 +61,10 @@ Carrier state is a routing constraint, not authority. A scheduler cannot manufac
 
 Before one persistent agent invokes another agent for live inter-agent work, classify the relationship:
 
-- **bounded delegation:** the issuer retains the active commitment, responsibility, and authority. The immutable task must name the issuer as commitment owner and return target. Terminal child persistence must include a durable pending caller continuation. While its live-return lease is fresh, immediately reinstate that caller in the same live runtime, execute its ENTRYPOINT, re-read the durable child result, and acknowledge the exact continuation before consequential caller work. If runtime loss occurs before acknowledgement, autonomous recovery must deliver the expired pending continuation without re-executing the child. Consumed continuations are not redelivered. Do not require a new Owner message.
+- **bounded delegation:** the issuer retains the active commitment, responsibility, and authority, but the target persistent Agent executes only in a separate runtime. For interactive work use `continuation:manual-pull`: persist verified child result and leave caller continuation to a later Owner/caller retrieval. For autonomous work use `continuation:automatic-new-runtime` only with a precreated dependency-bound `runtime:caller-continuation` task targeting the caller. That continuation runs in a fresh runtime after child success. Never change the persistent Agent identity of the current runtime.
 - **explicit handoff:** responsibility transfers only through an explicit authorized handoff contract. The target becomes the commitment owner for the transferred scope, and no automatic return to the issuer is implied.
 
-A live agent-to-agent task with ambiguous responsibility semantics must not proceed. Nested bounded delegations return one level at a time using durable parent/workflow provenance. Delegation never expands authority.
+An agent-to-agent task with ambiguous responsibility semantics or runtime identity policy must not proceed. Nested bounded delegations preserve one-level-at-a-time parent/workflow provenance, but every persistent Agent transition crosses a runtime boundary.
 
 
 For an externally routed task, validate the task envelope against this agent's mandate and engagement model before acceptance. Preserve issuer and authority provenance; do not treat routing, registry membership, tool capability, or execution ownership as authority. Another authorized agent may invoke the service directly; Supervisor is not a mandatory intermediary.
@@ -72,6 +72,12 @@ For an externally routed task, validate the task envelope against this agent's m
 If a supplied execution context includes a fence, revalidate the current fence immediately before each consequential external write and before terminal completion. Fence mismatch, expiry, revocation, or verification failure stops consequential writes.
 
 Checkpoint only stable resume data: task/execution identity, current step, verified evidence, and next action. Do not persist hidden reasoning. On successful terminal completion, satisfy the declared evidence contract and clear/deactivate active execution ownership before the runtime can be considered finished.
+
+## Runtime identity and user-visible diagnostics
+
+After reinstantiation, bind the runtime to the exact persistent Agent identity recovered from authoritative repository state. Reject any operation that would reinstate another persistent Agent in the same runtime.
+
+Start every user-visible Agent/infrastructure message with `DD.MM.YYYY · HH:MM MSK · <source_id>` using Europe/Moscow time. Treat the header as diagnostic metadata, never as identity proof.
 
 ## Safety
 
