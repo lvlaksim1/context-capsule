@@ -107,8 +107,9 @@ Before accepting interactive execution of a task that already has a control-plan
 
 Before using autonomous scheduler transport, determine the **specific task/chain carrier**:
 
-- **live carrier:** an Owner-facing runtime actively carries that task/chain. Persist durable task/handoff state in GitHub, then reinstate the next persistent agent directly in the same live runtime. Do not let scheduler infrastructure claim or execute this task while its live-carrier lease is fresh.
-- **expired live carrier:** if fallback-after-expiry is allowed, scheduler execution may resume for that task after lease expiry.
+- **same-agent live carrier:** an Owner-facing runtime may actively carry scheduler-visible work only while it remains bound to the same persistent Project Manager identity. Do not let scheduler infrastructure claim that task while its live-carrier lease is fresh.
+- **inter-agent delegation:** a different target `agent_id` is a mandatory runtime boundary. Persist responsibility-semantics-v3 task/handoff state and a durable wake in GitHub; the target is reinstantiated only in a separate runtime. A live carrier never authorizes an `agent_id` switch.
+- **expired live carrier:** if fallback-after-expiry is allowed, scheduler execution may resume eligible same-agent work after lease expiry.
 - **per-task hold:** explicit Owner pause; scheduler must not advance that task until the hold is cleared.
 - **no carrier:** normal autonomous scheduler eligibility applies.
 
@@ -118,12 +119,14 @@ Carrier state constrains routing only. It does not increase authority and never 
 
 ## Delegation responsibility
 
-Before one persistent agent invokes another agent for live inter-agent work, classify the relationship:
+Before one persistent agent invokes another, classify the relationship and use responsibility semantics version 3 for new nonterminal work:
 
-- **bounded delegation:** the issuer retains the active commitment, responsibility, and authority. The immutable task must name the issuer as commitment owner and return target. Terminal child persistence must include a durable pending caller continuation. While its live-return lease is fresh, immediately reinstate that caller in the same live runtime, execute its ENTRYPOINT, re-read the durable child result, and acknowledge the exact continuation before consequential caller work. If runtime loss occurs before acknowledgement, autonomous recovery must deliver the expired pending continuation without re-executing the child. Consumed continuations are not redelivered. Do not require a new Owner message.
-- **explicit handoff:** responsibility transfers only through an explicit authorized handoff contract. The target becomes the commitment owner for the transferred scope, and no automatic return to the issuer is implied.
+- **bounded delegation:** the issuer retains the active commitment, responsibility, and authority. The immutable task names the issuer as commitment owner and return provenance, but the target always executes in a separate runtime.
+  - `continuation_policy=manual_pull` is the default for Owner-facing interactive delegation. The child persists a verified durable result and terminal state in GitHub; no automatic caller continuation is created. On a later Owner/requester message, the caller reads that exact durable result and continues as the same persistent identity.
+  - `continuation_policy=automatic_new_runtime` is reserved for autonomous chains. Verified child completion persists a pending caller continuation; Broker/Worker reinstantiates the caller in another new runtime, and that continuation is acknowledged before consequential caller work.
+- **explicit handoff:** use `continuation_policy=none`. Responsibility transfers only through an explicit authorized handoff contract. The target becomes the commitment owner for the transferred scope, and no automatic return to the issuer is implied.
 
-A live agent-to-agent task with ambiguous responsibility semantics must not proceed. Nested bounded delegations return one level at a time using durable parent/workflow provenance. Delegation never expands authority.
+A same-runtime persistent `agent_id` switch is forbidden. An inter-agent task with ambiguous responsibility semantics must not proceed. Nested autonomous bounded delegations return one level at a time using durable parent/workflow provenance and distinct runtimes. Delegation never expands authority.
 
 
 When a task arrives through external orchestration, treat the envelope as transport evidence. Before accepting responsibility:
