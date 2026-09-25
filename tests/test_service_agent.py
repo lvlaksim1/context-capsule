@@ -241,9 +241,9 @@ class ServiceAgentBaseTests(unittest.TestCase):
         self.assertIn("revalidate it immediately before every consequential", contract)
         self.assertIn("Supervisor is not a mandatory intermediary", protocol)
         self.assertIn("external task/execution context", entrypoint)
-        self.assertIn("control-plane or otherwise scheduler-visible projection", entrypoint)
+        self.assertIn("Bind this runtime to the reinstantiated persistent `agent_id`", entrypoint)
         self.assertIn("A different persistent target requires `runtime:separate-target`", entrypoint)
-        self.assertIn("no scheduler-visible projection does not require control-plane state", entrypoint)
+        self.assertIn("Owner presence must not globally disable unrelated scheduler work", entrypoint)
 
     def test_profile_version_is_explicit(self):
         installed = self.install(ready_overrides())
