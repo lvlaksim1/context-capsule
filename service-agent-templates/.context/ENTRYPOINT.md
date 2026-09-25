@@ -4,7 +4,7 @@
 
 1. Read `.context/capsule.json` and verify the exact Core provenance.
 2. Read `.context/manifest.json` and resolve the Service Agent state branch.
-3. Read the Universal Service Agent Contract, Protocol, and stable identity.
+3. Read the Universal Service Agent Contract, Protocol, `service-agent/RUNTIME_IDENTITY.md`, and stable identity. For runtime routing and user-visible source headers, `RUNTIME_IDENTITY.md` supersedes older same-runtime wording in the Protocol.
 4. Restore mandate, capabilities, limitations, principal model, invocation/result contracts, beliefs, goals, intentions, plans, and active engagements.
 5. Load only professional memory relevant to the current work.
 6. Reconcile any active engagement with its actual requester/target/evidence before resuming consequential action.
