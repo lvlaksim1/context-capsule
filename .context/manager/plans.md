@@ -45,14 +45,17 @@ Executable ACP evidence:
 
 The private-repository hosted-runner quota is no longer part of the verification path for ACP; exact ACP verification is performed by the existing public `repo-factory` workflow without changing ACP runtime semantics.
 
-## IOSPM-001 remediation gate
+## Current development task — fixed runtime identity
 
-The systemic implementation adds a manager-state integrity marker that seals the Git blob identities of beliefs/goals/intentions/plans/current state/blockers/next/latest handoff.
+`IOSPM-001` is independently CLOSED / Medium / High confidence by `AUD-2026-09-24-IOSPM-001-RETEST-002`.
 
-Required behavior:
-- partial or interrupted multi-file Persist is NOT READY;
-- recovery refuses a mismatching protected snapshot before consequential continuation;
-- explicit v2 repair bootstraps protection for legacy-unsealed capsules;
-- repair refuses to bless an already-protected mismatching snapshot.
-
-Next: bind this repository's own capsule to the remediated Core, publish its first coherent sealed generation, then obtain independent Auditor retest. IOSPM-001 remains open until that retest.
+For `TASK-CC-RUNTIME-IDENTITY-ADOPTION-001`:
+1. Remove every normative path that permits a runtime to change persistent Agent identity.
+2. Require a separate runtime for a different target Agent.
+3. Preserve responsibility semantics v2 independently from runtime routing.
+4. Use manual-pull for interactive bounded delegation.
+5. Use dependency-bound fresh caller runtime for autonomous continuation.
+6. Add the mandatory Moscow-time diagnostic source header.
+7. Run deterministic source/template regression tests plus existing Context Capsule validation.
+8. Persist BDI/current/handoff state as one sealed generation.
+9. Do not modify `main`, publish stable v2, or migrate consumers.

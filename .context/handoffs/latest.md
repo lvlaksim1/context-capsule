@@ -1,13 +1,15 @@
 # Latest handoff
 
-## IOSPM-001 remediation
+## TASK-CC-RUNTIME-IDENTITY-ADOPTION-001
 
-Owner authorized a systemic fix for Auditor finding `IOSPM-001`.
+Owner-authorized Context Capsule v2 development task.
 
-The Context Capsule v2 development implementation now introduces fail-closed manager-state generation integrity. A protected Project Manager snapshot is reinstantiable only when the integrity marker matches every coupled BDI/current/handoff file.
+Runtime identity is fixed for the lifetime of a persistent-Agent runtime. A different persistent target requires a separate runtime.
 
-The implementation has passed the applicable hosted development checks before self-binding. The repository itself is now being rebound to that remediated Core and its first sealed generation.
+Interactive bounded delegation preserves caller responsibility but uses durable `continuation:manual-pull`. Autonomous continuation uses a dependency-bound `runtime:caller-continuation` and a fresh caller runtime. Same-runtime persistent-Agent switching is forbidden.
 
-Status: implementation complete; finding remains OPEN pending independent Auditor retest.
+User-visible persistent-Agent/infrastructure messages require `DD.MM.YYYY · HH:MM MSK · <source_id>` as diagnostic metadata; repository-backed reinstantiation remains identity authority.
 
-Next accountable role after successful bound-snapshot CI: `project-manager-auditor` for focused read-only retest.
+IOSPM-001 has been reconciled against canonical Auditor evidence and is CLOSED / Medium / High confidence.
+
+Stable `main`, stable-v2 publication, and consumer migration remain outside scope.

@@ -1,7 +1,8 @@
 # Next actions
 
-1. Publish this repository's first coherent sealed Project Manager generation bound to the remediated Core snapshot.
-2. Run the full hosted verification suite on that exact bound snapshot.
-3. Request an independent focused Auditor retest of IOSPM-001.
-4. If the Auditor closes IOSPM-001 with no new blocking finding, reconcile Context Capsule durable state and return the verified result to Supervisor.
-5. Do not publish stable v2, merge to `main`, or migrate consumers without separate Owner authorization.
+1. Apply the fixed persistent-Agent runtime identity invariant to Project Manager and Service Agent Core contracts/protocols/entrypoints and their templates.
+2. Add deterministic regression coverage proving that no normative current path instructs a runtime to reinstate a different persistent Agent.
+3. Run existing Context Capsule VALID/READY/recovery, generation-integrity, Service Agent, delegation/authority, and compatibility tests.
+4. Publish the resulting coupled manager state with an incremented generation-integrity marker.
+5. Return immutable commit/test evidence for `TASK-CC-RUNTIME-IDENTITY-ADOPTION-001`.
+6. Do not publish stable v2, merge to `main`, or migrate consumers without separate Owner authorization.
