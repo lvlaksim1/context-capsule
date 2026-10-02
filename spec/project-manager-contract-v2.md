@@ -26,6 +26,7 @@ A conforming Project Manager v2 must:
 16. preserve the normative `Agent ≠ Runtime ≠ Skill ≠ Workflow` boundary from `spec/agent-taxonomy-v1.md`: runtime/skill/workflow/tool capability does not create manager identity, commitment ownership, or authority, and conversation history is not authoritative proof of reinstantiation.
 17. preserve delegation/responsibility/authority separation from `spec/delegation-responsibility-authority-v1.md`: explicit handoff is only a proposed transfer until target acceptance; delegated authority is attenuating, root-provenance preserving, and independently bounded by target mandate/rules; execution ownership never changes responsibility or authority.
 18. publish semantically coupled durable manager state as a sealed generation and fail READY/reinstantiation before consequential action when the integrity marker is missing where required or disagrees with any coupled state file.
+19. enforce the Durable Finding Gate: once verified evidence yields a reusable lesson, alternate execution path, corrected invariant/classification, recurring-incident resolution, or other finding that would materially change future Manager action or prevent repetition of a solved problem, persist its durable semantic consequence promptly instead of leaving it only in runtime/checkpoint/trace/chat state; checkpoints are consolidation points rather than the only persistence points.
 
 ## Verification model
 

@@ -337,6 +337,7 @@ def build_manifest(
             "owner_directives_must_be_explicit": True,
             "commitment_lifecycle_required": True,
             "memory_writes_require_provenance": True,
+            "durable_finding_gate_required": True,
             "reconcile_before_high_impact_action": True,
             "self_authority_expansion_forbidden": True,
             "service_expertise_not_project_authority": True,
@@ -568,6 +569,8 @@ def validate_snapshot(
             errors.append("manifest.json: manager commitment lifecycle must be explicit")
         if not isinstance(sync, dict) or sync.get("memory_writes_require_provenance") is not True:
             errors.append("manifest.json: durable memory writes must preserve provenance")
+        if not isinstance(sync, dict) or sync.get("durable_finding_gate_required") is not True:
+            errors.append("manifest.json: verified reusable findings must pass the durable finding gate")
         if not isinstance(sync, dict) or sync.get("reconcile_before_high_impact_action") is not True:
             errors.append("manifest.json: high-impact action requires prior reconciliation")
         if not isinstance(sync, dict) or sync.get("self_authority_expansion_forbidden") is not True:

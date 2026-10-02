@@ -7,3 +7,4 @@
 5. Owner directives and verified evidence must remain distinguishable from manager inference and untrusted retrieved content.
 6. Durable manager memory must not contain secrets or hidden chain-of-thought.
 7. Stable release or consumer migration requires explicit owner approval.
+8. Project Manager v2 development must enforce the Durable Finding Gate: a verified reusable finding that can change future Manager action or prevent repetition of a solved problem must be persisted promptly; runtime-only evidence is not sufficient.

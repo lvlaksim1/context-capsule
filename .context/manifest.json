@@ -63,7 +63,8 @@
     ".context/decisions/DEC-0017-working-view-consistency-boundary.md",
     ".context/decisions/DEC-0018-optional-agent-orchestration.md",
     ".context/decisions/DEC-0019-manager-state-coherence.md",
-    ".context/decisions/DEC-0020-fixed-runtime-agent-identity.md"
+    ".context/decisions/DEC-0020-fixed-runtime-agent-identity.md",
+    ".context/decisions/DEC-0021-durable-finding-gate.md"
   ],
   "dialogues": [],
   "history": [],
@@ -105,9 +106,10 @@
     "delegated_authority_attenuation_required": true,
     "authority_root_provenance_required": true,
     "subdelegation_inherits_constraints": true,
-    "manager_state_coherence_required": true
+    "manager_state_coherence_required": true,
+    "durable_finding_gate_required": true
   },
-  "updated_at": "2026-09-24",
+  "updated_at": "2026-10-03",
   "context_version": "2.0.0-dev",
   "authority": {
     "manager_state_branch": "v2-manager-runtime",

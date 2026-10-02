@@ -1,11 +1,13 @@
 # Latest handoff
 
-## TASK-CC-RUNTIME-IDENTITY-ADOPTION-001 — completed
+## TASK-CC-DURABLE-FINDING-GATE-001 — active
 
-Implementation: 65a99617fea931858a15eabe737a705e39570a8a.
-Binding: 40af0efbcc7e8b3cd952bcb517620ce41aae6d8c.
-CI 36129787876: SUCCESS.
+Authority: direct Owner instruction, 2026-10-03.
 
-IOSPM-001 remains CLOSED / Medium / High confidence.
+Objective: make verified reusable findings mandatory durable Manager state when they can change future action or prevent repetition of a solved problem.
 
-Stable main and existing consumers are unchanged.
+Implementation scope: v2 Contract/Protocol/ENTRYPOINT, installed templates, manifest policy/validator, specification and deterministic tests.
+
+Stable `main` / v1.3.1 and existing consumers are unchanged.
+
+Next: publish implementation on `v2-manager-runtime`, consume exact-head hosted CI, then seal completion.

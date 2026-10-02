@@ -169,6 +169,7 @@ class ContextCapsuleV2Tests(unittest.TestCase):
             "owner_directives_must_be_explicit",
             "commitment_lifecycle_required",
             "memory_writes_require_provenance",
+            "durable_finding_gate_required",
             "reconcile_before_high_impact_action",
             "self_authority_expansion_forbidden",
             "service_expertise_not_project_authority",
@@ -207,6 +208,14 @@ class ContextCapsuleV2Tests(unittest.TestCase):
         self.assertIn("Reconciliation is risk-based", contract)
         self.assertIn("must not, by its own unilateral decision", contract)
         self.assertIn("expertise does not automatically confer project authority", contract)
+        self.assertIn("Durable finding admission invariant", contract)
+        self.assertIn("materially change a reasonable future Manager's next action", contract)
+        protocol = installed[".context/manager/PROTOCOL.md"]
+        entrypoint = installed[".context/ENTRYPOINT.md"]
+        self.assertIn("## Durable Finding Gate", protocol)
+        self.assertIn("Runtime checkpoints, scheduler/mailbox/trace state, logs, and chat history are evidence sources", protocol)
+        self.assertIn("High-level checkpoints remain mandatory consolidation points, not the only persistence points", protocol)
+        self.assertIn("run the Durable Finding Gate", entrypoint)
 
     def test_product_and_manager_state_authority_are_distinct(self):
         installed = apply({}, clean_install_changes(

@@ -10,5 +10,6 @@
 
 ## Active commitments
 
+- Implement and verify the Owner-directed Durable Finding Gate across v2 Project Manager Contract, Protocol, ENTRYPOINT, templates, manifest generation/validation, specification and deterministic tests.
 - Preserve the verified v2 behavior and regression baseline.
 - Keep stable main and existing consumers unchanged unless separately authorized.
