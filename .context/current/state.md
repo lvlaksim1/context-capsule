@@ -2,13 +2,18 @@
 
 Context Capsule v2 remains development-only on `v2-manager-runtime`; stable `main` and known consumers are unchanged.
 
-Owner-directed Durable Finding Gate implementation is ACTIVE.
+TASK-CC-DURABLE-FINDING-GATE-001 is COMPLETE on the development line.
 
-Scope:
-- normative Project Manager Contract/Protocol;
-- installed Project Manager templates and ENTRYPOINT;
-- generated manifest policy + validation;
-- deterministic regression coverage;
-- no stable v1.3.1 promotion and no consumer migration.
+Implementation: `e6dbfb6df38f270e298e210852bf243b895524e6`.
+Self-provenance binding: `fbcb36757882a7d89af96335e3fb707830d8ac27`.
+GitHub-hosted CI `37072482225`: SUCCESS.
 
-The design criterion is explicit: a verified finding becomes mandatory durable state when it can materially change a reasonable future Manager's action or prevent repetition of a problem already solved. Runtime-only checkpoint/mailbox/trace/log/chat state is evidence, not durable managerial memory.
+Verified surfaces:
+- Project Manager Contract + Protocol;
+- installed templates + ENTRYPOINT;
+- generated manifest policy + validator;
+- normative v2 spec;
+- deterministic regression tests;
+- self VALID/READY and reinstantiation/compatibility smokes.
+
+Stable v1.3.1 promotion and consumer migration were not performed.
