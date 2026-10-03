@@ -1,7 +1,8 @@
 > [!IMPORTANT]
-> **Authority moved.** Project Manager v2 source authority is now
-> `lvlaksim1/context-capsule-project-manager`. This branch is retained for migration provenance
-> and compatibility archaeology only. Do not add new Project Manager product behavior here.
+> **Authorities moved.** Project Manager v2 source authority is now
+> `lvlaksim1/context-capsule-project-manager`; generic Service Agent Base authority is
+> `lvlaksim1/service-agent-base`. This branch is retained for migration provenance and
+> compatibility archaeology only. Do not add new Project Manager or Service Agent Base product behavior here.
 
 # Context Capsule Core
 
