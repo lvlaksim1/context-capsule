@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **Authority moved.** Project Manager v2 source authority is now
+> `lvlaksim1/context-capsule-project-manager`. This branch is retained for migration provenance
+> and compatibility archaeology only. Do not add new Project Manager product behavior here.
+
 # Context Capsule Core
 
 **Stable release: v1.3.1. Development line: v2 Project Manager on `v2-manager-runtime`.**
