@@ -39,3 +39,19 @@ Local `install/repair` commands are development helpers. Canonical repository mu
 ## Permanent context branch
 
 Repositories that develop through disposable feature branches should keep durable Context Capsule authority on one permanent branch, for example context. The default branch remains a discovery-only gateway. Feature branches record their live-work identity inside semantic state; they do not become Context Capsule authority.
+
+
+## Product boundary
+
+This repository is the authoritative source for **Context Capsule Core**: the durable-context
+format, schemas, migrations, validation/recovery invariants, and Core installation semantics.
+
+Project Manager is a separate product and source authority:
+
+- Project Manager: `lvlaksim1/context-capsule-project-manager`
+- Auditor: `lvlaksim1/project-manager-auditor`
+- Supervisor: `lvlaksim1/supervisor`
+- Provisioning / compatible component pins: `lvlaksim1/repo-factory`
+
+The historical `v2-manager-runtime` branch is retained as migration provenance. New Project
+Manager product behavior must not be developed there.
