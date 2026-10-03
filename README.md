@@ -49,6 +49,7 @@ format, schemas, migrations, validation/recovery invariants, and Core installati
 Project Manager is a separate product and source authority:
 
 - Project Manager: `lvlaksim1/context-capsule-project-manager`
+- Service Agent Base: `lvlaksim1/service-agent-base`
 - Auditor: `lvlaksim1/project-manager-auditor`
 - Supervisor: `lvlaksim1/supervisor`
 - Provisioning / compatible component pins: `lvlaksim1/repo-factory`
