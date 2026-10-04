@@ -6,11 +6,11 @@
 
 # Context Capsule Core
 
-**Stable release: v1.3.1. Development line: v2 Project Manager on `v2-manager-runtime`.**
+**Stable release: v1.3.1. This branch is the frozen historical v2 migration line; active Project Manager and Service Agent development has moved to the repositories named above.**
 
 Context Capsule v1.3.1 is the stable repository-local durable project-memory product. v2 evolves the same foundation into a portable Project Manager that can be reinstantiated across replaceable chats, models, processes, or agent runtimes.
 
-## v2 Project Manager model
+## Historical v2 Project Manager model
 
 The Project Manager is not the runtime. A runtime is a temporary carrier of one stable repository-scoped manager identity.
 
@@ -62,7 +62,7 @@ In v2, `authoritative_branch` is a compatibility alias for `authority.manager_st
 
 Stable consumer repositories must remain on v1.3.1 until v2 is explicitly promoted and migration is explicitly requested.
 
-## Minimal Service Agent Base
+## Historical embedded Service Agent Base
 
 The v2 development line also contains a separate **Service Agent Base 1.0.0-dev**. It is not a replacement for Project Manager.
 
