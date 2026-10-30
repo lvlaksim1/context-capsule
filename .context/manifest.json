@@ -24,7 +24,8 @@
   "rules": [
     ".context/rules/project-rules.md",
     ".context/rules/batch-development-standard.md",
-    ".context/rules/local-first-workspace.md"
+    ".context/rules/local-first-workspace.md",
+    ".context/rules/possibility-first-research.md"
   ],
   "decisions": [
     ".context/decisions/DEC-0001-core-separation.md",
@@ -37,7 +38,8 @@
     ".context/decisions/DEC-0008-default-semantic-writeback.md",
     ".context/decisions/DEC-0009-permanent-authoritative-context-branch.md",
     ".context/decisions/DEC-0010-canonical-v1.3.1.md",
-    ".context/decisions/owner-batched-development-2026-10-30.md"
+    ".context/decisions/owner-batched-development-2026-10-30.md",
+    ".context/decisions/owner-possibility-first-2026-10-30.md"
   ],
   "dialogues": [],
   "history": [],
