@@ -22,7 +22,8 @@
   },
   "current_state": ".context/current/state.md",
   "rules": [
-    ".context/rules/project-rules.md"
+    ".context/rules/project-rules.md",
+    ".context/rules/batch-development-standard.md"
   ],
   "decisions": [
     ".context/decisions/DEC-0001-core-separation.md",
@@ -34,7 +35,8 @@
     ".context/decisions/DEC-0007-retire-legacy-adoption.md",
     ".context/decisions/DEC-0008-default-semantic-writeback.md",
     ".context/decisions/DEC-0009-permanent-authoritative-context-branch.md",
-    ".context/decisions/DEC-0010-canonical-v1.3.1.md"
+    ".context/decisions/DEC-0010-canonical-v1.3.1.md",
+    ".context/decisions/owner-batched-development-2026-10-30.md"
   ],
   "dialogues": [],
   "history": [],
