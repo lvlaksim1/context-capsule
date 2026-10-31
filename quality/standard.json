@@ -12,5 +12,21 @@
       "timeout_sec": 65
     }
   ],
-  "full_additional": []
+  "full_additional": [
+    {
+      "id": "core_model_unittest",
+      "kind": "sandbox",
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_capsulectl.py"
+      ],
+      "timeout_sec": 95
+    }
+  ]
 }
